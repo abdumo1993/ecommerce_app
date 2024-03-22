@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter/widgets.dart";
 
 class ContinueButton extends StatelessWidget {
   final Function onPress;
@@ -84,16 +85,25 @@ class _ChoiceButtonState extends State<ChoiceButton> {
                     child: ListView.builder(
                       itemCount: widget.representations.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                          title: widget.choices[index],
-                          onTap: () {
-                            setState(() {
-                              _currentChoice = widget.representations[index];
-                              _value = widget.values[index];
-                            });
-                            print("selected : ${widget.values[index]}");
-                            Navigator.pop(context);
-                          },
+                        return Container(
+                          margin: EdgeInsets.all(10),
+                          child: ListTile(
+                            tileColor: Colors.black.withOpacity(0.05),
+                            hoverColor: Color(0xFF8E6CEF).withOpacity(1),
+                            
+                            shape: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(100),
+                                borderSide: BorderSide.none),
+                            title: widget.choices[index],
+                            onTap: () {
+                              setState(() {
+                                _currentChoice = widget.representations[index];
+                                _value = widget.values[index];
+                              });
+                              print("selected : ${widget.values[index]}");
+                              Navigator.pop(context);
+                            },
+                          ),
                         );
                       },
                     ),
@@ -188,6 +198,59 @@ class _HeartButtonState extends State<HeartButton> {
               : "lib/assets/images/Vector.png";
         });
       },
+    );
+  }
+}
+
+
+class QuantityButton extends StatefulWidget {
+  const QuantityButton({super.key});
+
+  @override
+  State<QuantityButton> createState() => _QuantityButtonState();
+}
+
+class _QuantityButtonState extends State<QuantityButton> {
+  int _quantity = 1;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(6).copyWith(right: 20, left: 20),
+      decoration: BoxDecoration(
+          color: Color(0xF4F4F4).withOpacity(1),
+          borderRadius: BorderRadius.circular(100)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("Quantity", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+          Row(
+            children: [
+              ContinueButton(
+                  onPress: () {
+                    setState(() {
+                      _quantity += 1;
+                    });
+                  },
+                  child: Icon(Icons.add)),
+              SizedBox(
+                width: 10,
+              ),
+              Text("$_quantity"),
+              SizedBox(
+                width: 10,
+              ),
+              ContinueButton(
+                  padding: 20,
+                  onPress: () {
+                    setState(() {
+                      if (_quantity > 1) _quantity -= 1;
+                    });
+                  },
+                  child: Icon(Icons.remove)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
