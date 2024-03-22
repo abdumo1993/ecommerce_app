@@ -17,7 +17,7 @@ class ContinueButton extends StatelessWidget {
         style: ButtonStyle(
           padding:
               MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(padding)),
-          backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF8E6CEF)),
+          backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.tertiary),
         ),
         onPressed: () => onPress(),
         child: child);
@@ -57,14 +57,16 @@ class _ChoiceButtonState extends State<ChoiceButton> {
       style: ButtonStyle(
         padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
         backgroundColor:
-            MaterialStateProperty.all<Color>(Color(0xF4F4F4).withOpacity(1)),
+            MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
       ),
       onPressed: () {
         showModalBottomSheet(
+          backgroundColor: Theme.of(context).colorScheme.primary,
           context: context,
           builder: (BuildContext context) {
             return Container(
               padding: EdgeInsets.all(10.0),
+              
               child: Column(
                 mainAxisSize: MainAxisSize
                     .min, // Use min to make the bottom sheet only as tall as its content
@@ -75,11 +77,11 @@ class _ChoiceButtonState extends State<ChoiceButton> {
                     child: Text(
                       widget.title,
                       style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                   // Add a divider for better visual separation
-                  Divider(color: Colors.grey),
+                  Divider(color: Theme.of(context).colorScheme.onSecondary),
                   // Your existing ListView.builder
                   Expanded(
                     child: ListView.builder(
@@ -88,8 +90,9 @@ class _ChoiceButtonState extends State<ChoiceButton> {
                         return Container(
                           margin: EdgeInsets.all(10),
                           child: ListTile(
-                            tileColor: Colors.black.withOpacity(0.05),
-                            hoverColor: Color(0xFF8E6CEF).withOpacity(1),
+                            textColor: Theme.of(context).colorScheme.onPrimary,
+                            tileColor: Theme.of(context).colorScheme.secondary,
+                            hoverColor: Theme.of(context).colorScheme.tertiary,
                             
                             shape: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(100),
@@ -119,15 +122,15 @@ class _ChoiceButtonState extends State<ChoiceButton> {
         children: [
           Text(
             widget.title,
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold),
           ),
           Row(
             children: [
               _currentChoice,
               SizedBox(
-                width: 5,
+                width: 10,
               ),
-              Icon(Icons.arrow_downward),
+              Image.asset("lib/assets/images/arrow_down.png", color: Theme.of(context).colorScheme.onSecondary,)
             ],
           )
         ],
@@ -217,12 +220,12 @@ class _QuantityButtonState extends State<QuantityButton> {
     return Container(
       padding: EdgeInsets.all(6).copyWith(right: 20, left: 20),
       decoration: BoxDecoration(
-          color: Color(0xF4F4F4).withOpacity(1),
+          color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(100)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Quantity", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+          Text("Quantity", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold),),
           Row(
             children: [
               ContinueButton(
@@ -231,11 +234,11 @@ class _QuantityButtonState extends State<QuantityButton> {
                       _quantity += 1;
                     });
                   },
-                  child: Icon(Icons.add)),
+                  child: Icon(Icons.add, color: Colors.white,)),
               SizedBox(
                 width: 10,
               ),
-              Text("$_quantity"),
+              Text("$_quantity", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
               SizedBox(
                 width: 10,
               ),
@@ -246,7 +249,7 @@ class _QuantityButtonState extends State<QuantityButton> {
                       if (_quantity > 1) _quantity -= 1;
                     });
                   },
-                  child: Icon(Icons.remove)),
+                  child: Icon(Icons.remove, color: Colors.white,)),
             ],
           ),
         ],
