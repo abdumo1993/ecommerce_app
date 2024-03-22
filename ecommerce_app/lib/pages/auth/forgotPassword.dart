@@ -2,16 +2,15 @@ import 'package:ecommerce_app/widgets/button.dart';
 import 'package:ecommerce_app/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -22,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Sign in",
+              Text("Forgot Password",
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
               SizedBox(
                 height: 20,
@@ -40,17 +39,9 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(
                       height: 15,
                     ),
-                    Container(
-                        child: myTextField(
-                      keyboardType: TextInputType.visiblePassword,
-                      obscure: true,
-                      palceholder: "Password",
-                    )),
-
                     SizedBox(
                       height: 15,
                     ),
-                   
                     ContinueButton(
                       onPress: () => print("here"),
                       child: Text(
@@ -58,27 +49,51 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      children: [
-                        Text("Dont have an Account?"),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Create One",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    )
                   ],
                 ),
               )
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class EmailSent extends StatelessWidget {
+  const EmailSent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SingleChildScrollView(
+        child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Image.asset(
+                  "lib/assets/images/image 4.png",
+                  fit: BoxFit.contain,
+                ),
+                Text(
+                  "We Sent You an Email to reset your password",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ContinueButton(
+                  onPress: () => print("return to login"),
+                  child: Text(
+                    "Return to Login",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            )),
       ),
     );
   }

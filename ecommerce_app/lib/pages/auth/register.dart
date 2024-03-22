@@ -94,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     //   onPressed: () => print("login"),
                     //   child:
                     // ),
-                    myButton(
+                    ContinueButton(
                       onPress: () => print("here"),
                       child: Text(
                         "Continue",
