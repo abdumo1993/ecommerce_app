@@ -27,7 +27,7 @@ class myScaffold extends StatelessWidget {
       var screenWidth = MediaQuery.of(context).size.width;
       var diff = screenWidth - 500;
       if (screenWidth > 500) {
-        if (diff > 280) {
+        if (diff > 390) {
           side = true;
         } else
           side = false;
@@ -39,13 +39,11 @@ class myScaffold extends StatelessWidget {
     return Container(
       color: Theme.of(context).colorScheme.primary,
       alignment: Alignment.center,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
+      child:Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 500,
+              width: MediaQuery.of(context).size.width > 500 ? 500 : MediaQuery.of(context).size.width,
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 bottomNavigationBar: Container(
@@ -380,13 +378,8 @@ class myScaffold extends StatelessWidget {
                         ),
 
                         side
-                            ? Text(
-                                "side",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
-                              )
+                            ? SizedBox(width: 0,height: 0,)
+                              
                             : myReviews(),
                       ],
                     ),
@@ -396,11 +389,11 @@ class myScaffold extends StatelessWidget {
             ),
             side
                 ? SizedBox(
-                    width: ((diff - 280 <= 0))
+                    width: ((diff - 390 <= 0))
                         ? 10
-                        : (diff - 280 > 150)
+                        : (diff - 390 > 150)
                             ? 150
-                            : diff - 280)
+                            : diff - 390)
                 : SizedBox(
                     width: 0,
                   ),
@@ -408,14 +401,9 @@ class myScaffold extends StatelessWidget {
                 ? myReviews(
                     side: side,
                   )
-                : Text(
-                    "side",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
+                : SizedBox(width: 0,height: 0,)
           ],
-        ),
-      ),
+        )
     );
   }
 }
@@ -431,7 +419,7 @@ class myReviews extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(10.0),
       child: side
           ? SingleChildScrollView(
               scrollDirection: Axis.vertical,
