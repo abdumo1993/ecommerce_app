@@ -6,12 +6,15 @@ class myTextField extends StatefulWidget {
   final String? palceholder;
   final Widget? prefix;
    final double? borderRadius;
-  const myTextField(
+   final TextEditingController controller;
+   final Function? validator;
+   
+   myTextField(
       {super.key,
       this.keyboardType = TextInputType.text,
       this.obscure = false,
       this.palceholder,
-      this.prefix, this.borderRadius});
+      this.prefix, this.borderRadius, required this.controller, this.validator});
 
   @override
   State<myTextField> createState() => _myTextFieldState();
@@ -28,8 +31,11 @@ _obscure = widget.obscure;
  
   @override
   Widget build(BuildContext context) {
-    print(_obscure);
+    // print("val: ${widget.validator!("kd")}");
+    // print(_obscure);
     return TextFormField(
+      controller: widget.controller,
+      validator: (value) => widget.validator!(value),
       keyboardType: widget.keyboardType,
       obscureText: _obscure,
       style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
