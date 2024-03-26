@@ -7,9 +7,8 @@ class CheckoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double maxHeight = MediaQuery.of(context).size.height;
     double minHeight = 840;
-    print(maxHeight);
-    return Scaffold(
-      body: Container(
+    return Material(
+      child: Container(
         color: Theme.of(context).colorScheme.primary,
           alignment: Alignment.center,
         child: Container(

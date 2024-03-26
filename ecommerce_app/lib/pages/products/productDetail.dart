@@ -41,8 +41,8 @@ class myScaffold extends StatelessWidget {
       }
       return diff;
     })();
-    return Scaffold(
-      body: Container(
+    return Material(
+      child: Container(
           color: Theme.of(context).colorScheme.primary,
           alignment: Alignment.center,
           child: Row(

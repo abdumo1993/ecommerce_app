@@ -5,8 +5,8 @@ class EmptyCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return Material(
+      child: Container(
         color: Theme.of(context).colorScheme.primary,
         child: Center(
           child: SingleChildScrollView(

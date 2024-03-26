@@ -31,8 +31,7 @@ _obscure = widget.obscure;
  
   @override
   Widget build(BuildContext context) {
-    // print("val: ${widget.validator!("kd")}");
-    // print(_obscure);
+   
     return TextFormField(
       controller: widget.controller,
       validator: (value) => widget.validator!(value),

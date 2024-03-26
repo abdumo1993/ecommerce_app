@@ -19,8 +19,8 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return Material(
+      child: Container(
         color: Theme.of(context).colorScheme.primary,
         child: Center(
           child: SingleChildScrollView(
@@ -129,7 +129,6 @@ class RegisterPage extends StatelessWidget {
                         ContinueButton(
                           onPress: () {
                             print("regisetered");
-                            print(_formKey.currentState == null);
                             if (_formKey.currentState!.validate()) {
                              
 

@@ -12,8 +12,8 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return Material(
+      child: Container(
         color: Theme.of(context).colorScheme.primary,
         child: Center(
           child: SingleChildScrollView(

@@ -57,10 +57,12 @@ class ForgotPassword extends StatelessWidget {
                         ),
                         ContinueButton(
                           onPress: () {
-                             print("here");
-      
-                             Get.toNamed("/emailSent");
-                             },
+                            print("here");
+                            if (_formKey.currentState!.validate()) {
+                              // Proceed with form submission
+                            Get.toNamed("/productDetail");
+                            }
+                          },
                           child: Text(
                             "Continue",
                             style: TextStyle(color: Colors.white, fontSize: 16),
@@ -84,8 +86,8 @@ class EmailSent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+    return Material(
+      child: Container(
         color: Theme.of(context).colorScheme.primary,
         child: Center(
           child: SingleChildScrollView(

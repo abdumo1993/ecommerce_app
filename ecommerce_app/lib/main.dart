@@ -32,7 +32,7 @@ class MainApp extends StatelessWidget {
       getPages: routes,
       
       themeMode: ThemeMode.light,
-      home:RegisterPage(),
+      home:CheckoutPage(),
          
     );     
   }
