@@ -1,14 +1,9 @@
 import 'package:ecommerce_app/widgets/button.dart';
 import 'package:flutter/material.dart';
 
-class Cart extends StatefulWidget {
+class Cart extends StatelessWidget {
   const Cart({super.key});
 
-  @override
-  State<Cart> createState() => _CartState();
-}
-
-class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -46,27 +41,7 @@ class _CartState extends State<Cart> {
                               : 800,
                           child: Row(
                             children: [
-                              Container(
-                                alignment: Alignment.topLeft,
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: IconButton(
-                                  icon: ImageIcon(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary,
-                                    AssetImage(
-                                        "lib/assets/images/arrowleft2.png"),
-                                    size: 40, // Adjust the size as needed
-                                  ),
-                                  onPressed: () => print("back"),
-                                ),
-                              ),
+                              const backButton(),
                               Expanded(
                                 child: Container(
                                   alignment: Alignment.center,

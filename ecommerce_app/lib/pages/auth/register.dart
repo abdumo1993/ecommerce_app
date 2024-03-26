@@ -1,8 +1,10 @@
 import 'package:ecommerce_app/Controllers/auth.dart';
 import 'package:ecommerce_app/pages/auth/login.dart';
+import 'package:ecommerce_app/pages/home/home.dart';
 import 'package:ecommerce_app/widgets/button.dart';
 import 'package:ecommerce_app/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -29,22 +31,7 @@ class RegisterPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: IconButton(
-                      icon: ImageIcon(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                        AssetImage("lib/assets/images/arrowleft2.png"),
-                        size: 40, // Adjust the size as needed
-                      ),
-                      onPressed: () => print("back"),
-                    ),
-                  ),
+                  const backButton(nextPageName: "login"),
                   Text("Create Account",
                       style: TextStyle(
                           fontSize: 32,
@@ -111,6 +98,20 @@ class RegisterPage extends StatelessWidget {
                           obscure: true,
                           palceholder: "Password",
                         )),
+                         SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                            child: myTextField(
+                              controller: registerConroller.confirmController,
+                              validator: (value) {
+                                registerConroller.validateConfirm();
+                                return registerConroller.confirmError.value;
+                              },
+                          keyboardType: TextInputType.visiblePassword,
+                          obscure: true,
+                          palceholder: "Confirm Password",
+                        )),
 
                         SizedBox(
                           height: 15,
@@ -130,10 +131,10 @@ class RegisterPage extends StatelessWidget {
                             print("regisetered");
                             print(_formKey.currentState == null);
                             if (_formKey.currentState!.validate()) {
-                            print("regisetered null");
+                             
 
                               // Proceed with form submission
-                            Get.to(LoginPage());
+                            Get.toNamed("/home");
                             }
                           },
                           child: Text(
@@ -155,12 +156,17 @@ class RegisterPage extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              "Reset",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed("/forgotPassword");
+                              },
+                              child: Text(
+                                "Reset",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary),
+                              ),
                             ),
                           ],
                         )

@@ -1,7 +1,5 @@
 import 'package:ecommerce_app/Controllers/auth.dart';
-import 'package:ecommerce_app/pages/auth/login.dart';
 import 'package:ecommerce_app/widgets/button.dart';
-import 'package:ecommerce_app/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,34 +18,31 @@ class AddCheckout extends StatelessWidget {
     return Container(
       color: Theme.of(context).colorScheme.primary,
       child: Center(
-        
         child: Container(
           width: 800,
-                  
-        
           child: Scaffold(
             backgroundColor: Colors.transparent,
             bottomNavigationBar: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: Theme.of(context).colorScheme.tertiary),
-                          margin: EdgeInsets.all(20.0),
-                          padding: EdgeInsets.all(16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "\$148",
-                                style: TextStyle(
-                                    color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Add to Bag",
-                                style: TextStyle(color: Colors.white),
-                              )
-                            ],
-                          ),
-                        ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Theme.of(context).colorScheme.tertiary),
+              margin: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "\$148",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Add to Bag",
+                    style: TextStyle(color: Colors.white),
+                  )
+                ],
+              ),
+            ),
             body: Container(
               color: Theme.of(context).colorScheme.primary,
               padding: EdgeInsets.all(20.0),
@@ -66,23 +61,7 @@ class AddCheckout extends StatelessWidget {
                               : 800,
                           child: Row(
                             children: [
-                              Container(
-                                alignment: Alignment.topLeft,
-                                width: 40,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.secondary,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: IconButton(
-                                  icon: ImageIcon(
-                                    color: Theme.of(context).colorScheme.onSecondary,
-                                    AssetImage("lib/assets/images/arrowleft2.png"),
-                                    size: 40, // Adjust the size as needed
-                                  ),
-                                  onPressed: () => print("back"),
-                                ),
-                              ),
+                              const backButton(),
                               Expanded(
                                 child: Container(
                                   alignment: Alignment.center,
@@ -91,8 +70,9 @@ class AddCheckout extends StatelessWidget {
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
-                                        color:
-                                            Theme.of(context).colorScheme.onPrimary),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                   ),
                                 ),
                               )
@@ -119,14 +99,16 @@ class AddCheckout extends StatelessWidget {
                                           fontSize: 12)),
                                   subtitle: Text("Add Shipping Address",
                                       style: TextStyle(
-                                          color:
-                                              Theme.of(context).colorScheme.onPrimary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
                                           fontSize: 16)),
                                   trailing: Image.asset(
                                       "lib/assets/images/arrowright2.png",
                                       fit: BoxFit.contain,
-                                      color:
-                                          Theme.of(context).colorScheme.onSecondary),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary),
                                 ),
                               ),
                               SizedBox(
@@ -144,14 +126,16 @@ class AddCheckout extends StatelessWidget {
                                           fontSize: 12)),
                                   subtitle: Text("Add Shipping Address",
                                       style: TextStyle(
-                                          color:
-                                              Theme.of(context).colorScheme.onPrimary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
                                           fontSize: 16)),
                                   trailing: Image.asset(
                                       "lib/assets/images/arrowright2.png",
                                       fit: BoxFit.contain,
-                                      color:
-                                          Theme.of(context).colorScheme.onSecondary),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary),
                                 ),
                               ),
                             ],
@@ -162,52 +146,71 @@ class AddCheckout extends StatelessWidget {
                         ),
                         Container(
                           alignment: Alignment.bottomLeft,
-                          
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Subtotal", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSecondary
-                                  )),
-                                  Text("\$200", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onPrimary
-                                  )),
+                                  Text("Subtotal",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary)),
+                                  Text("\$200",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)),
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Shipping Cost", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSecondary
-                                  )),
-                                  Text("\$8.00", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onPrimary
-                                  )),
+                                  Text("Shipping Cost",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary)),
+                                  Text("\$8.00",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)),
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Tax", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSecondary
-                                  )),
-                                  Text("\$0.00", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onPrimary
-                                  )),
+                                  Text("Tax",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary)),
+                                  Text("\$0.00",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)),
                                 ],
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text("Total", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onSecondary
-                                  )),
-                                  Text("\$208", style: TextStyle(
-                                    color: Theme.of(context).colorScheme.onPrimary,
-                                    fontWeight: FontWeight.bold
-                                  )),
+                                  Text("Total",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary)),
+                                  Text("\$208",
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          fontWeight: FontWeight.bold)),
                                 ],
                               ),
                             ],

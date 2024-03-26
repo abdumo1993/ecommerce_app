@@ -85,28 +85,7 @@ class myScaffold extends StatelessWidget {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: IconButton(
-                                    icon: ImageIcon(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSecondary,
-                                      AssetImage(
-                                        "lib/assets/images/arrowleft2.png",
-                                      ),
-                                      size: 40, // Adjust the size as needed
-                                    ),
-                                    onPressed: () {print("back");
-                                    Get.off(LoginPage());},
-                                  ),
-                                ),
+                                const backButton(),
                                 Container(
                                   width: 40,
                                   height: 40,
@@ -170,7 +149,8 @@ class myScaffold extends StatelessWidget {
                               Container(
                                 padding: EdgeInsets.all(20.0),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
@@ -383,7 +363,7 @@ class myScaffold extends StatelessWidget {
                               ),
                             ],
                           ),
-      
+
                           side
                               ? SizedBox(
                                   width: 0,
