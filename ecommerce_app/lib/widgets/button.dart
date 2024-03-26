@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:get/get.dart";
 
 class ContinueButton extends StatelessWidget {
   final Function onPress;
@@ -252,6 +253,37 @@ class _QuantityButtonState extends State<QuantityButton> {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class backButton extends StatelessWidget {
+ final String? nextPageName;
+  const backButton({
+    super.key, this.nextPageName,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: IconButton(
+        icon: ImageIcon(
+          color: Theme.of(context).colorScheme.onSecondary,
+          AssetImage("lib/assets/images/arrowleft2.png"),
+          size: 40, // Adjust the size as needed
+        ),
+        onPressed: () {
+
+         nextPageName != null ? Get.off(nextPageName) : Get.back();
+        },
       ),
     );
   }

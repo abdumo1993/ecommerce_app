@@ -3,6 +3,7 @@ import 'package:ecommerce_app/pages/products/productDetail.dart';
 import 'package:ecommerce_app/widgets/button.dart';
 import 'package:ecommerce_app/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class LoginPage extends StatelessWidget {
@@ -69,7 +70,7 @@ class LoginPage extends StatelessWidget {
                             print("here");
                             if (_formKey.currentState!.validate()) {
                               // Proceed with form submission
-                            Get.to(ProductDetail());
+                            Get.toNamed("/home");
                             }
                           },
                           child: Text(
@@ -91,12 +92,18 @@ class LoginPage extends StatelessWidget {
                             SizedBox(
                               width: 5,
                             ),
-                            Text(
-                              "Create One",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      Theme.of(context).colorScheme.onPrimary),
+                            GestureDetector(
+                              
+                              onTap: () {
+                                Get.toNamed("/register");
+                              },
+                              child: Text(
+                                "Create One",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary),
+                              ),
                             ),
                           ],
                         )

@@ -9,6 +9,7 @@ import 'package:ecommerce_app/pages/checkout/checkout.dart';
 import 'package:ecommerce_app/pages/home/home.dart';
 import 'package:ecommerce_app/pages/products/productDetail.dart';
 import 'package:ecommerce_app/pages/search/search_page.dart';
+import 'package:ecommerce_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -28,6 +29,8 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
+      getPages: routes,
+      
       themeMode: ThemeMode.light,
       home:RegisterPage(),
          
