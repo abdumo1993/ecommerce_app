@@ -157,7 +157,8 @@ class myScaffold extends StatelessWidget {
                                       "Men's Harrington Jacket",
                                       style: TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).colorScheme.onPrimary),
                                     ),
                                     SizedBox(
                                       height: 8,

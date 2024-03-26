@@ -24,7 +24,6 @@ class _myTextFieldState extends State<myTextField> {
    late bool _obscure;
    @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 _obscure = widget.obscure;
   }
