@@ -52,11 +52,12 @@ class AddCheckout extends StatelessWidget {
               color: Theme.of(context).colorScheme.primary,
               padding: EdgeInsets.all(20.0),
               child: Center(
+                heightFactor: 1,
                 child: SingleChildScrollView(
                   child: Container(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(

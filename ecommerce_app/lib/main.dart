@@ -2,6 +2,7 @@
 import 'package:ecommerce_app/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/pages/auth/login.dart';
 import 'package:ecommerce_app/pages/auth/register.dart';
+import 'package:ecommerce_app/pages/cart/cart.dart';
 import 'package:ecommerce_app/pages/cart/emptyCart.dart';
 import 'package:ecommerce_app/pages/checkout/addCheckout.dart';
 import 'package:ecommerce_app/pages/checkout/checkout.dart';
@@ -23,8 +24,8 @@ class MainApp extends StatelessWidget {
     return GetMaterialApp(
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.dark,
-      home:AddCheckout()
+      themeMode: ThemeMode.light,
+      home:HomePage(),
          
     );     
   }
