@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/pages/settings/edit_profile_page.dart';
+import 'package:ecommerce_app/pages/settings/payment_page.dart';
 import 'package:flutter/material.dart';
 
 import 'address_page.dart';
@@ -12,7 +14,7 @@ class Body extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: 55),
+          SizedBox(height: 25),
           CircleAvatar(
             backgroundImage: AssetImage("lib/assets/images/Rectangle 9.png"),
             radius: 50,
@@ -43,61 +45,68 @@ class Body extends StatelessWidget {
               ],
             ),
             trailing: Text(
-                  "Edit",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
+              "Edit",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+            ),
+            press: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => EditProfilePage())),
           ),
           SizedBox(height: 10),
           CustomTextBtn(
             title: "Address",
             trailing: ImageIcon(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        AssetImage(
-                          "lib/assets/images/arrowright2.png",
-                        ),
-                      ),
-            press: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddressPage())),),
+              color: Theme.of(context).colorScheme.onPrimary,
+              AssetImage(
+                "lib/assets/images/arrowright2.png",
+              ),
+            ),
+            press: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => AddressPage())),
+          ),
           CustomTextBtn(
             title: "Payment",
             trailing: ImageIcon(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        AssetImage(
-                          "lib/assets/images/arrowright2.png",
-                        ),
-                      ),
+              color: Theme.of(context).colorScheme.onPrimary,
+              AssetImage(
+                "lib/assets/images/arrowright2.png",
+              ),
+            ),
+            press: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PaymentPage())),
           ),
           CustomTextBtn(
             title: "Help",
             trailing: ImageIcon(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        AssetImage(
-                          "lib/assets/images/arrowright2.png",
-                        ),
-                      ),
+              color: Theme.of(context).colorScheme.onPrimary,
+              AssetImage(
+                "lib/assets/images/arrowright2.png",
+              ),
+            ),
           ),
           CustomTextBtn(
-            title: "Support",
+            title: "About",
             trailing: ImageIcon(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        AssetImage(
-                          "lib/assets/images/arrowright2.png",
-                        ),
-                      ),
-          ),
-          SizedBox(
-            height: 15,
+              color: Theme.of(context).colorScheme.onPrimary,
+              AssetImage(
+                "lib/assets/images/arrowright2.png",
+              ),
+            ),
+            press:() => showAboutDialog(context: context,
+            applicationName: "Ecommerce App",
+            applicationVersion: "1.0.0",
+            ),
           ),
           TextButton(
               onPressed: () {},
               child: Text(
                 "Sign Out",
                 style: TextStyle(color: Color(0xFFFA3636)),
-              ))
+              )),
+          const SizedBox(
+            height: 55,
+          )
         ],
       ),
     );
@@ -105,17 +114,12 @@ class Body extends StatelessWidget {
 }
 
 class CustomTextBtn extends StatelessWidget {
-  CustomTextBtn({
-    super.key,
-    this.title,
-    this.leading,
-    this.trailing,
-    this.press
-  });
-  String? title;
-  Widget? leading;
-  Widget? trailing;
-  VoidCallback? press;
+  const CustomTextBtn(
+      {super.key, this.title, this.leading, this.trailing, this.press});
+  final String? title;
+  final Widget? leading;
+  final Widget? trailing;
+  final VoidCallback? press;
   @override
   Widget build(BuildContext context) {
     return Padding(

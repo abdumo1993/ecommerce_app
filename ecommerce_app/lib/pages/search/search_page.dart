@@ -73,13 +73,13 @@ class SearchPage extends StatelessWidget {
                   selected: true,
                   selectedColor: Theme.of(context).colorScheme.tertiary,
                 ),
-                const ChoiceButton(
-                  values: ["S", "M", "L", "XL", "2XL"],
+                ChoiceButton(
+                  values: ["S", "M", "L", "XL"],
                   representations: [
-                    Text("S"),
-                    Text("Me"),
-                    Text("L"),
-                    Text("XL"),
+                    Text("S", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("Me", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("L", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("XL", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                   ],
                   choices: [
                     Text("Price: Lowest - Highest"),

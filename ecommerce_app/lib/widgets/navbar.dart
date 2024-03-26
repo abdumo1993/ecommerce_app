@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
   NavBar({super.key, this.pageNumber});
-  int? pageNumber;
+  final int? pageNumber;
   @override
   State<NavBar> createState() => _NavBarState();
 }

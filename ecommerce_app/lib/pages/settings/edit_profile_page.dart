@@ -1,10 +1,10 @@
 import 'package:ecommerce_app/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
-class EditAddressPage extends StatelessWidget {
-  EditAddressPage({super.key, required this.createNewAddress});
-  final bool createNewAddress;
+class EditProfilePage extends StatelessWidget {
+  EditProfilePage({super.key});
   final TextEditingController adress = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class EditAddressPage extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    createNewAddress? "Add Address": "Edit Address",
+                    "Edit Profile",
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold),
@@ -44,37 +44,36 @@ class EditAddressPage extends StatelessWidget {
                 ],
               ),
             ),
+            GestureDetector(
+              onTap: () {},
+              child: CircleAvatar(
+              backgroundImage: AssetImage("lib/assets/images/Rectangle 9.png"),
+              radius: 50,
+                        ),
+            ),
+          SizedBox(height: 35),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: myTextField(
                 controller: adress,
+                palceholder: "Name",
+              ),
+            ),
+             Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: myTextField(
+                controller: adress,
+                palceholder: "email",
               ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               child: myTextField(
                 controller: adress,
+                palceholder: "phone",
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: myTextField(
-                        controller: adress,
-                      )),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: myTextField(
-                        controller: adress,
-                      )),
-                ],
-              ),
-            ),
-            SizedBox(height: MediaQuery.of(context).size.width * 0.6,),
+            SizedBox(height: MediaQuery.of(context).size.width * 0.4,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: SizedBox(
@@ -86,7 +85,7 @@ class EditAddressPage extends StatelessWidget {
                       backgroundColor: MaterialStatePropertyAll(
                           Theme.of(context).colorScheme.tertiary),
                       foregroundColor: MaterialStatePropertyAll(
-                          Theme.of(context).colorScheme.onPrimary),
+                          Colors.white),
                       // minimumSize: MaterialStatePropertyAll(25 as Size?),
                       ),
                 ),

@@ -2,9 +2,9 @@ import 'package:ecommerce_app/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class EditAddressPage extends StatelessWidget {
-  EditAddressPage({super.key, required this.createNewAddress});
-  final bool createNewAddress;
+class EditPaymentPage extends StatelessWidget {
+  EditPaymentPage({super.key, required this.createNewCard});
+  final bool createNewCard;
   final TextEditingController adress = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class EditAddressPage extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    createNewAddress? "Add Address": "Edit Address",
+                    createNewCard?"Add Card":"Edit Card",
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.bold),
@@ -42,12 +42,6 @@ class EditAddressPage extends StatelessWidget {
                   Spacer(),
                   Spacer(),
                 ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: myTextField(
-                controller: adress,
               ),
             ),
             Padding(
@@ -74,6 +68,12 @@ class EditAddressPage extends StatelessWidget {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+              child: myTextField(
+                controller: adress,
+              ),
+            ),
             SizedBox(height: MediaQuery.of(context).size.width * 0.6,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -86,7 +86,7 @@ class EditAddressPage extends StatelessWidget {
                       backgroundColor: MaterialStatePropertyAll(
                           Theme.of(context).colorScheme.tertiary),
                       foregroundColor: MaterialStatePropertyAll(
-                          Theme.of(context).colorScheme.onPrimary),
+                          Colors.white),
                       // minimumSize: MaterialStatePropertyAll(25 as Size?),
                       ),
                 ),
