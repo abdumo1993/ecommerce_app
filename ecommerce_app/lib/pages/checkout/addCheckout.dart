@@ -1,7 +1,4 @@
 import 'package:ecommerce_app/Controllers/auth.dart';
-import 'package:ecommerce_app/pages/auth/login.dart';
-import 'package:ecommerce_app/widgets/button.dart';
-import 'package:ecommerce_app/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

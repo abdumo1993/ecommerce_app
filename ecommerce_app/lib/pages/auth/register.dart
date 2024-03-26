@@ -111,6 +111,20 @@ class RegisterPage extends StatelessWidget {
                           obscure: true,
                           palceholder: "Password",
                         )),
+                         SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                            child: myTextField(
+                              controller: registerConroller.confirmController,
+                              validator: (value) {
+                                registerConroller.validateConfirm();
+                                return registerConroller.confirmError.value;
+                              },
+                          keyboardType: TextInputType.visiblePassword,
+                          obscure: true,
+                          palceholder: "Confirm Password",
+                        )),
 
                         SizedBox(
                           height: 15,
@@ -130,7 +144,7 @@ class RegisterPage extends StatelessWidget {
                             print("regisetered");
                             print(_formKey.currentState == null);
                             if (_formKey.currentState!.validate()) {
-                            print("regisetered null");
+                             
 
                               // Proceed with form submission
                             Get.to(LoginPage());

@@ -10,9 +10,12 @@ import 'package:ecommerce_app/pages/home/home.dart';
 import 'package:ecommerce_app/pages/products/productDetail.dart';
 import 'package:ecommerce_app/pages/search/search_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
-void main() {
+
+void main() async {
+  await dotenv.load();
   runApp(const MainApp());
 }
 
@@ -22,10 +25,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.light,
-      home:HomePage(),
+      home:RegisterPage(),
          
     );     
   }
