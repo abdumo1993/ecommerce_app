@@ -1,6 +1,9 @@
+import 'package:ecommerce_app/pages/home/components/categories_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import 'selected_category_page.dart';
 
 class Categories extends StatelessWidget {
   const Categories({super.key});
@@ -14,11 +17,26 @@ class Categories extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Categories"),
-              GestureDetector(onTap: (){}, child: Text("See All")),
+              Text(
+                "Categories",
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary,fontWeight: FontWeight.bold),
+              ),
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CategoriesPage())),
+                  child: Text(
+                    "See All",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.w500),
+                  )),
             ],
           ),
         ),
+        SizedBox(height: 5,),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(
@@ -31,13 +49,26 @@ class Categories extends StatelessWidget {
                   return Column(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectedCategoryPage())),
                         icon: Image.asset(
                           "lib/assets/images/bag_1.png",
-                          fit: BoxFit.contain,scale: 5,
+                          fit: BoxFit.contain,
+                          scale: 5,
                         ),
                       ),
-                      GestureDetector(onTap: () {} ,child: Text("Bags"))
+                      GestureDetector(
+                          onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SelectedCategoryPage())),
+                          child: Text(
+                            "Bags",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary),
+                          ))
                     ],
                   );
                 }),

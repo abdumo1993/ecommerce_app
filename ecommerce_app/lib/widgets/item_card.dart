@@ -19,7 +19,7 @@ class ItemCard extends StatelessWidget {
           alignment: Alignment(1.2, -1.2),
           children: [
             Card(
-              color: Colors.grey.shade200,
+              color: Theme.of(context).colorScheme.secondary,
               elevation: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +35,7 @@ class ItemCard extends StatelessWidget {
                         vertical: 10 / 4, horizontal: 10),
                     child: Text(
                       "Shopping Bag",
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -43,7 +43,8 @@ class ItemCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       "\$531",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 ],

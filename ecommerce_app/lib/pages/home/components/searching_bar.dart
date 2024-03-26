@@ -12,11 +12,13 @@ class SearchingBar extends StatelessWidget {
     //   child: SizedBox(
     //       child:
            SearchBar(
+            textStyle: MaterialStatePropertyAll(TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+            backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary) ,
             onSubmitted: (value) => Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchPage(keyWord: value,))),
             padding: const MaterialStatePropertyAll(
               EdgeInsets.only(left: 30,right: 10),
             ),
-            leading: const Icon(Icons.search_outlined),
+            leading: Icon(Icons.search_outlined),
             hintText: "Search",
             elevation:const MaterialStatePropertyAll(2),
     );
