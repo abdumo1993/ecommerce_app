@@ -77,5 +77,10 @@ class DioClient {
     }
   }
 
+  Future<void> deleteTokens() async {
+    _storage.delete(key: "access_token");
+    _storage.delete(key: "refresh_token");
+  }
+
   Dio get dio => _dio;
 }

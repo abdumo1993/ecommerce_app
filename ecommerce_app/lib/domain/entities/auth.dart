@@ -13,5 +13,5 @@ class RegisterModel {
   final String confirmPassword;
 
 
-  const RegisterModel(this.firstname, this.lastname, this.confirmPassword, {required this.email, required this.password});
+  const RegisterModel({required this.email, required this.password, required this.firstname, required this.lastname, required this.confirmPassword, });
 }

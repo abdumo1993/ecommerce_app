@@ -34,9 +34,9 @@ DioClient dio = DioClient();
     validateEmail();
     validatePassword();
     if (emailError.value == null && passwordError.value == null) {
-     var use = LoginUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+     var use = AuthUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
      print("good here");
-     var res = await use.call(LoginModel(email: emailController.text, password: passwordController.text));
+     var res = await use.login(LoginModel(email: emailController.text, password: passwordController.text));
      print("good here 2");
 
      print(res);
@@ -86,6 +86,26 @@ class RegisterConroller extends LoginController {
       confirmError.value = "Cofirm Password and Password must be similar";
     } else {
       confirmError.value = null;
+    }
+  }
+
+
+
+  void submitForm() async {
+    validateEmail();
+    validatePassword();
+    validateFirstName();
+    validateLastName();
+    validateConfirm();
+
+    if (emailError.value == null && passwordError.value == null && firstNameError.value == null && lastNameError.value == null && confirmError.value == null) {
+     var use = AuthUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+     print("good here");
+     var res = await use.register(RegisterModel(email: emailController.text, password: passwordController.text, firstname: firstNameController.text, lastname: lastNameController.text, confirmPassword: confirmController.text));
+     print("good here 2");
+
+     print(res);
+
     }
   }
 

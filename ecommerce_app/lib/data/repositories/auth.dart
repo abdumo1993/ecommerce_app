@@ -10,10 +10,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<String> login(LoginModel user) => authProvider.login(user);
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
-  }
+  Future<void> logout() async => await authProvider.logout();
 
   @override
   Future<String> refresh() {
@@ -22,9 +19,5 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<String> register(RegisterModel user) {
-    // TODO: implement register
-    throw UnimplementedError();
-  }
-  
+  Future<String> register(RegisterModel user) async  => authProvider.register(user);
 }

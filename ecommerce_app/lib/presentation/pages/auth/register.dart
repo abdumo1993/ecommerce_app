@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/domain/usecases/auth.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
@@ -14,7 +15,7 @@ class RegisterPage extends StatelessWidget {
   // TextEditingController _passwordController = TextEditingController();
   final registerConroller = Get.put(RegisterConroller());
   final _formKey = GlobalKey<FormState>();
-  
+
   RegisterPage({super.key});
 
   @override
@@ -89,25 +90,25 @@ class RegisterPage extends StatelessWidget {
                         ),
                         Container(
                             child: myTextField(
-                              controller: registerConroller.passwordController,
-                              validator: (value) {
-                                registerConroller.validatePassword();
-                                return registerConroller.passwordError.value;
-                              },
+                          controller: registerConroller.passwordController,
+                          validator: (value) {
+                            registerConroller.validatePassword();
+                            return registerConroller.passwordError.value;
+                          },
                           keyboardType: TextInputType.visiblePassword,
                           obscure: true,
                           palceholder: "Password",
                         )),
-                         SizedBox(
+                        SizedBox(
                           height: 15,
                         ),
                         Container(
                             child: myTextField(
-                              controller: registerConroller.confirmController,
-                              validator: (value) {
-                                registerConroller.validateConfirm();
-                                return registerConroller.confirmError.value;
-                              },
+                          controller: registerConroller.confirmController,
+                          validator: (value) {
+                            registerConroller.validateConfirm();
+                            return registerConroller.confirmError.value;
+                          },
                           keyboardType: TextInputType.visiblePassword,
                           obscure: true,
                           palceholder: "Confirm Password",
@@ -130,10 +131,10 @@ class RegisterPage extends StatelessWidget {
                           onPress: () {
                             print("regisetered");
                             if (_formKey.currentState!.validate()) {
-                             
+                              registerConroller.submitForm();
 
                               // Proceed with form submission
-                            Get.toNamed("/home");
+                              Get.toNamed("/home");
                             }
                           },
                           child: Text(
@@ -163,8 +164,9 @@ class RegisterPage extends StatelessWidget {
                                 "Reset",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
                               ),
                             ),
                           ],
