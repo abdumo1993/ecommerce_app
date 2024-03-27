@@ -1,3 +1,8 @@
+import 'package:ecommerce_app/data/datasources/api_client.dart';
+import 'package:ecommerce_app/data/datasources/auth.dart';
+import 'package:ecommerce_app/data/repositories/auth.dart';
+import 'package:ecommerce_app/domain/entities/auth.dart';
+import 'package:ecommerce_app/domain/usecases/auth.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
@@ -5,6 +10,7 @@ import 'package:ecommerce_app/presentation/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import "dart:async";
 
 class LoginPage extends StatelessWidget {
   final loginController = Get.put(LoginController());
@@ -69,8 +75,11 @@ class LoginPage extends StatelessWidget {
                           onPress: () {
                             print("here");
                             if (_formKey.currentState!.validate()) {
+                              loginController.submitForm();
+                             Get.toNamed("/productDetail");
+
+                              
                               // Proceed with form submission
-                            Get.toNamed("/home");
                             }
                           },
                           child: Text(
@@ -93,7 +102,6 @@ class LoginPage extends StatelessWidget {
                               width: 5,
                             ),
                             GestureDetector(
-                              
                               onTap: () {
                                 Get.toNamed("/register");
                               },
@@ -101,8 +109,9 @@ class LoginPage extends StatelessWidget {
                                 "Create One",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
                               ),
                             ),
                           ],

@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  
   @override
   Widget build(BuildContext context) {
     return myScaffold();
@@ -18,7 +21,9 @@ class _ProductDetailState extends State<ProductDetail> {
 }
 
 class myScaffold extends StatelessWidget {
-  const myScaffold({
+  DioClient dio = DioClient();
+
+   myScaffold({
     super.key,
   });
 
@@ -52,25 +57,31 @@ class myScaffold extends StatelessWidget {
                 width: screenWidth > minWidth ? minWidth : screenWidth,
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
-                  bottomNavigationBar: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Theme.of(context).colorScheme.tertiary),
-                    margin: EdgeInsets.all(20.0),
-                    padding: EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "\$148",
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "Add to Bag",
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
+                  bottomNavigationBar: GestureDetector(
+                    onTap: () async {
+                      print("herea af ");
+                      await dio.dio.get("/anything");
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Theme.of(context).colorScheme.tertiary),
+                      margin: EdgeInsets.all(20.0),
+                      padding: EdgeInsets.all(16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "\$148",
+                            style: TextStyle(
+                                color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "Add to Bag",
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   body: Container(

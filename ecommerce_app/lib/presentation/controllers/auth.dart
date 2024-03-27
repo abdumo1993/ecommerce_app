@@ -1,7 +1,14 @@
+import 'package:ecommerce_app/data/datasources/api_client.dart';
+import 'package:ecommerce_app/data/datasources/auth.dart';
+import 'package:ecommerce_app/data/repositories/auth.dart';
+import 'package:ecommerce_app/domain/entities/auth.dart';
+import 'package:ecommerce_app/domain/repositories/auth.dart';
+import 'package:ecommerce_app/domain/usecases/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
+DioClient dio = DioClient();
   final email = "".obs;
   final password = "".obs;
   RxnString emailError = RxnString(null);
@@ -23,12 +30,17 @@ class LoginController extends GetxController {
     }
   }
 
-  void submitForm() {
+  void submitForm() async {
     validateEmail();
     validatePassword();
     if (emailError.value == null && passwordError.value == null) {
-      // Proceed with form submission
-      // cal the func that logs in.
+     var use = LoginUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+     print("good here");
+     var res = await use.call(LoginModel(email: emailController.text, password: passwordController.text));
+     print("good here 2");
+
+     print(res);
+
     }
   }
 
