@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/auth/register.dart';
@@ -29,5 +30,6 @@ final routes = [
   GetPage(name: "/settings", page: () => SettingsPage()),
   GetPage(name: "/address", page: () => AddressPage()),
   GetPage(name: "/addAddress", page: () => EditAddressPage(createNewAddress: true,)),
+  GetPage(name: "/error", page: () =>  ErrorPage())
   // GetPage(name: "/search", page: () => HomePage()),
 ];

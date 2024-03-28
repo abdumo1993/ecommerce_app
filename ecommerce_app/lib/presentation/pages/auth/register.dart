@@ -38,7 +38,7 @@ class RegisterPage extends StatelessWidget {
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).colorScheme.onPrimary)),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Form(
@@ -57,7 +57,7 @@ class RegisterPage extends StatelessWidget {
                             palceholder: "First Name",
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Container(
@@ -71,7 +71,7 @@ class RegisterPage extends StatelessWidget {
                             palceholder: "Last Name",
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Container(
@@ -85,7 +85,7 @@ class RegisterPage extends StatelessWidget {
                             palceholder: "Email Address",
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Container(
@@ -99,7 +99,7 @@ class RegisterPage extends StatelessWidget {
                           obscure: true,
                           palceholder: "Password",
                         )),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Container(
@@ -114,7 +114,7 @@ class RegisterPage extends StatelessWidget {
                           palceholder: "Confirm Password",
                         )),
 
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         // TextButton(
@@ -137,12 +137,12 @@ class RegisterPage extends StatelessWidget {
                               Get.toNamed("/home");
                             }
                           },
-                          child: Text(
+                          child: const Text(
                             "Continue",
                             style: TextStyle(color: Colors.white, fontSize: 16),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 15,
                         ),
                         Row(
@@ -153,7 +153,7 @@ class RegisterPage extends StatelessWidget {
                                   color:
                                       Theme.of(context).colorScheme.onPrimary),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
                             GestureDetector(

@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/data/datasources/auth.dart';
 import 'package:ecommerce_app/domain/entities/auth.dart';
+import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/domain/repositories/auth.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -7,17 +8,33 @@ class AuthRepositoryImpl implements AuthRepository {
 
   AuthRepositoryImpl({required this.authProvider});
   @override
-  Future<String> login(LoginModel user) => authProvider.login(user);
+  Future<bool> login(LoginModel user) => authProvider.login(user);
 
   @override
-  Future<void> logout() async => await authProvider.logout();
+  Future<bool> logout() async => await authProvider.logout();
 
   @override
-  Future<String> refresh() {
+  Future<bool> refresh() {
     // TODO: implement refresh
     throw UnimplementedError();
   }
 
   @override
-  Future<String> register(RegisterModel user) async  => authProvider.register(user);
+  Future<bool> register(RegisterModel user) async  => authProvider.register(user);
+}
+
+
+class ReviewRepositoryImp implements ReviewRepository {
+  final ReviewDataSource reviewSource;
+
+  ReviewRepositoryImp({required this.reviewSource});
+
+  @override
+  Future<bool> send(ReviewModel review) async {
+    return await reviewSource.send(review);
+  }
+
+
+
+  
 }

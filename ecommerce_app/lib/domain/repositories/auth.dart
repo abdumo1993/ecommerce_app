@@ -1,8 +1,13 @@
 import 'package:ecommerce_app/domain/entities/auth.dart';
+import 'package:ecommerce_app/domain/entities/product.dart';
 
 abstract class AuthRepository {
-  Future<String> login(LoginModel user);
-  Future<String> register(RegisterModel user);
-  Future<String> refresh();
-  Future<void> logout();
+  Future<bool> login(LoginModel user);
+  Future<bool> register(RegisterModel user);
+  Future<bool> refresh();
+  Future<bool> logout();
+}
+
+abstract class ReviewRepository {
+  Future<bool> send(ReviewModel review);
 }

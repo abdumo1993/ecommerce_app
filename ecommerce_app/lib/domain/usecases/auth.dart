@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/domain/entities/auth.dart';
+import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/domain/repositories/auth.dart';
 
 class AuthUserCase {
@@ -6,16 +7,27 @@ class AuthUserCase {
 
   AuthUserCase({required this.repo});
 
-  Future<String> login(LoginModel user) async {
+  Future<bool> login(LoginModel user) async {
     return await repo.login(user);
   }
 
-  Future<String> register(RegisterModel user) async {
+  Future<bool> register(RegisterModel user) async {
     return await repo.register(user);
 
   }
-  Future<void> logout() async {
+  Future<bool> logout() async {
     return await repo.logout();
   }
 }
 
+
+class ReviewUseCase {
+  final ReviewRepository repo;
+
+  ReviewUseCase({required this.repo});
+Future<bool> send(ReviewModel review) async {
+  
+  return await repo.send(review);
+}
+
+}

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -22,18 +23,23 @@ class DioClient {
           String? accessToken = await getAccessToken();
           // print("access still valid access: $accessToken");
           options.headers['Authorization'] = 'Bearer $accessToken';
+
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
-          if (e.response?.statusCode == 401) {
+          if (e.response?.statusCode == 401 && e.requestOptions.path != "auth/refresh") {
             // print("are we here?");
             String newAccessToken = await refreshToken();
+            if (newAccessToken == 'noToken') throw AccessTokenNotFoundExeption();
+          
             // print("yes wwe are: $newAccessToken");
 
-            e.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+            e.requestOptions.headers['Authorization'] =
+                'Bearer $newAccessToken';
             return handler.resolve(await _dio.fetch(e.requestOptions));
-          }
+          } 
           return handler.next(e);
+          // return;
         },
       ),
     );
@@ -50,30 +56,33 @@ class DioClient {
   Future<String> refreshToken() async {
     String? newAccessToken;
     try {
-      var res = await dio.post("/auth/refresh", data: {"refresh_token" : await getRefreshToken()});
+      var res = await dio.post("/auth/refresh",
+          data: {"refresh_token": await getRefreshToken()});
       if (res.statusCode == 200) {
         print(
-            "refreshed successfully. returning new accesstoken...${res.data["refresh_token"]}   access:${res.data["access_token"]}");
-       newAccessToken = res.data["access_token"];
+            "refreshed successfully. returning new accesstoken... access:${res.data["access_token"]}");
+        newAccessToken = res.data["access_token"];
         await saveTokens(res.data["access_token"], null);
-      }
+      } 
     } catch (e) {
-      Get.toNamed("/login");
-      throw Exception("not possible");
+      throw Exception(e.toString());
     }
-    return newAccessToken!;
+    newAccessToken ??= "noToken";
+    return newAccessToken;
   }
 
   Future<void> saveTokens(String? accessToken, String? refreshToken) async {
     // print("the tokens a: $accessToken \r r: $refreshToken" );
     try {
-  
-      if (accessToken != null){await _storage.write(key: 'access_token', value: accessToken);}
-      if (refreshToken != null){await _storage.write(key: 'refresh_token', value: refreshToken);}
-
+      if (accessToken != null) {
+        await _storage.write(key: 'access_token', value: accessToken);
+      }
+      if (refreshToken != null) {
+        await _storage.write(key: 'refresh_token', value: refreshToken);
+      }
     } catch (e) {
       throw Exception(
-          "failed by _________________________________________\n$e");
+          "failed by $e");
     }
   }
 

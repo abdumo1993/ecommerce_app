@@ -76,7 +76,6 @@ class LoginPage extends StatelessWidget {
                             print("here");
                             if (_formKey.currentState!.validate()) {
                               loginController.submitForm();
-                             Get.toNamed("/productDetail");
 
                               
                               // Proceed with form submission

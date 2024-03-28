@@ -46,3 +46,5 @@ app.*.map.json
 # custom
 *.env
 services
+
+exceptions.dart

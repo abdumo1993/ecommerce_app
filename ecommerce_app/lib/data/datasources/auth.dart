@@ -1,10 +1,15 @@
+// import 'dart:js_interop';
+
+import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
+import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:get/get.dart';
 
 class AuthDataSource {
   DioClient dio = DioClient();
-  Future<String> login(LoginModel user) async {
+  Future<bool> login(LoginModel user) async {
     try {
       var res = await dio.dio.post("/auth/login",
           data: {"email": user.email, "password": user.password});
@@ -12,21 +17,31 @@ class AuthDataSource {
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
         // print("the data: ${res.data}");
-        print("in the login: ");
-        print("${res.data["access_token"]}");
-        print("${res.data["refresh_token"]}");
+
         dio.saveTokens(res.data["access_token"]!, res.data["refresh_token"]);
         // print("the data: ${res.data}");
-        return "laf";
+        return true;
       } else {
-        throw Exception("failed with statuscode: ${res.statusCode}");
+        throw LoginException();
       }
-    } catch (e) {
-      throw Exception("failed to login with exception: $e");
+    } on LoginException catch (e) {
+      print("lgoin Excepiton------------------------------------------");
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+      // Future.delayed(Duration(seconds: 2), (){});
+      throw LoginException();
+    } on DioException catch (e) {
+      print("Dio Excepiton---------------------------------------------");
+
+      // Get.toNamed("/error", arguments: {
+      //   "message": "Error Code:${e.response?.statusCode}. Try again."
+      // });
+      // Future.delayed(Duration(seconds: 2), (){});
+throw Exception("connection error");
     }
+    // return false;
   }
 
-  Future<String> register(RegisterModel user) async {
+  Future<bool> register(RegisterModel user) async {
     try {
       var res = await dio.dio.post("/auth/register", data: {
         "email": user.email,
@@ -38,26 +53,49 @@ class AuthDataSource {
 
       if (res.statusCode == 201) {
         print("register successful");
-        // log in 
+        // log in
         await login(LoginModel(email: user.email, password: user.password));
 
-        return "registered";
+        return true;
       }
     } catch (e) {}
-    return "hello";
+    return false;
   }
 
-  Future<String> refresh() async {
+  Future<bool> refresh() async {
     try {} catch (e) {}
-    return "hello";
+    return false;
   }
 
-  Future<void> logout() async {
+  Future<bool> logout() async {
     try {
       await dio.deleteTokens();
-      Get.toNamed("/login");
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
+  }
+}
+
+class ReviewDataSource {
+  DioClient dio = DioClient();
+
+  Future<bool> send(ReviewModel review) async {
+    try {
+      var res = await dio.dio.post("/review", data: {
+        "review": review.review,
+        "rating": review.rating,
+      });
+
+      if (res.statusCode == 200) {
+        return true;
+      }
+      else throw Exception("review failed");
+    } catch (e) {
+      Get.toNamed("/error", arguments: {"message" : e.toString()});
+      return false;
+    }
+  
   }
 }
