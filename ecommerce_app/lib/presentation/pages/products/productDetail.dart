@@ -160,7 +160,7 @@ final _formKey = GlobalKey<FormState>();
                               ),
                               // end of image part
                               // start of name and choices
-
+Text(product.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),),
                               // choiceContainer(product: product),
                               SizedBox(
                                 height: 30,
@@ -325,6 +325,7 @@ class choiceContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(product);
     return Container(
       padding: EdgeInsets.all(20.0),
       child: Column(
