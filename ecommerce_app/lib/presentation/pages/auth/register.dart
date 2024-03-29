@@ -32,7 +32,7 @@ class RegisterPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const backButton(nextPageName: "login"),
+                  const backButton(),
                   Text("Create Account",
                       style: TextStyle(
                           fontSize: 32,

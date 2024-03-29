@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
+import 'package:ecommerce_app/core/utils/handleExceptions.dart';
 import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
@@ -18,35 +19,27 @@ class AuthDataSource {
         // save access and refresh token to the storage
         // print("the data: ${res.data}");
 
-        dio.saveTokens(res.data["access_token"]!, res.data["refresh_token"]);
+        dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
         // print("the data: ${res.data}");
         return true;
-      }
-      else if (res.statusCode == 401) {
-        throw LoginException(message: res.data.toString());
+      } else if (res.statusCode == 401) {
+        throw AuthException(message: res.data.toString());
       } else {
-        throw LoginException(message: "something went wrong. try again later.");
+        throw CustomeException(
+            message: "something went wrong. try again later.");
       }
-    } on LoginException catch (e) {
+    } on AuthException catch (e) {
       print("login exception: $e");
       rethrow;
       // Future.delayed(Duration(seconds: 2), (){});
     } on DioException catch (e) {
-       
-    if (e.type == DioExceptionType.connectionError || e.type == DioExceptionType.connectionTimeout){
-      throw NetworkErrorException(message: "Connection Error. please try again later");
+      handleDioException(e);
+    } on CustomeException catch (e) {
+      rethrow;
+    } catch (e) {
+      throw CustomeException(message: "something went wrong");
     }
-    if (e.type == DioExceptionType.unknown) {
-      throw CustomeException(message: "Something went wrong. try again later");
-    }
-    else {
-      throw CustomeException(message: "somethin went wrong.");
-
-    }
-
-    }  catch (e) {
-      throw CustomeException(message: "something went wrong.");
-    }
+    return false;
     // return false;
   }
 
@@ -60,14 +53,24 @@ class AuthDataSource {
         "password": user.password,
       });
 
-      if (res.statusCode == 201) {
+      if (res.statusCode == 200) {
         print("register successful");
         // log in
-        await login(LoginModel(email: user.email, password: user.password));
-
-        return true;
+        return await login(
+            LoginModel(email: user.email, password: user.password));
+      } else if (res.statusCode == 500) {
+        throw CustomeException(message: res.data.toString());
+      } else {
+        throw CustomeException(
+            message: "something went wrong. try again later.");
       }
-    } catch (e) {}
+    } on DioException catch (e) {
+      handleDioException(e);
+    } on CustomeException catch (e) {
+      rethrow;
+    } catch (e) {
+      throw CustomeException(message: "something went wrong");
+    }
     return false;
   }
 
@@ -99,12 +102,12 @@ class ReviewDataSource {
 
       if (res.statusCode == 200) {
         return true;
-      }
-      else throw Exception("review failed");
+      } else
+        throw Exception("review failed");
     } catch (e) {
-      Get.toNamed("/error", arguments: {"message" : e.toString()});
+      print("error in auth.dart ReviewDatasource");
+      Get.toNamed("/error", arguments: {"message": e.toString()});
       return false;
     }
-  
   }
 }

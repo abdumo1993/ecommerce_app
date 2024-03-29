@@ -30,6 +30,35 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  (Get.arguments != null) ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                                color: Colors.red.withOpacity(0.3),
+                                alignment: Alignment.center,
+                                child: Text("${Get.arguments["message"]}",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    )))
+                          ]):  const SizedBox(width: 0,height: 0,),
+                  // Get.arguments ??
+                  //     Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.stretch,
+                  //         children: [
+                  //           Container(
+                  //               color: Colors.red.withOpacity(0.3),
+                  //               alignment: Alignment.center,
+                  //               child: Text("${Get.arguments!["message"]}",
+                  //                   style: TextStyle(
+                  //                     fontSize: 24,
+                  //                     color: Theme.of(context)
+                  //                         .colorScheme
+                  //                         .onPrimary,
+                  //                   )))
+                  //         ]),
                   Text("Sign in",
                       style: TextStyle(
                           fontSize: 32,
@@ -77,7 +106,6 @@ class LoginPage extends StatelessWidget {
                             if (_formKey.currentState!.validate()) {
                               loginController.submitForm();
 
-                              
                               // Proceed with form submission
                             }
                           },

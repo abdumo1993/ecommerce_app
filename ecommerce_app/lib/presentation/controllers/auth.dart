@@ -43,6 +43,7 @@ class PDetailController extends GetxController {
       changeRating(0);
       reviewController.text = "";
     } catch (e) {
+      print("error in auth.dart Pdetail submitform");
       Get.toNamed("/error", arguments: {"message": "login is needed"});
       Future.delayed(Duration(seconds: 3), () => Get.toNamed("/login"));
       // Get.toNamed("/login");
@@ -84,21 +85,15 @@ class LoginController extends GetxController {
       var res = await use.login(LoginModel(
           email: emailController.text, password: passwordController.text));
       print("good here 2");
-      res == true ? Get.toNamed("/productDetail") : Get.toNamed("/login");
-    }} on LoginException catch (e) {
+      res == true ? Get.toNamed("/home") : Get.toNamed("/login", arguments: {"message": "login failed. try again"});
+    }} on AuthException catch (e) {
       print("the problem is in auth controller ");
       Get.toNamed("/login", arguments: {"message": e.toString()});
 
 
     } on CustomeException catch (e) {
-      Get.toNamed("/error", arguments: {"message": e.toString()});
+      print("error in auth.dart Pdetail submitform of login customException");
 
-    } on NetworkErrorException catch (e) {
-      Get.toNamed("/error", arguments: {"message": e.toString()});
-      Future.delayed(Duration(seconds: 2), () => Get.back());
-
-    }
-     catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
       Future.delayed(Duration(seconds: 2), () => Get.back());
 
@@ -188,6 +183,6 @@ class LogoutController extends GetxController {
     var use =
         AuthUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
     bool a = await use.logout();
-    a == true ? Get.toNamed("/login") : null;
+    a == true ? Get.offAllNamed("/login") : null;
   }
 }
