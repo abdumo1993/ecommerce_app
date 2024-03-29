@@ -32,3 +32,28 @@ class ReviewModel {
     return {"Review": review, "Rating": rating};
   }
 }
+
+
+class Product {
+  final String name;
+  final double price;
+  final String imageUrl;
+
+  
+ factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      name: json['title'],
+      price: json['price'].toDouble(),
+      imageUrl: json['image'],
+    );
+ }
+
+  Product({required this.name, required this.price, required this.imageUrl});
+} 
+
+class SearchModel{
+  final String searchWord;
+  final List<String>? filters;
+
+  SearchModel({required this.searchWord, this.filters});
+}

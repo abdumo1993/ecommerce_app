@@ -4,15 +4,30 @@ import 'package:get/get.dart';
 
 import '../../../core/rest_client.dart';
 import '../../../data/data_sources/product_remote_data_source_impl.dart';
+import '../../../data/repositories/product_repository_impl.dart';
 import '../../../domain/usecases/fetch_products_usecase.dart';
+import '../../../domain/usecases/fetch_products_usecase_impl.dart';
 import '../../controllers/product_controller.dart';
 import '../../widgets/product_item.dart';
 
 class ProductListScreen extends StatelessWidget {
- final ProductController productController = Get.find<ProductController>();
 
  @override
  Widget build(BuildContext context) {
+
+
+  final productRemoteDataSource = ProductRemoteDataSourceImpl(restClient: RestClient(baseUrl: 'https://fakestoreapi.com/'));
+ final productLocalDataSource = ProductLocalDataSource();
+ final productRepository = ProductRepositoryImpl(
+    remoteDataSource: productRemoteDataSource,
+    localDataSource: productLocalDataSource,
+ );
+  //final productRepository = ProductRepository(remoteDataSource: ProductRemoteDataSourceImpl(restClient: RestClient(baseUrl: 'https://fakestoreapi.com/')));
+  final fetchProductsUseCase = FetchProductsUseCaseImpl(productRepository: productRepository);
+  Get.put(ProductController(fetchProductsUseCase: fetchProductsUseCase));
+ final ProductController productController = Get.find<ProductController>();
+
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
