@@ -21,22 +21,31 @@ class AuthDataSource {
         dio.saveTokens(res.data["access_token"]!, res.data["refresh_token"]);
         // print("the data: ${res.data}");
         return true;
+      }
+      else if (res.statusCode == 401) {
+        throw LoginException(message: res.data.toString());
       } else {
-        throw LoginException();
+        throw LoginException(message: "something went wrong. try again later.");
       }
     } on LoginException catch (e) {
-      print("lgoin Excepiton------------------------------------------");
-      Get.toNamed("/error", arguments: {"message": e.toString()});
+      print("login exception: $e");
+      rethrow;
       // Future.delayed(Duration(seconds: 2), (){});
-      throw LoginException();
     } on DioException catch (e) {
-      print("Dio Excepiton---------------------------------------------");
+       
+    if (e.type == DioExceptionType.connectionError || e.type == DioExceptionType.connectionTimeout){
+      throw NetworkErrorException(message: "Connection Error. please try again later");
+    }
+    if (e.type == DioExceptionType.unknown) {
+      throw CustomeException(message: "Something went wrong. try again later");
+    }
+    else {
+      throw CustomeException(message: "somethin went wrong.");
 
-      // Get.toNamed("/error", arguments: {
-      //   "message": "Error Code:${e.response?.statusCode}. Try again."
-      // });
-      // Future.delayed(Duration(seconds: 2), (){});
-throw Exception("connection error");
+    }
+
+    }  catch (e) {
+      throw CustomeException(message: "something went wrong.");
     }
     // return false;
   }
