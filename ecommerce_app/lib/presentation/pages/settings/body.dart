@@ -5,113 +5,119 @@ import 'package:flutter/material.dart';
 
 import 'address_page.dart';
 
-class Body extends StatelessWidget {
-  const Body({
+class SettingsBody extends StatelessWidget {
+  const SettingsBody({
     super.key,
   });
-
+// Center(child: Container(constraints: BoxConstraints(maxWidth: 600) ,child: SettingsBody()))
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: 25),
-          CircleAvatar(
-            backgroundImage: AssetImage("lib/assets/images/Rectangle 9.png"),
-            radius: 50,
-          ),
-          SizedBox(height: 35),
-          CustomTextBtn(
-            leading: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "username",
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 600) ,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 25),
+              CircleAvatar(
+                backgroundImage: AssetImage("lib/assets/images/Rectangle 9.png"),
+                radius: 50,
+              ),
+              SizedBox(height: 35),
+              CustomTextBtn(
+                leading: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "username",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    Text(
+                      "email@gmail.com",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                    ),
+                    Text(
+                      "123-567-890",
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: Text(
+                  "Edit",
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
-                Text(
-                  "email@gmail.com",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
+                press: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditProfilePage())),
+              ),
+              SizedBox(height: 10),
+              CustomTextBtn(
+                title: "Address",
+                trailing: ImageIcon(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  AssetImage(
+                    "lib/assets/images/arrowright2.png",
                   ),
                 ),
-                Text(
-                  "123-567-890",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
+                press: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => AddressPage())),
+              ),
+              CustomTextBtn(
+                title: "Payment",
+                trailing: ImageIcon(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  AssetImage(
+                    "lib/assets/images/arrowright2.png",
                   ),
                 ),
-              ],
-            ),
-            trailing: Text(
-              "Edit",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.tertiary,
+                press: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PaymentPage())),
               ),
-            ),
-            press: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => EditProfilePage())),
-          ),
-          SizedBox(height: 10),
-          CustomTextBtn(
-            title: "Address",
-            trailing: ImageIcon(
-              color: Theme.of(context).colorScheme.onPrimary,
-              AssetImage(
-                "lib/assets/images/arrowright2.png",
+              CustomTextBtn(
+                title: "Help",
+                trailing: ImageIcon(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  AssetImage(
+                    "lib/assets/images/arrowright2.png",
+                  ),
+                ),
               ),
-            ),
-            press: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AddressPage())),
-          ),
-          CustomTextBtn(
-            title: "Payment",
-            trailing: ImageIcon(
-              color: Theme.of(context).colorScheme.onPrimary,
-              AssetImage(
-                "lib/assets/images/arrowright2.png",
+              CustomTextBtn(
+                title: "About",
+                trailing: ImageIcon(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  AssetImage(
+                    "lib/assets/images/arrowright2.png",
+                  ),
+                ),
+                press:() => showAboutDialog(context: context,
+                applicationName: "Ecommerce App",
+                applicationVersion: "1.0.0",
+                ),
               ),
-            ),
-            press: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PaymentPage())),
+              TextButton(
+                  onPressed: () {
+                    LogoutController controller = LogoutController();
+                    controller.logout();
+                  },
+                  child: Text(
+                    "Sign Out",
+                    style: TextStyle(color: Color(0xFFFA3636)),
+                  )),
+              const SizedBox(
+                height: 55,
+              )
+            ],
           ),
-          CustomTextBtn(
-            title: "Help",
-            trailing: ImageIcon(
-              color: Theme.of(context).colorScheme.onPrimary,
-              AssetImage(
-                "lib/assets/images/arrowright2.png",
-              ),
-            ),
-          ),
-          CustomTextBtn(
-            title: "About",
-            trailing: ImageIcon(
-              color: Theme.of(context).colorScheme.onPrimary,
-              AssetImage(
-                "lib/assets/images/arrowright2.png",
-              ),
-            ),
-            press:() => showAboutDialog(context: context,
-            applicationName: "Ecommerce App",
-            applicationVersion: "1.0.0",
-            ),
-          ),
-          TextButton(
-              onPressed: () {
-                LogoutController controller = LogoutController();
-                controller.logout();
-              },
-              child: Text(
-                "Sign Out",
-                style: TextStyle(color: Color(0xFFFA3636)),
-              )),
-          const SizedBox(
-            height: 55,
-          )
-        ],
+        ),
       ),
     );
   }

@@ -1,17 +1,21 @@
-import 'package:ecommerce_app/presentation/widgets/button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
+import '../../controllers/search_page_controller.dart';
+import '../../widgets/button.dart';
 import '../../widgets/item_card.dart';
 
-class SearchPage extends StatelessWidget {
-  SearchPage({super.key, required this.keyWord});
-  final String keyWord;
 
-  @override
-  Widget build(BuildContext context) {
-    final List<Widget> filter = [
+
+class SearchPage extends StatelessWidget {
+//  final SearchPageController controller = Get.find<SearchPageController>();
+  final String? keyWord = Get.arguments['keyword'];
+  SearchPage({super.key});
+  final SearchPageController controller = Get.put(SearchPageController());
+ @override
+ Widget build(BuildContext context) {
+  final List<Widget> filter = [
       IconButton(
           onPressed: () {},
           icon:
@@ -64,22 +68,28 @@ class SearchPage extends StatelessWidget {
           SizedBox(
             height: 40,
             child: ListView(
-              itemExtent: 150,
+              itemExtent: 200,
               scrollDirection: Axis.horizontal,
               children: [
-                FilterChip(
-                  label: Icon(Icons.filter_alt),
-                  onSelected: (value) {},
-                  selected: true,
-                  selectedColor: Theme.of(context).colorScheme.tertiary,
+                Obx(() => FilterChip(
+                    label: Row( mainAxisSize: MainAxisSize.min,
+                      children: [Text("${controller.selectedFilters.length}"),
+                        Icon(Icons.filter_alt),
+                      ],
+                    ),
+                    onSelected: (value) { _showFilterBottomSheet(context);},
+                    selected: controller.selectedFilters.length>0,
+                    // selectedColor:  Theme.of(context).colorScheme.tertiary ,
+                    color: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+                  ),
                 ),
                 ChoiceButton(
-                  values: ["S", "M", "L", "XL"],
+                  values: ["Hi-Low", "Low-Hi", "New", "Recommend"],
                   representations: [
-                    Text("S", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    Text("Me", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    Text("L", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    Text("XL", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("Hi-Low", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("Low-Hi", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("New", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("Recommend", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                   ],
                   choices: [
                     Text("Price: Lowest - Highest"),
@@ -120,5 +130,63 @@ class SearchPage extends StatelessWidget {
         ],
       ),
     );
-  }
+ }
+
+ void _showFilterBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Obx(() => Container(
+          color: Theme.of(context).colorScheme.primary,
+          child: Column(
+                children: [
+                  ListTile(
+                   title: Text('Filter 1',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),),
+                   trailing: IconButton(
+                      icon: Icon(controller.selectedFilters.contains('Filter 1') ? Icons.check_box : Icons.check_box_outline_blank, 
+                    color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      onPressed: () {
+                        if (controller.selectedFilters.contains('Filter 1')) {
+                          controller.removeFilter('Filter 1');
+                        } else {
+                          controller.addFilter('Filter 1');
+                        }
+                      },
+                   ),
+                  ),
+                  ListTile(
+                   title: Text('Filter 2',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),),
+                   trailing: IconButton(
+                      icon: Icon(controller.selectedFilters.contains('Filter 2') ? Icons.check_box : Icons.check_box_outline_blank, 
+                    color: Theme.of(context).colorScheme.onPrimary,),
+                      onPressed: () {
+                        if (controller.selectedFilters.contains('Filter 2')) {
+                          controller.removeFilter('Filter 2');
+                        } else {
+                          controller.addFilter('Filter 2');
+                        }
+                      },
+                   ),
+                  ),
+                  ListTile(
+                   title: Text('Filter 3',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),),
+                   trailing: IconButton(
+                      icon: Icon(controller.selectedFilters.contains('Filter 3') ? Icons.check_box : Icons.check_box_outline_blank, 
+                    color: Theme.of(context).colorScheme.onPrimary,),
+                      onPressed: () {
+                        if (controller.selectedFilters.contains('Filter 3')) {
+                          controller.removeFilter('Filter 3');
+                        } else {
+                          controller.addFilter('Filter 3');
+                        }
+                      },
+                   ),
+                  ),
+                ],
+              ),
+        ));
+      },
+    );
+ }
 }

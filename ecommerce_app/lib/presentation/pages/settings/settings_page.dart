@@ -1,6 +1,9 @@
 import 'package:ecommerce_app/presentation/widgets/navbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
+import '../../widgets/navrail.dart';
 import 'body.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -8,10 +11,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Body(),
-      bottomNavigationBar: NavBar(pageNumber: 3,),
-    );
+    return SettingsBody();
   }
 }

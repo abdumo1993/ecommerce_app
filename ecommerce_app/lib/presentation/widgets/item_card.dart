@@ -28,6 +28,7 @@ class ItemCard extends StatelessWidget {
                     child: Image.asset(
                       "lib/assets/images/bag_1.png",
                       fit: BoxFit.fitWidth,
+                      width: double.maxFinite,
                     ),
                   ),
                   Padding(
