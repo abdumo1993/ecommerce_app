@@ -12,9 +12,8 @@ class AuthDataSource {
   DioClient dio = DioClient();
   Future<bool> login(LoginModel user) async {
     try {
-      var res = await dio.dio.post("/auth/login",
-          data: user.toJson());
-
+      var res = await dio.dio.post("/auth/login", data: user.toJson());
+      print("statuscode : ${res.statusCode}");
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
 
@@ -43,25 +42,29 @@ class AuthDataSource {
   Future<bool> register(RegisterModel user) async {
     try {
       var res = await dio.dio.post("/auth/register", data: user.toJson());
-
+      print("line47");
 
       if (res.statusCode == 200) {
         // log in
         return await login(
             LoginModel(email: user.email, password: user.password));
       } else if (res.statusCode == 500) {
+        print("line 54");
         throw CustomeException(message: res.data.toString());
       } else {
         throw CustomeException(
             message: "something went wrong. try again later.");
       }
     } on DioException catch (e) {
-      handleDioException(e);
+      print("line 61");
+      if (e.type == DioExceptionType.badResponse) {
+        throw AuthException(message: e.response?.data);
+      } else {
+        handleDioException(e);
+      }
     } on CustomeException catch (e) {
-
       rethrow;
     } catch (e) {
-
       throw CustomeException(message: "something went wrong");
     }
     return false;

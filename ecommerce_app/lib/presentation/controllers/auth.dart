@@ -7,6 +7,7 @@ import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/domain/repositories/auth.dart';
 import 'package:ecommerce_app/domain/usecases/auth.dart';
+import 'package:ecommerce_app/presentation/pages/auth/register.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -80,6 +81,7 @@ class LoginController extends GetxController {
           email: emailController.text, password: passwordController.text));
       res == true ? Get.toNamed("/home") : Get.toNamed("/login", arguments: {"message": "login failed. try again"});
     }} on AuthException catch (e) {
+      print("line 83");
       Get.toNamed("/login", arguments: {"message": e.toString()});
 
 
@@ -149,6 +151,7 @@ class RegisterConroller extends LoginController {
         firstNameError.value == null &&
         lastNameError.value == null &&
         confirmError.value == null) {
+          print("line153");
       var use = AuthUserCase(
           repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
       var res = await use.register(RegisterModel(
@@ -157,19 +160,22 @@ class RegisterConroller extends LoginController {
           firstname: firstNameController.text,
           lastname: lastNameController.text,
           confirmPassword: confirmController.text));
-
-      res == true ? Get.toNamed("/productDetail") : Get.toNamed("/login");
+          print("line162");
+//
+      res == true ? Get.toNamed("/home") : Get.toNamed("/login");
     }
     } on AuthException catch (e) {
-      Get.toNamed("/register", arguments: {"message": e.toString()});
+      print("go");
+       Get.to(RegisterPage(), arguments: {"message": e.message});
+      print("went");
 
 
     } on CustomeException catch (e) {
-
+print("line171");
       Get.toNamed("/error", arguments: {"message": e.toString()});
       Future.delayed(Duration(seconds: 2), () => Get.back());
 
-    }
+    } 
   }
 
   TextEditingController firstNameController = TextEditingController();

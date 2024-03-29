@@ -20,6 +20,7 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("argsR: ${Get.arguments}");
     return Material(
       child: Container(
         color: Theme.of(context).colorScheme.primary,
@@ -33,6 +34,25 @@ class RegisterPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const backButton(),
+                  (Get.arguments != null)
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                              Container(
+                                  color: Colors.red.withOpacity(0.3),
+                                  alignment: Alignment.center,
+                                  child: Text("${Get.arguments["message"]}",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                      )))
+                            ])
+                      : const SizedBox(
+                          width: 0,
+                          height: 0,
+                        ),
                   Text("Create Account",
                       style: TextStyle(
                           fontSize: 32,
@@ -132,7 +152,6 @@ class RegisterPage extends StatelessWidget {
                             print("regisetered");
                             if (_formKey.currentState!.validate()) {
                               registerConroller.submitForm();
-
                               // Proceed with form submission
                               // Get.toNamed("/home");
                             }

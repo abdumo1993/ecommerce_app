@@ -25,7 +25,7 @@ class RegisterModel {
   Map<String, String> toJson () {
     return {
       "Email": email,
-      "Password": email,
+      "Password": password,
       "FirstName": firstname,
       "LastName": lastname,
       "ConfirmPassword": confirmPassword,

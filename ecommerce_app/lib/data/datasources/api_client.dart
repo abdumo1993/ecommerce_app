@@ -8,7 +8,7 @@ class DioClient {
   static final DioClient _instance = DioClient._internal();
   late Dio _dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-
+var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
   factory DioClient() {
     return _instance;
   }
@@ -25,9 +25,9 @@ class DioClient {
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
+
           if (e.response?.statusCode == 401 &&
-              e.requestOptions.path != "auth/refresh") {
-            print("loop");
+             !(excludePaths.contains(e.requestOptions.path))) {
             String newAccessToken = await refreshToken();
             
 
@@ -35,7 +35,7 @@ class DioClient {
                 'Bearer $newAccessToken';
             return handler.resolve(await _dio.fetch(e.requestOptions));
           }
-          if (e.response?.statusCode == 401 && e.requestOptions.path != "auth/refresh") throw AuthException(message: "Refresh Failed. try again");
+          if (e.response?.statusCode == 401 && !(excludePaths.contains(e.requestOptions.path))) throw AuthException(message: "Refresh Failed. try again");
           return handler.next(e);
           // return;
         },
@@ -52,7 +52,8 @@ class DioClient {
   Future<String?> getRefreshToken() async {
     var refresh = await _storage.read(key: "refreshToken");
     if (refresh == null) {
-      throw AuthException(message: "Invalid Credentials");
+
+      throw AuthException(message: "Invalid Credentials line56");
     } else {
       return refresh;
     }
@@ -73,7 +74,7 @@ class DioClient {
     if (newAccessToken == null) {
       print("in api line 82");
 
-      throw AuthException(message: "Invalid Credentials");
+      throw AuthException(message: "Invalid Credentials line77");
     }
     return newAccessToken;
   }
@@ -89,7 +90,7 @@ class DioClient {
       if (accessToken == null || refreshToken == null) {
       print("in api line 97");
 
-        throw AuthException(message: "Invalid Credentials");
+        throw AuthException(message: "Invalid Credentials line93");
         };
     } catch (e) {
       throw CustomeException(message: "something went wrong at: ${runtimeType.toString()}");
