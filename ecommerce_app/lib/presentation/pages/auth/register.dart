@@ -134,7 +134,7 @@ class RegisterPage extends StatelessWidget {
                               registerConroller.submitForm();
 
                               // Proceed with form submission
-                              Get.toNamed("/home");
+                              // Get.toNamed("/home");
                             }
                           },
                           child: const Text(

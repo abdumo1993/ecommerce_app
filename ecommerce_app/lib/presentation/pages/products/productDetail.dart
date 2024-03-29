@@ -77,7 +77,7 @@ final _formKey = GlobalKey<FormState>();
                   backgroundColor: Colors.transparent,
                   bottomNavigationBar: GestureDetector(
                     onTap: () async {
-                      print("herea af ");
+                      print("line 80 in productDetail.dart");
                       await dio.dio.get("/anything");
                     },
                     child: Container(
@@ -90,7 +90,7 @@ final _formKey = GlobalKey<FormState>();
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "\$148",
+                            "\$${product.price}",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),

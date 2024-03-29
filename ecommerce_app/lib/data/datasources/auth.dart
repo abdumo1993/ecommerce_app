@@ -13,14 +13,12 @@ class AuthDataSource {
   Future<bool> login(LoginModel user) async {
     try {
       var res = await dio.dio.post("/auth/login",
-          data: {"email": user.email, "password": user.password});
+          data: user.toJson());
 
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
-        // print("the data: ${res.data}");
 
         dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
-        // print("the data: ${res.data}");
         return true;
       } else if (res.statusCode == 401) {
         throw AuthException(message: res.data.toString());
@@ -29,7 +27,6 @@ class AuthDataSource {
             message: "something went wrong. try again later.");
       }
     } on AuthException catch (e) {
-      print("login exception: $e");
       rethrow;
       // Future.delayed(Duration(seconds: 2), (){});
     } on DioException catch (e) {
@@ -45,16 +42,10 @@ class AuthDataSource {
 
   Future<bool> register(RegisterModel user) async {
     try {
-      var res = await dio.dio.post("/auth/register", data: {
-        "email": user.email,
-        "confirmPassword": user.confirmPassword,
-        "firstname": user.firstname,
-        "lastname": user.lastname,
-        "password": user.password,
-      });
+      var res = await dio.dio.post("/auth/register", data: user.toJson());
+
 
       if (res.statusCode == 200) {
-        print("register successful");
         // log in
         return await login(
             LoginModel(email: user.email, password: user.password));
@@ -67,8 +58,10 @@ class AuthDataSource {
     } on DioException catch (e) {
       handleDioException(e);
     } on CustomeException catch (e) {
+
       rethrow;
     } catch (e) {
+
       throw CustomeException(message: "something went wrong");
     }
     return false;
@@ -84,7 +77,6 @@ class AuthDataSource {
       await dio.deleteTokens();
       return true;
     } catch (e) {
-      print(e);
       return false;
     }
   }
@@ -95,17 +87,13 @@ class ReviewDataSource {
 
   Future<bool> send(ReviewModel review) async {
     try {
-      var res = await dio.dio.post("/review", data: {
-        "review": review.review,
-        "rating": review.rating,
-      });
+      var res = await dio.dio.post("/review", data: review.toJson());
 
       if (res.statusCode == 200) {
         return true;
       } else
         throw Exception("review failed");
     } catch (e) {
-      print("error in auth.dart ReviewDatasource");
       Get.toNamed("/error", arguments: {"message": e.toString()});
       return false;
     }

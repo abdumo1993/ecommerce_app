@@ -17,13 +17,10 @@ class PDetailController extends GetxController {
   RxBool valid = false.obs;
   void changeRating(value) {
     rating(value);
-    print(rating);
   }
 
   void validateReview() {
-    // print("${rating.value.toString()}, ${reviewController.text.toString()}");
     if (rating.value != null && reviewController.text.isNotEmpty) {
-      print("indede");
       valid.value = true;
     }
     else {
@@ -38,12 +35,10 @@ class PDetailController extends GetxController {
           repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
       var res = await use.send(
           ReviewModel(review: reviewController.text, rating: rating.value!));
-      print(res);
       res == true ? Get.toNamed("/productDetail") : null;
       changeRating(0);
       reviewController.text = "";
     } catch (e) {
-      print("error in auth.dart Pdetail submitform");
       Get.toNamed("/error", arguments: {"message": "login is needed"});
       Future.delayed(Duration(seconds: 3), () => Get.toNamed("/login"));
       // Get.toNamed("/login");
@@ -81,18 +76,14 @@ class LoginController extends GetxController {
    try {if (emailError.value == null && passwordError.value == null) {
       var use = AuthUserCase(
           repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
-      print("good here");
       var res = await use.login(LoginModel(
           email: emailController.text, password: passwordController.text));
-      print("good here 2");
       res == true ? Get.toNamed("/home") : Get.toNamed("/login", arguments: {"message": "login failed. try again"});
     }} on AuthException catch (e) {
-      print("the problem is in auth controller ");
       Get.toNamed("/login", arguments: {"message": e.toString()});
 
 
     } on CustomeException catch (e) {
-      print("error in auth.dart Pdetail submitform of login customException");
 
       Get.toNamed("/error", arguments: {"message": e.toString()});
       Future.delayed(Duration(seconds: 2), () => Get.back());
@@ -152,24 +143,32 @@ class RegisterConroller extends LoginController {
     validateLastName();
     validateConfirm();
 
-    if (emailError.value == null &&
+    try {
+      if (emailError.value == null &&
         passwordError.value == null &&
         firstNameError.value == null &&
         lastNameError.value == null &&
         confirmError.value == null) {
       var use = AuthUserCase(
           repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
-      print("good here");
       var res = await use.register(RegisterModel(
           email: emailController.text,
           password: passwordController.text,
           firstname: firstNameController.text,
           lastname: lastNameController.text,
           confirmPassword: confirmController.text));
-      print("good here 2");
 
-      print(res);
       res == true ? Get.toNamed("/productDetail") : Get.toNamed("/login");
+    }
+    } on AuthException catch (e) {
+      Get.toNamed("/register", arguments: {"message": e.toString()});
+
+
+    } on CustomeException catch (e) {
+
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+      Future.delayed(Duration(seconds: 2), () => Get.back());
+
     }
   }
 

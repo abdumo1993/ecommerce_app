@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/pages/settings/edit_profile_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/payment_page.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,10 @@ class Body extends StatelessWidget {
             ),
           ),
           TextButton(
-              onPressed: () {},
+              onPressed: () {
+                LogoutController controller = LogoutController();
+                controller.logout();
+              },
               child: Text(
                 "Sign Out",
                 style: TextStyle(color: Color(0xFFFA3636)),

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
@@ -19,9 +19,7 @@ class DioClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // print("this onw");
           String? accessToken = await getAccessToken();
-          // print("access still valid access: $accessToken");
           options.headers['Authorization'] = 'Bearer $accessToken';
 
           return handler.next(options);
@@ -54,7 +52,6 @@ class DioClient {
   Future<String?> getRefreshToken() async {
     var refresh = await _storage.read(key: "refreshToken");
     if (refresh == null) {
-      print("in api line 61");
       throw AuthException(message: "Invalid Credentials");
     } else {
       return refresh;
