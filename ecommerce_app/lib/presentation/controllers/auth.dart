@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/data/datasources/auth.dart';
 import 'package:ecommerce_app/data/repositories/auth.dart';
@@ -83,7 +85,20 @@ class LoginController extends GetxController {
           email: emailController.text, password: passwordController.text));
       print("good here 2");
       res == true ? Get.toNamed("/productDetail") : Get.toNamed("/login");
-    }} catch (e) {
+    }} on LoginException catch (e) {
+      print("the problem is in auth controller ");
+      Get.toNamed("/login", arguments: {"message": e.toString()});
+
+
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+
+    } on NetworkErrorException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+      Future.delayed(Duration(seconds: 2), () => Get.back());
+
+    }
+     catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
       Future.delayed(Duration(seconds: 2), () => Get.back());
 
