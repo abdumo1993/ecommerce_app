@@ -1,11 +1,9 @@
-import 'package:dio/dio.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
-import 'package:ecommerce_app/presentation/pages/auth/login.dart';
+import 'package:ecommerce_app/presentation/pages/loadingpage.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class ProductDetail extends StatefulWidget {
@@ -16,37 +14,54 @@ class ProductDetail extends StatefulWidget {
 }
 
 class _ProductDetailState extends State<ProductDetail> {
+  PDetailModel? product;
+  PDetailController pDetailController = PDetailController();
   @override
+  void initState() {
+    // TODO: implement initState
+    // super.initState();
+    // pDetailController.retrieveProduct(Get.arguments["id"]).then((p) {
+    //   if (p != null) {
+    //     setState(() {
+    //       product = p;
+    //     });
+    //   }
+    // });
+
+   
+      fetch();
+   
+    super.initState();
+  }
+
+  void fetch() async {  
+    try {
+      var a = await pDetailController.retrieveProduct("1");
+      print("a: $a");
+      setState(() {
+        
+      product = a;
+      });
+    } catch (e) {
+      // Handle the error, e.g., show a snackbar or a dialog
+      Get.snackbar("Error", "Failed to load product details");
+    }
+  }
+
+  @override 
   Widget build(BuildContext context) {
-    return myScaffold(
-      product: PDetailModel(
-          name: "Men's Harrington Jacket",
-          price: 148.0,
-          imageUrls: [
-            "lib/assets/images/Rectangle 9.png",
-            "lib/assets/images/Rectangle 10.png",
-            "lib/assets/images/Rectangle 11.png",
-            "lib/assets/images/Rectangle 10.png",
-          ],
-          description:
-              "Built for life and made to last, this full-zip corduroy jacket is part of our Nike Life collection. The spacious fit gives you plenty of room to layer underneath, while the soft corduroy keeps it casual and timeless.",
-          reviews: {"reviews": mokeReviews, "rating": 3.5}),
-    );
+    return myScaffold(product: product);
   }
 }
 
 class myScaffold extends StatelessWidget {
   DioClient dio = DioClient();
-  final PDetailModel product;
-  myScaffold({
-    super.key,
-    required this.product,
-  });
+  final PDetailModel? product;
+  myScaffold({super.key, required this.product});
   PDetailController detailController = Get.put(PDetailController());
-final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-
     bool side = false;
     var screenWidth = MediaQuery.of(context).size.width;
     double minWidth = 500;
@@ -90,7 +105,7 @@ final _formKey = GlobalKey<FormState>();
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "\$${product.price}",
+                            product == null ? "" : "\$${product!.price}",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -141,28 +156,50 @@ final _formKey = GlobalKey<FormState>();
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   child: Row(
-                                      children: product.imageUrls!.map(
-                                    (e) {
-                                      return Row(
-                                        children: [
-                                          Image.asset(
-                                            e,
-                                            fit: BoxFit.contain,
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          )
-                                        ],
-                                      );
-                                    },
-                                  ).toList()),
+                                      children: product != null
+                                          ? product!.imageUrls!.map(
+                                              (e) {
+                                                return Row(
+                                                  children: [
+                                                    Image.asset(
+                                                      e,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    )
+                                                  ],
+                                                );
+                                              },
+                                            ).toList()
+                                          : [1, 2, 3, 4, 5]
+                                              .map((e) => Row(
+                                                children: [
+                                                  Container(
+                                                        color: Theme.of(context).colorScheme.secondary,
+                                                        width: 120,
+                                                      ),
+                                                      const SizedBox(
+                                                      width: 10,
+                                                    )
+                                                ],
+                                              ))
+                                              .toList()),
                                 ),
                               ),
                               // end of image part
                               // start of name and choices
-Text(product.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),),
+                              Text(
+                                product == null ? "" : product!.name,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
                               // choiceContainer(product: product),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                               ),
                               Container(
@@ -181,11 +218,12 @@ Text(product.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, c
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       TextField(
-                                        controller: detailController.reviewController,
+                                        controller:
+                                            detailController.reviewController,
                                         maxLines: 4,
                                         minLines: 4,
                                         decoration: InputDecoration(
@@ -209,13 +247,21 @@ Text(product.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, c
                                       ratingWidget(
                                         detailController: detailController,
                                       ),
-
-                                      IconButton(onPressed: () {
-                                        if (_formKey.currentState!.validate()){
-                                          detailController.submitForm();
-                                          Get.offNamed("/productDetail");
-                                        }
-                                      }, icon: Icon(Icons.send, size: 40, color: Theme.of(context).colorScheme.onPrimary,))
+                                      IconButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              detailController.submitForm();
+                                              Get.offNamed("/productDetail");
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.send,
+                                            size: 40,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ))
                                     ],
                                   ),
                                 ),
@@ -228,16 +274,18 @@ Text(product.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, c
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      product.description == null
-                                          ? "No Description"
-                                          : product.description!,
+                                      product != null
+                                          ? product!.description == null
+                                              ? "No Description"
+                                              : product!.description!
+                                          : "",
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .onSecondary),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                   ],
@@ -245,14 +293,18 @@ Text(product.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, c
                               ),
                             ],
                           ),
-
-                          side
-                              ? SizedBox(
+                          product != null
+                              ? side == true
+                                  ? const SizedBox(
+                                      width: 0,
+                                      height: 0,
+                                    )
+                                  : myReviews(
+                                      product: product!,
+                                    )
+                              : SizedBox(
                                   width: 0,
                                   height: 0,
-                                )
-                              : myReviews(
-                                  product: product,
                                 ),
                         ],
                       ),
@@ -260,21 +312,31 @@ Text(product.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, c
                   ),
                 ),
               ),
-              side
-                  ? SizedBox(
-                      width: ((diff - minDiff <= 0))
-                          ? 10
-                          : (diff - minDiff > maxGap)
-                              ? maxGap
-                              : diff - minDiff)
+              product != null
+                  ? side
+                      ? SizedBox(
+                          width: ((diff - minDiff <= 0))
+                              ? 10
+                              : (diff - minDiff > maxGap)
+                                  ? maxGap
+                                  : diff - minDiff)
+                      : const SizedBox(
+                          width: 0,
+                        )
                   : SizedBox(
                       width: 0,
+                      height: 0,
                     ),
-              side
-                  ? myReviews(
-                      side: side,
-                      product: product,
-                    )
+              product != null
+                  ? side
+                      ? myReviews(
+                          side: side,
+                          product: product!,
+                        )
+                      : const SizedBox(
+                          width: 0,
+                          height: 0,
+                        )
                   : SizedBox(
                       width: 0,
                       height: 0,
@@ -295,14 +357,14 @@ class ratingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Obx(() => (Row(
           mainAxisSize: MainAxisSize.min,
           children: [1, 2, 3, 4, 5]
               .map(
                 (e) => GestureDetector(
                   onTap: () => detailController.changeRating(e),
-                  child: ( detailController.rating.value != null && (detailController.rating.value! >= e))
+                  child: (detailController.rating.value != null &&
+                          (detailController.rating.value! >= e))
                       ? Icon(
                           Icons.star,
                           color: Colors.yellow,
@@ -339,7 +401,7 @@ class choiceContainer extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onPrimary),
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           Text(
@@ -349,7 +411,7 @@ class choiceContainer extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.tertiary),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           ChoiceButton(
@@ -385,7 +447,7 @@ class choiceContainer extends StatelessWidget {
             ],
             title: "Size",
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           ChoiceButton(
@@ -484,7 +546,7 @@ class choiceContainer extends StatelessWidget {
             ],
             title: "Color",
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           QuantityButton(),
@@ -567,7 +629,7 @@ class myReviews extends StatelessWidget {
                                 child: Text(product.reviews!["reviews"][index]
                                     ["name"]![0]),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 10,
                               ),
                               Text(
@@ -606,7 +668,7 @@ class myReviews extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Text(

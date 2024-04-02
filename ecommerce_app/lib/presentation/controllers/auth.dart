@@ -23,10 +23,10 @@ class PDetailController extends GetxController {
   void validateReview() {
     if (rating.value != null && reviewController.text.isNotEmpty) {
       valid.value = true;
-    }
-    else {
+    } else {
       valid.value = false;
-      };
+    }
+    ;
   }
 
   void submitForm() async {
@@ -45,6 +45,22 @@ class PDetailController extends GetxController {
       // Get.toNamed("/login");
     }
     // submit the reviews using a use case.
+  }
+
+  Future<PDetailModel?> retrieveProduct(String id) async {
+    try {
+      var use = PDetailUseCase(
+          repo: PDetailRepositoryImp(dataSource: PDetailDataSource()));
+      var a = await use.fetch(id);
+      print(a);
+      return a;
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+      Future.delayed(Duration(seconds: 2), () => Get.back());
+    } on DioException catch (e) {
+      Get.offNamed("/home");
+      Get.snackbar("Error", "Product Detail loading failed.");
+    }
   }
 }
 
@@ -74,22 +90,20 @@ class LoginController extends GetxController {
   void submitForm() async {
     validateEmail();
     validatePassword();
-   try {if (emailError.value == null && passwordError.value == null) {
-      var use = AuthUserCase(
-          repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
-      var res = await use.login(LoginModel(
-          email: emailController.text, password: passwordController.text));
-      res == true ? Get.toNamed("/home") : Get.toNamed("/login", arguments: {"message": "login failed. try again"});
-    }} on AuthException catch (e) {
+    try {
+      if (emailError.value == null && passwordError.value == null) {
+        var use = AuthUserCase(
+            repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+        var res = await use.login(LoginModel(
+            email: emailController.text, password: passwordController.text));
+        res == true ? Get.toNamed("/home") : null;
+      }
+    } on AuthException catch (e) {
       print("line 83");
       Get.toNamed("/login", arguments: {"message": e.toString()});
-
-
     } on CustomeException catch (e) {
-
       Get.toNamed("/error", arguments: {"message": e.toString()});
       Future.delayed(Duration(seconds: 2), () => Get.back());
-
     }
   }
 
@@ -147,35 +161,32 @@ class RegisterConroller extends LoginController {
 
     try {
       if (emailError.value == null &&
-        passwordError.value == null &&
-        firstNameError.value == null &&
-        lastNameError.value == null &&
-        confirmError.value == null) {
-          print("line153");
-      var use = AuthUserCase(
-          repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
-      var res = await use.register(RegisterModel(
-          email: emailController.text,
-          password: passwordController.text,
-          firstname: firstNameController.text,
-          lastname: lastNameController.text,
-          confirmPassword: confirmController.text));
-          print("line162");
+          passwordError.value == null &&
+          firstNameError.value == null &&
+          lastNameError.value == null &&
+          confirmError.value == null) {
+        print("line153");
+        var use = AuthUserCase(
+            repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+        var res = await use.register(RegisterModel(
+            email: emailController.text,
+            password: passwordController.text,
+            firstname: firstNameController.text,
+            lastname: lastNameController.text,
+            confirmPassword: confirmController.text));
+        print("line162");
 //
-      res == true ? Get.toNamed("/home") : Get.toNamed("/login");
-    }
+        res == true ? Get.toNamed("/home") : Get.toNamed("/login");
+      }
     } on AuthException catch (e) {
       print("go");
-       Get.to(RegisterPage(), arguments: {"message": e.message});
+      Get.to(RegisterPage(), arguments: {"message": e.message});
       print("went");
-
-
     } on CustomeException catch (e) {
-print("line171");
+      print("line171");
       Get.toNamed("/error", arguments: {"message": e.toString()});
       Future.delayed(Duration(seconds: 2), () => Get.back());
-
-    } 
+    }
   }
 
   TextEditingController firstNameController = TextEditingController();

@@ -31,3 +31,14 @@ Future<bool> send(ReviewModel review) async {
 }
 
 }
+
+class PDetailUseCase {
+  final PDetailRepository repo;
+
+  PDetailUseCase({required this.repo});
+
+  Future<PDetailModel?> fetch (String id) async {
+    return await repo.fetch(id);
+  }
+  
+}

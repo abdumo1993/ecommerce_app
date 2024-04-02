@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
 import 'package:ecommerce_app/core/routes/routes.dart';
+import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';

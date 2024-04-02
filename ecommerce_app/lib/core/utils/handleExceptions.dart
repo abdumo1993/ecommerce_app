@@ -1,17 +1,34 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
+import 'package:get/get.dart';
 
-void handleDioException(DioException e) {
-  if (e.type == DioExceptionType.connectionError ||
-      e.type == DioExceptionType.connectionTimeout) {
-    throw CustomeException(message: "Connection Error. please try again later");
+void handleDioExceptions(DioException e) {
+  if (e.type == DioExceptionType.connectionError) {
+    Get.toNamed("/error", arguments: {"message": "Connection Error. Please connect to Internet and try again."});
+    Future.delayed(Duration(seconds: 2), () => Get.back());
   }
 
-  else if (e.type == DioExceptionType.badResponse &&  e.response?.statusCode == 401) {
-    throw AuthException(message: e.response?.data);
+   else if (e.type == DioExceptionType.connectionTimeout) {
+    Get.toNamed("/error", arguments: {"message": "Connection timeOut. Please try again."});
+    Future.delayed(Duration(seconds: 2), () => Get.back());
+  }
+
+   else if (e.type == DioExceptionType.sendTimeout) {
+    Get.toNamed("/error", arguments: {"message": "Request TimeOut. Please try again."});
+    Future.delayed(Duration(seconds: 2), () => Get.back());
+  }
+
+  else if (e.type == DioExceptionType.receiveTimeout) {
+    Get.toNamed("/error", arguments: {"message": "Response TimeOut. Please try again."});
+    Future.delayed(Duration(seconds: 2), () => Get.back());
   }
   else if (e.type == DioExceptionType.badResponse) {
     throw e;
   }
-  else throw CustomeException(message: "somethin went wrong");
+  else {
+    Get.toNamed("/error", arguments: {"message": "Something went wrong. try again."});
+    Future.delayed(Duration(seconds: 2), () => Get.back());
+  }
+
+  
 }

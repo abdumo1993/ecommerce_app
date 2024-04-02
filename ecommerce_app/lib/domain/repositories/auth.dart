@@ -11,3 +11,7 @@ abstract class AuthRepository {
 abstract class ReviewRepository {
   Future<bool> send(ReviewModel review);
 }
+
+abstract class PDetailRepository {
+  Future<PDetailModel?> fetch(String id);
+}
