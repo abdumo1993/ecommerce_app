@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../products.dart';
-import '../search.dart';
+// import '../search.dart';
 import 'categories.dart';
 import '../../../widgets/item_card.dart';
 import 'searching_bar.dart';
