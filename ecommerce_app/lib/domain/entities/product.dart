@@ -57,15 +57,19 @@ class SearchModel{
   final int? low;
   final int? high;
   final String? category;
-
-  SearchModel({this.high, this.category, required this.searchWord, this.filters, this.low});
+  final int? start;
+  final int? maxSize;
+  
+  SearchModel( {this.high, this.category, required this.searchWord, this.filters, this.low, this.start, this.maxSize,});
 
   Map<String, String> toJson () {
     return {
       "searchWord": searchWord,
       if(category!=null)"category": category!,
       if(low!=null)"low":low.toString(),
-      if(high!=null)"high": high.toString()
+      if(high!=null)"high": high.toString(),
+      if(start!=null)"start": start.toString(),
+      if(maxSize!=null)"maxSize": maxSize.toString(),
     };
     }  
 }

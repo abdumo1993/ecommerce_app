@@ -1,7 +1,15 @@
+import 'package:ecommerce_app/presentation/pages/search/search_results.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
+import '../../../data/data_sources/search_product_data_source.dart';
+import '../../../data/data_sources/search_products_data_source_impl.dart';
+import '../../../data/repositories/search_product_repository_impl.dart';
+import '../../../domain/repositories/search_product_repository.dart';
+import '../../../domain/usecases/search_product_usecase.dart';
+import '../../../domain/usecases/search_product_usecase_impl.dart';
 import '../../controllers/search_page_controller.dart';
 import '../../widgets/button.dart';
 import '../../widgets/item_card.dart';
@@ -12,12 +20,19 @@ class SearchPage extends StatelessWidget {
 //  final SearchPageController controller = Get.find<SearchPageController>();
   final String? keyWord = Get.arguments['keyword'];
   SearchPage({super.key});
-  final SearchPageController controller = Get.put(SearchPageController());
+   
  @override
  Widget build(BuildContext context) {
+
+
+final SearchProductsDataSource searchProductsDataSource = SearchProductsDataSourceImpl();
+ final SearchProductsRepository searchProductsRepository = SearchProductsRepositoryImpl(searchRepo: searchProductsDataSource);
+final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(searchRepo: searchProductsRepository);
+  final SearchPageController controller = Get.put(SearchPageController(searchProductsUseCase, keyWord));
+
   final List<Widget> filter = [
       IconButton(
-          onPressed: () {},
+          onPressed: () {controller.searchWordController.clear();},
           icon:
               Icon(Icons.clear, color: Theme.of(context).colorScheme.onPrimary))
     ];
@@ -36,7 +51,7 @@ class SearchPage extends StatelessWidget {
                         color: Theme.of(context).colorScheme.secondary,
                         shape: CircleBorder()),
                     child: IconButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => {controller.searchWordController.clear(),Navigator.pop(context),},
                       icon: ImageIcon(
                         color: Theme.of(context).colorScheme.onSecondary,
                         AssetImage("lib/assets/images/arrowleft2.png"),
@@ -44,13 +59,17 @@ class SearchPage extends StatelessWidget {
                     )),
               ),
               SearchBar(
+                controller: controller.searchWordController,
                 shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
                 constraints: BoxConstraints(maxHeight: 40,maxWidth: MediaQuery.of(context).size.width*0.7),
                 textStyle: MaterialStatePropertyAll(
                     TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
                 backgroundColor: MaterialStateColor.resolveWith(
                     (states) => Theme.of(context).colorScheme.secondary),
-                onSubmitted: (value) => (),
+                onSubmitted: (value) => ({
+                  // controller.searchWord.value =value,
+                  controller.submitSearch(),
+                  }),
                 padding: const MaterialStatePropertyAll(
                   EdgeInsets.only(left: 30, right: 10),
                 ),
@@ -58,7 +77,7 @@ class SearchPage extends StatelessWidget {
                   Icons.search_outlined,
                   color: Theme.of(context).colorScheme.onPrimary,
                 ),
-                hintText: "$keyWord",
+                // hintText: "$keyWord",
                 elevation: const MaterialStatePropertyAll(2),
                 trailing: filter,
               ),
@@ -112,21 +131,22 @@ class SearchPage extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: GridView.builder(
-                  itemCount: 50,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        (MediaQuery.of(context).size.width * 0.009).floor(),
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemBuilder: (context, index) => ItemCard()),
-            ),
-          ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.symmetric(horizontal: 10),
+          //     child: GridView.builder(
+          //         itemCount: 50,
+          //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //           crossAxisCount:
+          //               (MediaQuery.of(context).size.width * 0.009).floor(),
+          //           mainAxisSpacing: 20,
+          //           crossAxisSpacing: 20,
+          //           childAspectRatio: 0.75,
+          //         ),
+          //         itemBuilder: (context, index) => ItemCard()),
+          //   ),
+          // ),
+          Expanded(child: SearchResult())
         ],
       ),
     );
@@ -143,14 +163,14 @@ class SearchPage extends StatelessWidget {
                   ListTile(
                    title: Text('Filter 1',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),),
                    trailing: IconButton(
-                      icon: Icon(controller.selectedFilters.contains('Filter 1') ? Icons.check_box : Icons.check_box_outline_blank, 
+                      icon: Icon(Get.find<SearchPageController>().selectedFilters.contains('Filter 1') ? Icons.check_box : Icons.check_box_outline_blank, 
                     color: Theme.of(context).colorScheme.onPrimary,
                       ),
                       onPressed: () {
-                        if (controller.selectedFilters.contains('Filter 1')) {
-                          controller.removeFilter('Filter 1');
+                        if (Get.find<SearchPageController>().selectedFilters.contains('Filter 1')) {
+                          Get.find<SearchPageController>().removeFilter('Filter 1');
                         } else {
-                          controller.addFilter('Filter 1');
+                          Get.find<SearchPageController>().addFilter('Filter 1');
                         }
                       },
                    ),
@@ -158,13 +178,13 @@ class SearchPage extends StatelessWidget {
                   ListTile(
                    title: Text('Filter 2',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),),
                    trailing: IconButton(
-                      icon: Icon(controller.selectedFilters.contains('Filter 2') ? Icons.check_box : Icons.check_box_outline_blank, 
+                      icon: Icon(Get.find<SearchPageController>().selectedFilters.contains('Filter 2') ? Icons.check_box : Icons.check_box_outline_blank, 
                     color: Theme.of(context).colorScheme.onPrimary,),
                       onPressed: () {
-                        if (controller.selectedFilters.contains('Filter 2')) {
-                          controller.removeFilter('Filter 2');
+                        if (Get.find<SearchPageController>().selectedFilters.contains('Filter 2')) {
+                          Get.find<SearchPageController>().removeFilter('Filter 2');
                         } else {
-                          controller.addFilter('Filter 2');
+                          Get.find<SearchPageController>().addFilter('Filter 2');
                         }
                       },
                    ),
@@ -172,13 +192,13 @@ class SearchPage extends StatelessWidget {
                   ListTile(
                    title: Text('Filter 3',style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),),
                    trailing: IconButton(
-                      icon: Icon(controller.selectedFilters.contains('Filter 3') ? Icons.check_box : Icons.check_box_outline_blank, 
+                      icon: Icon(Get.find<SearchPageController>().selectedFilters.contains('Filter 3') ? Icons.check_box : Icons.check_box_outline_blank, 
                     color: Theme.of(context).colorScheme.onPrimary,),
                       onPressed: () {
-                        if (controller.selectedFilters.contains('Filter 3')) {
-                          controller.removeFilter('Filter 3');
+                        if (Get.find<SearchPageController>().selectedFilters.contains('Filter 3')) {
+                          Get.find<SearchPageController>().removeFilter('Filter 3');
                         } else {
-                          controller.addFilter('Filter 3');
+                          Get.find<SearchPageController>().addFilter('Filter 3');
                         }
                       },
                    ),
