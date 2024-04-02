@@ -1,5 +1,6 @@
 // import 'dart:js_interop';
 
+
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/core/utils/handleExceptions.dart';
@@ -19,24 +20,16 @@ class AuthDataSource {
 
         dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
         return true;
-      } else if (res.statusCode == 401) {
-        throw AuthException(message: res.data.toString());
-      } else {
-        throw CustomeException(
-            message: "something went wrong. try again later.");
       }
-    } on AuthException catch (e) {
-      rethrow;
-      // Future.delayed(Duration(seconds: 2), (){});
+      // return false;
     } on DioException catch (e) {
-      handleDioException(e);
-    } on CustomeException catch (e) {
-      rethrow;
+      throw AuthException(message: e.response?.data ?? e.toString());
     } catch (e) {
-      throw CustomeException(message: "something went wrong");
+      Get.toNamed("/error",
+          arguments: {"message": "something went wrong. try again."});
+      Future.delayed(Duration(seconds: 2), () => Get.back());
     }
     return false;
-    // return false;
   }
 
   Future<bool> register(RegisterModel user) async {
@@ -48,24 +41,14 @@ class AuthDataSource {
         // log in
         return await login(
             LoginModel(email: user.email, password: user.password));
-      } else if (res.statusCode == 500) {
-        print("line 54");
-        throw CustomeException(message: res.data.toString());
-      } else {
-        throw CustomeException(
-            message: "something went wrong. try again later.");
       }
     } on DioException catch (e) {
-      print("line 61");
-      if (e.type == DioExceptionType.badResponse) {
-        throw AuthException(message: e.response?.data);
-      } else {
-        handleDioException(e);
-      }
-    } on CustomeException catch (e) {
-      rethrow;
-    } catch (e) {
-      throw CustomeException(message: "something went wrong");
+      throw AuthException(message: e.response?.data ?? e.toString());
+    } 
+    catch (e) {
+      Get.toNamed("/error",
+          arguments: {"message": "something went wrong. try again."});
+      Future.delayed(Duration(seconds: 2), () => Get.back());
     }
     return false;
   }
@@ -100,5 +83,33 @@ class ReviewDataSource {
       Get.toNamed("/error", arguments: {"message": e.toString()});
       return false;
     }
+  }
+}
+
+class PDetailDataSource {
+  DioClient dio = DioClient();
+
+  Future<PDetailModel?> fetch(String id) async {
+    try {
+      var res = await dio.dio.get("/products/$id");
+      print(res);
+      if (res.statusCode == 200) {
+        return PDetailModel.fromJson(res.data);
+      }
+    } on DioException catch (e) {
+      handleDioExceptions(e);
+      var err = "";
+      if (e.type == DioExceptionType.badResponse) {
+        if (e.response?.statusCode == 404) {
+          err = "Product Not found!";
+        } else if (e.response?.statusCode == 400) {
+          err = "Invalid Request";
+        } else {
+          err = "Something went wrong";
+        }
+      }
+       throw CustomeException(message: err);
+    } 
+   return null; 
   }
 }

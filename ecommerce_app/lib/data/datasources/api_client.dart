@@ -1,14 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
+import 'package:ecommerce_app/core/utils/handleExceptions.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 // import 'package:get/get.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
   late Dio _dio;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
+  var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
   factory DioClient() {
     return _instance;
   }
@@ -25,18 +27,23 @@ var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
+          try {
+            if (e.response?.statusCode == 401 &&
+                !(excludePaths.contains(e.requestOptions.path))) {
+              String newAccessToken = await refreshToken(); // may throw customeExcepiton 
 
-          if (e.response?.statusCode == 401 &&
-             !(excludePaths.contains(e.requestOptions.path))) {
-            String newAccessToken = await refreshToken();
-            
+              e.requestOptions.headers['Authorization'] =
+                  'Bearer $newAccessToken';
+              return handler.resolve(await _dio.fetch(e.requestOptions));
+            }
 
-            e.requestOptions.headers['Authorization'] =
-                'Bearer $newAccessToken';
-            return handler.resolve(await _dio.fetch(e.requestOptions));
+            return handler.next(e);
+          } on DioException catch (e) {
+            handleDioExceptions(e);
+          } on CustomeException catch (e) {
+            Get.toNamed("/error", arguments: {"message" : e.toString()});
+            Future.delayed(Duration(seconds: 2), () => Get.back());
           }
-          if (e.response?.statusCode == 401 && !(excludePaths.contains(e.requestOptions.path))) throw AuthException(message: "Refresh Failed. try again");
-          return handler.next(e);
           // return;
         },
       ),
@@ -46,14 +53,14 @@ var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
   Future<String?> getAccessToken() async {
     var access = await _storage.read(key: 'accessToken');
 
-      return access;
+    return access;
   }
 
   Future<String?> getRefreshToken() async {
     var refresh = await _storage.read(key: "refreshToken");
     if (refresh == null) {
-
-      throw AuthException(message: "Invalid Credentials line56");
+      throw CustomeException(message: "Invalid Credentials line56");
+      
     } else {
       return refresh;
     }
@@ -62,8 +69,10 @@ var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
   Future<String> refreshToken() async {
     String? newAccessToken;
 
-    var res = await dio.post("/auth/refresh",
-        data: {"refreshToken": await getRefreshToken(), "accessToken": await getAccessToken()});
+    var res = await dio.post("/auth/refresh", data: {
+      "refreshToken": await getRefreshToken(),
+      "accessToken": await getAccessToken()
+    });
     if (res.statusCode == 200) {
       print(
           "refreshed successfully. returning new accesstoken... access:${res.data["accessToken"]}");
@@ -74,7 +83,7 @@ var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
     if (newAccessToken == null) {
       print("in api line 82");
 
-      throw AuthException(message: "Invalid Credentials line77");
+      throw CustomeException(message: "Invalid Credentials line77");
     }
     return newAccessToken;
   }
@@ -85,23 +94,25 @@ var excludePaths = ["/auth/refresh", '/auth/login', "/auth/register"];
         await _storage.write(key: 'accessToken', value: accessToken);
         await _storage.write(key: 'refreshToken', value: refreshToken);
       }
-      
 
       if (accessToken == null || refreshToken == null) {
-      print("in api line 97");
+        print("in api line 97");
 
-        throw AuthException(message: "Invalid Credentials line93");
-        };
+        throw CustomeException(message: "Invalid Credentials line93");
+      }
+      ;
     } catch (e) {
-      throw CustomeException(message: "something went wrong at: ${runtimeType.toString()}");
+      throw CustomeException(
+          message: "something went wrong at: ${runtimeType.toString()}");
     }
   }
 
   Future<void> deleteTokens() async {
-   try { _storage.delete(key: "accessToken");
-    _storage.delete(key: "refreshToken");}
-    catch (e) {
-throw AuthException(message: 'Logout failed. Try later.');
+    try {
+      _storage.delete(key: "accessToken");
+      _storage.delete(key: "refreshToken");
+    } catch (e) {
+      throw CustomeException(message: 'Logout failed. Try later.');
     }
   }
 

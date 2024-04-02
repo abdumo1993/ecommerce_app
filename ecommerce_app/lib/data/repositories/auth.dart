@@ -20,9 +20,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<bool> register(RegisterModel user) async  => authProvider.register(user);
+  Future<bool> register(RegisterModel user) async =>
+      authProvider.register(user);
 }
-
 
 class ReviewRepositoryImp implements ReviewRepository {
   final ReviewDataSource reviewSource;
@@ -33,8 +33,16 @@ class ReviewRepositoryImp implements ReviewRepository {
   Future<bool> send(ReviewModel review) async {
     return await reviewSource.send(review);
   }
+}
 
 
+class PDetailRepositoryImp implements PDetailRepository {
+  final PDetailDataSource dataSource;
 
+  PDetailRepositoryImp({required this.dataSource});
+  @override
+  Future<PDetailModel?> fetch(String id) async {
+    return await dataSource.fetch(id);
+  }
   
 }

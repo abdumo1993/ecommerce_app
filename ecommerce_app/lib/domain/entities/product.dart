@@ -3,7 +3,7 @@ class PDetailModel {
   final double price;
   final String? description;
   final Map<String, dynamic>? reviews;
-  final List<String>? imageUrls;
+  final List<dynamic>? imageUrls;
 
   PDetailModel({
     required this.name,
@@ -13,7 +13,7 @@ class PDetailModel {
     this.imageUrls,
   });
 
-  PDetailModel fromJson(Map<String, dynamic> json) {
+  static PDetailModel fromJson(Map<String, dynamic> json) {
     return PDetailModel(
         name: json["name"],
         price: json["price"],
