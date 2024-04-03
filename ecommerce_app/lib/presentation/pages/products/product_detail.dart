@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
+import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,26 +22,35 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: pDetailController.retrieveProduct("1"),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return  page(
-           
-            shimmer: true,
-          );
-        } else if (snapshot.hasError) {
-          return Text("error");
-        } else {
-          // print(
-          //   "the data: ${snapshot.data!.name}");
-          PDetailModel product = snapshot.data!;
-          return page(
-            product: product,
-            shimmer: false,
-          );
-        }
-      },
+    print("sss");
+    return Material(
+      child: FutureBuilder(
+        future: pDetailController.retrieveProduct("1"),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return page(
+              shimmer: true,
+            );
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data == null) {
+            return ErrorPage(
+              message: "Error loading.",
+            );
+          } else if (snapshot.hasError) {
+            return ErrorPage(
+              message: "Error.",
+            );
+          } else {
+            // print(
+            //   "the data: ${snapshot.data!.name}");
+            PDetailModel product = snapshot.data!;
+            return page(
+              product: product,
+              shimmer: false,
+            );
+          }
+        },
+      ),
     );
   }
 }
@@ -50,7 +62,7 @@ class page extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   page({
     super.key,
-   this.product,
+    this.product,
     required this.shimmer,
   });
 
@@ -102,14 +114,18 @@ class page extends StatelessWidget {
                         children: [
                           // image part >
                           // ImageSection(product: product),
-                          shimmer ? ImageSectionShimmer() : ImageSection(product: product!),
+                          shimmer
+                              ? ImageSectionShimmer()
+                              : ImageSection(product: product!),
                           // end of image part
                           // start of name and choices
                           // NameSection(product: product),
                           const SizedBox(
                             height: 30,
                           ),
-                          shimmer ? NameSectionShimmer() : NameSection(product: product!),
+                          shimmer
+                              ? NameSectionShimmer()
+                              : NameSection(product: product!),
                           // choiceContainer(product: product),
                           const SizedBox(
                             height: 30,
@@ -117,14 +133,20 @@ class page extends StatelessWidget {
                           // ReviewWrite(
                           //     formKey: _formKey,
                           //     detailController: detailController),
-                         shimmer ? ReviewWriteShimmer() : ReviewWrite(formKey: _formKey, detailController: detailController),
+                          shimmer
+                              ? ReviewWriteShimmer()
+                              : ReviewWrite(
+                                  formKey: _formKey,
+                                  detailController: detailController),
                           // end of name and choices
                           // description
                           // DescriptionSection(product: product),
                           const SizedBox(
                             height: 30,
                           ),
-                        shimmer ?   DescriptionSectionShimmer() : DescriptionSection(product: product!),
+                          shimmer
+                              ? DescriptionSectionShimmer()
+                              : DescriptionSection(product: product!),
                         ],
                       ),
                       side == true
@@ -132,7 +154,9 @@ class page extends StatelessWidget {
                               width: 0,
                               height: 0,
                             )
-                          : shimmer ? myReveiwsShimmer() : myReviews(product: product!),
+                          : shimmer
+                              ? myReveiwsShimmer()
+                              : myReviews(product: product!),
                     ],
                   ),
                 ),
@@ -177,9 +201,14 @@ class page extends StatelessWidget {
                   width: 0,
                 ),
           side
-              ? shimmer ? myReveiwsShimmer(
-                  side: side,
-                ) : myReviews(product: product!, side: side,)
+              ? shimmer
+                  ? myReveiwsShimmer(
+                      side: side,
+                    )
+                  : myReviews(
+                      product: product!,
+                      side: side,
+                    )
               : const SizedBox(
                   width: 0,
                   height: 0,
@@ -224,7 +253,6 @@ class DescriptionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -310,7 +338,6 @@ class ReviewWrite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.0),
       child: Form(
         key: _formKey,
         child: Column(
@@ -330,11 +357,17 @@ class ReviewWrite extends StatelessWidget {
               controller: detailController.reviewController,
               maxLines: 4,
               minLines: 4,
+              
+              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 12),
               decoration: InputDecoration(
                 label: Text(
                   "review",
+                  style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                 ),
                 hintText: "Write you review of this product.",
+                hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+                fillColor: Theme.of(context).colorScheme.secondary,
+                filled: true,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide(
@@ -351,7 +384,7 @@ class ReviewWrite extends StatelessWidget {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     detailController.submitForm();
-                    Get.offNamed("/productDetail");
+                    // Get.offNamed("/productDetail");
                   }
                 },
                 icon: Icon(
@@ -389,6 +422,7 @@ class NameSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
+    
       product == null ? "" : product!.name,
       style: TextStyle(
           fontSize: 16,
@@ -405,7 +439,6 @@ class ImageSectionShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 248,
-    
       width: double.infinity,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -436,12 +469,13 @@ class ShimmerContainer extends StatelessWidget {
       baseColor: Theme.of(context).colorScheme.secondary,
       highlightColor: Color.fromRGBO(169, 168, 168, 0.696),
       child: Container(
-        width: width,
-        height: height, 
-        color: Theme.of(context).colorScheme.primary// Adjust the height as needed
-      ),
+          width: width,
+          height: height,
+          color: Theme.of(context)
+              .colorScheme
+              .primary // Adjust the height as needed
+          ),
     );
-    
   }
 }
 
@@ -456,7 +490,6 @@ class ImageSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20),
       height: 248,
       width: double.infinity,
       child: SingleChildScrollView(
@@ -464,12 +497,30 @@ class ImageSection extends StatelessWidget {
         child: Row(
             children: product.imageUrls!.map(
           (e) {
+            var s;
+            try {
+              s = Image.network(
+                e,
+                fit: BoxFit.contain,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  // Return a Container as a fallback if the image fails to load
+                  return Container(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: 120,
+                  );
+                },
+              );
+            } catch (e) {
+              print("ljfaljflkajflkj: $e");
+              s = Container(
+                color: Theme.of(context).colorScheme.secondary,
+                width: 120,
+              );
+            }
             return Row(
               children: [
-                Image.asset(
-                  e,
-                  fit: BoxFit.contain,
-                ),
+                s,
                 const SizedBox(
                   width: 10,
                 )
@@ -504,7 +555,7 @@ class ratingWidget extends StatelessWidget {
                           Icons.star,
                           color: Colors.yellow,
                         )
-                      : Icon(Icons.star_border),
+                      : Icon(Icons.star_border, color: Theme.of(context).colorScheme.secondary,),
                 ),
               )
               .toList(),
@@ -864,6 +915,7 @@ class myReviews extends StatelessWidget {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
+       
         Text(
           "${product.reviews!["rating"]} Ratings",
           style: TextStyle(
@@ -872,11 +924,13 @@ class myReviews extends StatelessWidget {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
+       
         Text(
           "213 Reviews",
           style: TextStyle(
               fontSize: 12, color: Theme.of(context).colorScheme.onSecondary),
         ),
+       
         Container(
           // height: MediaQuery.of(context).size.height,
           width: commentsWidth,

@@ -102,6 +102,7 @@ class DioClient {
       }
       ;
     } catch (e) {
+      print("105: $e");
       throw CustomeException(
           message: "something went wrong at: ${runtimeType.toString()}");
     }

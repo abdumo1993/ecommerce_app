@@ -1,6 +1,5 @@
 // import 'dart:js_interop';
 
-
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/core/utils/handleExceptions.dart';
@@ -44,8 +43,7 @@ class AuthDataSource {
       }
     } on DioException catch (e) {
       throw AuthException(message: e.response?.data ?? e.toString());
-    } 
-    catch (e) {
+    } catch (e) {
       Get.toNamed("/error",
           arguments: {"message": "something went wrong. try again."});
       Future.delayed(Duration(seconds: 2), () => Get.back());
@@ -74,15 +72,18 @@ class ReviewDataSource {
   Future<bool> send(ReviewModel review) async {
     try {
       var res = await dio.dio.post("/review", data: review.toJson());
-
+      print("wer a e re77");
       if (res.statusCode == 200) {
         return true;
-      } 
+      }
     } on DioException catch (e) {
-print("in review source: $e");
-      Get.toNamed("/error", arguments: {"message": e.toString()});
+      print("in review source: $e");
+      if (e.type == DioExceptionType.badResponse) {
+        Get.toNamed("/error",
+            arguments: {"message": "Invalid request. Try again."});
+      }
     }
-      return false;
+    return false;
   }
 }
 
@@ -108,8 +109,8 @@ class PDetailDataSource {
           err = "Something went wrong";
         }
       }
-       throw CustomeException(message: err);
-    } 
-   return null; 
+      throw CustomeException(message: err);
+    }
+    return null;
   }
 }

@@ -31,7 +31,7 @@ class PDetailController extends GetxController {
 
   void submitForm() async {
     validateReview();
-    try {
+    if (valid.value == true){try {
       var use = ReviewUseCase(
           repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
       var res = await use.send(
@@ -43,7 +43,7 @@ class PDetailController extends GetxController {
       Get.toNamed("/error", arguments: {"message": "login is needed"});
       Future.delayed(Duration(seconds: 3), () => Get.toNamed("/login"));
       // Get.toNamed("/login");
-    }
+    }}
     // submit the reviews using a use case.
   }
 

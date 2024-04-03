@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -11,7 +12,7 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ProductDetail())),
+          context, MaterialPageRoute(builder: (context) => ProductDetails())),
       child: SizedBox(
         // width: 100,
         // height: 200,

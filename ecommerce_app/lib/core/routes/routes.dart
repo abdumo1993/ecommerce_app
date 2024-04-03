@@ -9,6 +9,7 @@ import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
 import 'package:ecommerce_app/presentation/pages/entry_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
 import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
+import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:ecommerce_app/presentation/pages/search/search_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/address_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/edit_address_page.dart';
@@ -26,7 +27,7 @@ final routes = [
   GetPage(name: "/emptyCart", page: () => EmptyCart()),
   GetPage(name: "/addCheckout", page: () => AddCheckout()),
   GetPage(name: "/checkout", page: () => CheckoutPage()),
-  GetPage(name: "/productDetail", page: () => ProductDetail()),
+  GetPage(name: "/productDetail", page: () => ProductDetails()),
   GetPage(name: "/search", page: () => SearchPage()),
   GetPage(name: "/settings", page: () => SettingsPage()),
   GetPage(name: "/address", page: () => AddressPage()),
