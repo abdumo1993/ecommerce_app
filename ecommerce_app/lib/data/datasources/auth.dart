@@ -77,12 +77,12 @@ class ReviewDataSource {
 
       if (res.statusCode == 200) {
         return true;
-      } else
-        throw Exception("review failed");
-    } catch (e) {
+      } 
+    } on DioException catch (e) {
+print("in review source: $e");
       Get.toNamed("/error", arguments: {"message": e.toString()});
-      return false;
     }
+      return false;
   }
 }
 

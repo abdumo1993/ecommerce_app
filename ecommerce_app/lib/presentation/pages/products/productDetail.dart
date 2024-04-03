@@ -36,7 +36,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   void fetch() async {  
     try {
-      var a = await pDetailController.retrieveProduct(Get.arguments["id"]);
+      var a = await pDetailController.retrieveProduct("1");
       print("a: $a");
       setState(() {
         
@@ -44,7 +44,8 @@ class _ProductDetailState extends State<ProductDetail> {
       });
     } catch (e) {
       // Handle the error, e.g., show a snackbar or a dialog
-      Get.snackbar("Error", "Failed to load product details");
+      print("here $e");
+      // Get.snackbar("Error", "Failed to load product details");
     }
   }
 
@@ -203,6 +204,7 @@ class myScaffold extends StatelessWidget {
                                 height: 30,
                               ),
                               Container(
+                                padding: EdgeInsets.all(20.0),
                                 child: Form(
                                   key: _formKey,
                                   child: Column(
