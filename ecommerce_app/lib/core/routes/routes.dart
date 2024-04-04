@@ -3,7 +3,6 @@ import 'package:ecommerce_app/presentation/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/auth/register.dart';
 import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
-import 'package:ecommerce_app/presentation/pages/cart/cart.dart';
 import 'package:ecommerce_app/presentation/pages/cart/emptyCart.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/addCheckout.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
