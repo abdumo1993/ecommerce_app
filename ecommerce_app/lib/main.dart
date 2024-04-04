@@ -26,7 +26,7 @@ class MainApp extends StatelessWidget {
       darkTheme: darkTheme,
       getPages: routes,
       themeMode: ThemeMode.light,
-      home: Cart_cart(),
+      home: LoginPage(),
     );
   }
 }
