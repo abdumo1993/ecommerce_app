@@ -120,6 +120,7 @@ class SearchPageController extends GetxController {
   @override
   void refresh(){
     offset.value=0;
+    total.value = 0;
     newItems.clear();
     _pagingController.refresh();
     super.refresh();
