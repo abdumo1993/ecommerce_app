@@ -1,7 +1,7 @@
 import 'package:ecommerce_app/domain/entities/product.dart';
 
 abstract class SearchProductsUseCase {
-  Future<Result<List<Product>>> call({required SearchModel searchModel});
+  Future<Result<ProductResponseModel>> call({required SearchModel searchModel});
 }
 
 class Result<T> {

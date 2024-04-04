@@ -5,10 +5,13 @@ import '../../domain/entities/product.dart';
 import '../../domain/usecases/search_product_usecase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import 'expansion_controller.dart';
 import 'search_text_controller.dart';
 
 class SearchPageController extends GetxController {
-  String? initialWord;
+  RxInt offset = 0.obs;
+  RxInt total = 0.obs;
+  // String? initialWord;
   var selectedFilters = [].obs;
   // var searchWord = ''.obs;
   bool valid = false;
@@ -17,6 +20,8 @@ class SearchPageController extends GetxController {
   SearchController searchWordController =
       Get.find<SearchTextController>().searchController;
 
+  late ExpansionController expansionController;
+
   final PagingController<int, Product> _pagingController =
       PagingController<int, Product>(firstPageKey: 0);
 //  final RestClient restClient = RestClient();
@@ -24,13 +29,14 @@ class SearchPageController extends GetxController {
   final List<Product> newItems = [];
   final SearchProductsUseCase searchProductsUseCase;
 
-  SearchPageController(this.searchProductsUseCase, this.initialWord) {
+  SearchPageController(this.searchProductsUseCase) {
     _pagingController.addPageRequestListener((pageKey) {
       loadPage(pageKey);
     });
     // Load the first page
     // if(initialWord!=null) {searchWordController.=initialWord!;}
-    loadPage(0);
+    expansionController = Get.put(ExpansionController());
+    // loadPage(offset.value);
   }
 
   void addFilter(String filter) {
@@ -51,58 +57,58 @@ class SearchPageController extends GetxController {
         !searchWordController.text.trim().isEmpty) {
       valid = true;
     } else {
+      valid = false;
       confirmError.value = 'Please enter a valid search';
     }
   }
 
-  Future<void> submitSearch() async {
-    validateSearchWord();
-    if (valid) {
-      // print("searchWord.value: ${searchWord.value}");
-      print("searchWordController.value.: ${searchWordController.value.text}");
-      final newItem = await SearchProduct(
-          searchModel: SearchModel(
-              searchWord: searchWordController.value.text,
-              category: "Electronics",
-              low: 0,
-              high: 100));
-
-      if (newItem.data != null) {
-        newItems.addAll(newItem.data!);
-      } else {
-        print(newItem.error);
-      }
-    }
-  }
 
   PagingController<int, Product> get pagingController => _pagingController;
 
   void loadPage(int pageKey) async {
+      await Future.delayed(Duration(seconds: 2));
+    validateSearchWord();
+    if (valid && _pagingController.nextPageKey!=null) {
     try {
-      print("initialWord.value: ${initialWord}");
-      // print("searchWord.value: ${searchWord.value}");
-      print("searchWordController.value.: ${searchWordController.value.text}");
-      final newItem = await SearchProduct(
-          searchModel:
-              SearchModel(searchWord: searchWordController.value.text));
+
+      int low = expansionController.range.value.start.toInt();
+      int high = expansionController.range.value.end.toInt();
+      int maxSize = int.tryParse(expansionController.pageSize.single) ?? 10;
+      SearchModel _searchModel = SearchModel(searchWord: searchWordController.value.text);
+      _searchModel.low = low;
+      _searchModel.high= high;
+      _searchModel.start = pageKey;
+      _searchModel.maxSize = maxSize;
+      
+      if (offset.value != -1){
+        final newItem = await SearchProduct(
+          searchModel:_searchModel);
+              // SearchModel(searchWord: searchWordController.value.text,low: low,high: high,maxSize: maxSize,start: pageKey, category: "Elec"));
       if (newItem.data != null) {
-        newItems.addAll(newItem.data!);
+        newItems.clear();
+        newItems.addAll(newItem.data!.productDtos);
+        offset.value = newItem.data!.nextIndex;
+        if (total.value == 0)total.value = newItem.data!.total;
       } else {
-        print(newItem.error);
+        //log error
+        // print(newItem.error);
+      }
       }
 
       // Check if we have more items to load
-      final isLastPage = newItems.length > 10;
+      final isLastPage = offset.value==-1;
       if (isLastPage) {
         _pagingController.appendLastPage(newItems);
       } else {
-        final nextPageKey = pageKey + 1;
+        final nextPageKey = offset.value;
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (error) {
       _pagingController.error = error;
-      print(error);
+      //log error
+      // print(error);
     }
+  }
   }
 
   @override
@@ -111,7 +117,15 @@ class SearchPageController extends GetxController {
     super.onClose();
   }
 
-  Future<Result<List<Product>>> SearchProduct(
+  @override
+  void refresh(){
+    offset.value=0;
+    newItems.clear();
+    _pagingController.refresh();
+    super.refresh();
+  }
+
+  Future<Result<ProductResponseModel>> SearchProduct(
       {required SearchModel searchModel}) async {
     var result = await searchProductsUseCase.call(searchModel: searchModel);
     return result;

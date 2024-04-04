@@ -10,15 +10,16 @@ class SearchProductsRepositoryImpl implements SearchProductsRepository{
   SearchProductsRepositoryImpl({required this.searchRepo});
   
     @override
-      Future<Result<List<Product>>> searchProducts(SearchModel searchModel) async{
+      Future<Result<ProductResponseModel>> searchProducts(SearchModel searchModel) async{
       try {
       final resultData = await searchRepo.searchProducts(searchModel);
-     if (resultData.isNotEmpty) {
+    //  if (resultData.productDtos.isNotEmpty) {
        return Result(data: resultData);
-     }
+    //  }
 
-     return Result(error: 'No products found');
+    //  return Result(error: 'No products found');
    } catch (e) {
+    print(e);
      return Result(error: 'Failed to fetch products');
    }  
     }

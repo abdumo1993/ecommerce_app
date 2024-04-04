@@ -37,14 +37,15 @@ class ReviewModel {
 class Product {
   final String name;
   final double price;
-  final String imageUrl;
+  final List<dynamic> imageUrl;
+  
 
   
  factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      name: json['title'],
+      name: json['name'],
       price: json['price'].toDouble(),
-      imageUrl: json['image'],
+      imageUrl: json['images'],
     );
  }
 
@@ -53,23 +54,38 @@ class Product {
 
 class SearchModel{
   final String searchWord;
-  final List<String>? filters;
-  final int? low;
-  final int? high;
-  final String? category;
-  final int? start;
-  final int? maxSize;
+  List<String>? filters;
+  int? low;
+  int? high;
+  String? category;
+  int? start;
+  int? maxSize;
   
   SearchModel( {this.high, this.category, required this.searchWord, this.filters, this.low, this.start, this.maxSize,});
 
   Map<String, String> toJson () {
     return {
-      "searchWord": searchWord,
+      "name": searchWord,
       if(category!=null)"category": category!,
       if(low!=null)"low":low.toString(),
       if(high!=null)"high": high.toString(),
-      if(start!=null)"start": start.toString(),
-      if(maxSize!=null)"maxSize": maxSize.toString(),
+      // if(start!=null)"start": start.toString(),
+      // if(maxSize!=null)"maxSize": maxSize.toString(),
     };
     }  
+}
+
+class ProductResponseModel{
+  List<Product> productDtos;
+  int nextIndex;
+  int total;
+    ProductResponseModel({required this.productDtos,required this.nextIndex,required this.total});
+
+    factory ProductResponseModel.fromJson(Map<String, dynamic> json, List<Product> products) {
+    return ProductResponseModel(
+      productDtos: products,
+      nextIndex: json['nextIndex'].toInt(),
+      total: json['total'],
+    );
+ }
 }

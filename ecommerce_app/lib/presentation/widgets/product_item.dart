@@ -55,7 +55,7 @@ class ProductItem extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Image.network(
-                        product.imageUrl,
+                        'https://via.placeholder.com/150',
                         width: double.maxFinite,
                         fit: BoxFit.contain, // Cover the available space
                       ),

@@ -11,7 +11,7 @@ SearchProductsUseCaseImpl({required this.searchRepo});
 
 
   @override
-  Future<Result<List<Product>>> call({required SearchModel searchModel}) async {
+  Future<Result<ProductResponseModel>> call({required SearchModel searchModel}) async {
     return await searchRepo.searchProducts(searchModel);
   }
 

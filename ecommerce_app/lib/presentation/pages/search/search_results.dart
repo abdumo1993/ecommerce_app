@@ -1,4 +1,4 @@
-import 'package:ecommerce_app/presentation/controllers/search_page_controller.dart';
+import '../../controllers/search_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -11,7 +11,7 @@ class SearchResult extends StatelessWidget {
  @override
  Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () => Future.sync(() => productController.pagingController.refresh()),
+      onRefresh: () => Future.sync(() => productController.refresh()),
       child: PagedGridView<int, Product>(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: (MediaQuery.of(context).size.width * 0.004).floor(),
@@ -27,10 +27,33 @@ class SearchResult extends StatelessWidget {
           //   title: Text(product.name),
           //   subtitle: Text('\$${product.price.toStringAsFixed(2)}'),
           // ),
-          noMoreItemsIndicatorBuilder: (_) => Container(alignment: Alignment.center, child: Text("NO More Items",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),)),
+          noMoreItemsIndicatorBuilder: (_) => Container(alignment: Alignment.center, height: 100,child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("NO More Items",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 50.0),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text("Explore"),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.tertiary),
+                      foregroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.onPrimary),
+                      // minimumSize: MaterialStatePropertyAll(25 as Size?),
+                      ),
+                ),
+              ),
+            ),
+            ],
+          )),
           noItemsFoundIndicatorBuilder: (_) => ListTile(leading: Image.asset('lib/assets/images/search error.png'),title: Text("Sorry, we couldn't find any \nmatching results for your \nSearch",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),),
           firstPageProgressIndicatorBuilder: (context) => ListTile(title: Text("Loading More Items......",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),),
-          newPageProgressIndicatorBuilder: (_) => ListTile(title: Text("Loading More Items......",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),tileColor: Colors.green.shade200,),
+          // newPageProgressIndicatorBuilder: (_) => ListTile(title: Text("Loading More Items......",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),tileColor: Colors.green.shade200,),
+          newPageProgressIndicatorBuilder: (context) => CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary,backgroundColor: Theme.of(context).colorScheme.secondary),
         ),
       ),
     );
@@ -45,38 +68,41 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-              color: Theme.of(context).colorScheme.secondary,
-              elevation: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Image.network(
-                        product.imageUrl,
-                        width: double.maxFinite,
-                        fit: BoxFit.contain, // Cover the available space
+    return GestureDetector(
+      onTap: () => Get.toNamed("/productDetail"),
+      child: Card(
+                color: Theme.of(context).colorScheme.secondary,
+                elevation: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Image.asset(
+                          'lib/assets/images/bag_1.png',
+                          width: double.maxFinite,
+                          fit: BoxFit.contain, // Cover the available space
+                        ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10 / 4, horizontal: 10),
+                      child: Text(
+                        "$index${product.name}",
+                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10 / 4, horizontal: 10),
-                    child: Text(
-                      "$index${product.name}",
-                      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      "\$${product.price}",
-                      style: TextStyle(fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onPrimary),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        "\$${product.price}",
+                        style: TextStyle(fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onPrimary),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            );
+    );
   }
 }
