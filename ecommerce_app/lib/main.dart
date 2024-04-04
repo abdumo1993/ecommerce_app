@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
+import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
 import 'package:ecommerce_app/presentation/pages/cart/cart.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
 import 'package:ecommerce_app/core/routes/routes.dart';
@@ -25,7 +26,7 @@ class MainApp extends StatelessWidget {
       darkTheme: darkTheme,
       getPages: routes,
       themeMode: ThemeMode.light,
-      home: LoginPage(),
+      home: Cart_cart(),
     );
   }
 }

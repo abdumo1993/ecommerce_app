@@ -1,19 +1,46 @@
+import 'package:ecommerce_app/domain/entities/cart.dart';
+import 'package:ecommerce_app/presentation/controllers/cart.dart';
+import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
+import 'package:ecommerce_app/presentation/pages/cart/emptyCart.dart';
+import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
-class Cart extends StatelessWidget {
-  const Cart({super.key});
+class Cart_cart extends StatelessWidget {
+  const Cart_cart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CartView();
+    CartController controller = Get.put(CartController());
+    return FutureBuilder(
+      future: controller.fetchItems(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CartView(shimmer: true);
+        } else if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.data == null) {
+          return ErrorPage(
+              message: "Couldn't fetch cart items. try again later.");
+        } else {
+          print(snapshot.data);
+          if (snapshot.data!.length == 0) {
+            return CartView(shimmer: true);
+          } else {
+            var cartitems = snapshot.data!;
+            return CartView(items: cartitems, shimmer: true);
+          }
+        }
+      },
+    );
   }
 }
 
 class CartView extends StatelessWidget {
-  const CartView({
-    super.key,
-  });
+  final bool shimmer;
+  final List<CartItem?>? items;
+  const CartView({super.key, this.shimmer = false, this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +51,23 @@ class CartView extends StatelessWidget {
           width: 800,
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            bottomNavigationBar: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Theme.of(context).colorScheme.tertiary),
-                margin: EdgeInsets.all(20.0),
-                padding: EdgeInsets.all(16),
-                child: Center(
-                    heightFactor: 1,
-                    child: Text("Checkout",
-                        style: TextStyle(color: Colors.white, fontSize: 16)))),
+            bottomNavigationBar: GestureDetector(
+              onTap: () {
+                Get.find<CartController>().addToCart(
+                    {"productId": Get.arguments["id"], "quantity": 1});
+              },
+              child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Theme.of(context).colorScheme.tertiary),
+                  margin: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(16),
+                  child: Center(
+                      heightFactor: 1,
+                      child: Text("Checkout",
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 16)))),
+            ),
             body: Container(
               color: Theme.of(context).colorScheme.primary,
               padding: EdgeInsets.all(20.0),
@@ -73,121 +107,25 @@ class CartView extends StatelessWidget {
                         SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          "Remove All",
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontSize: 16),
+                        GestureDetector(
+                          onTap: () {
+                            Get.find<CartController>();
+                          },
+                          child: Text(
+                            "Remove All",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: 16),
+                          ),
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        Form(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              CartTile(
-                                  imageUrl: "lib/assets/images/Rectangle 9.png",
-                                  size: "M",
-                                  color: "black",
-                                  price: 148,
-                                  title: "Men's Harrington Jacket"),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              CartTile(
-                                  imageUrl: "lib/assets/images/Rectangle 9.png",
-                                  size: "M",
-                                  color: "black",
-                                  price: 148,
-                                  title: "Men's Harrington Jacket"),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              CartTile(
-                                  imageUrl: "lib/assets/images/Rectangle 9.png",
-                                  size: "M",
-                                  color: "black",
-                                  price: 148,
-                                  title: "Men's Harrington Jacket"),
-                            ],
-                          ),
-                        ),
+                        shimmer ? myShimmerForm() : myForm(),
                         SizedBox(
                           height: 120,
                         ),
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Subtotal",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary)),
-                                  Text("\$200",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Shipping Cost",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary)),
-                                  Text("\$8.00",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Tax",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary)),
-                                  Text("\$0.00",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("Total",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onSecondary)),
-                                  Text("\$208",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .onPrimary,
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        shimmer ? myShimmerTotal() : myTotal(),
                         SizedBox(
                           height: 100,
                         ),
@@ -238,6 +176,186 @@ class CartView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class myShimmerTotal extends StatelessWidget {
+  const myShimmerTotal({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    print("herllow");
+    return Container(
+      alignment: Alignment.bottomLeft,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ShimmerContainer(
+                width: 150,
+                height: 30,
+              ),
+              ShimmerContainer(width: 100, height: 30),
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ShimmerContainer(width: 150, height: 30),
+              ShimmerContainer(width: 100, height: 30),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class myTotal extends StatelessWidget {
+  const myTotal({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomLeft,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Subtotal",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary)),
+              Text("\$200",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Shipping Cost",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary)),
+              Text("\$8.00",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Tax",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary)),
+              Text("\$0.00",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary)),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Total",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary)),
+              Text("\$208",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class myShimmerForm extends StatelessWidget {
+  const myShimmerForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: 5,
+        itemBuilder:(context, index) {
+        return Column(
+          children: [
+            ShimmerContainer(width: double.infinity, height: 80,),
+                  SizedBox(
+            height: 20,
+          )
+          ],
+        );
+          
+      },));
+  }
+}
+
+class myForm extends StatelessWidget {
+  const myForm({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: ListView.builder(
+        itemCount: 3,
+        itemBuilder:(context, index) {
+        return Column(
+          children: [
+            CartTile(
+                  imageUrl: "lib/assets/images/Rectangle 9.png",
+                  size: "M",
+                  color: "black",
+                  price: 148,
+                  title: "Men's Harrington Jacket"),
+                  SizedBox(
+            height: 20,
+          )
+          ],
+        );
+          
+      },),
+      // child: Column(
+      //   crossAxisAlignment: CrossAxisAlignment.stretch,
+      //   children: [
+      //     CartTile(
+      //         imageUrl: "lib/assets/images/Rectangle 9.png",
+      //         size: "M",
+      //         color: "black",
+      //         price: 148,
+      //         title: "Men's Harrington Jacket"),
+      //     SizedBox(
+      //       height: 20,
+      //     ),
+      //     CartTile(
+      //         imageUrl: "lib/assets/images/Rectangle 9.png",
+      //         size: "M",
+      //         color: "black",
+      //         price: 148,
+      //         title: "Men's Harrington Jacket"),
+      //     SizedBox(
+      //       height: 20,
+      //     ),
+      //     CartTile(
+      //         imageUrl: "lib/assets/images/Rectangle 9.png",
+      //         size: "M",
+      //         color: "black",
+      //         price: 148,
+      //         title: "Men's Harrington Jacket"),
+      //   ],
+      // ),
     );
   }
 }
@@ -372,6 +490,10 @@ class CartTile extends StatelessWidget {
                                   iconSize: MaterialStateProperty.all(20),
                                 ),
                               ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text("${0}"),
                               SizedBox(
                                 width: 10,
                               ),

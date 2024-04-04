@@ -22,7 +22,7 @@ class AuthDataSource {
       }
       // return false;
     } on DioException catch (e) {
-      throw AuthException(message: e.response?.data ?? e.toString());
+      throw AuthException(message: e.response?.data ?? "Connection Error, try again later.");
     } catch (e) {
       Get.toNamed("/error",
           arguments: {"message": "something went wrong. try again."});
@@ -42,7 +42,7 @@ class AuthDataSource {
             LoginModel(email: user.email, password: user.password));
       }
     } on DioException catch (e) {
-      throw AuthException(message: e.response?.data ?? e.toString());
+      throw AuthException(message: e.response?.data ?? "Connection Error. try again later.");
     } catch (e) {
       Get.toNamed("/error",
           arguments: {"message": "something went wrong. try again."});

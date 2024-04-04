@@ -2,6 +2,7 @@ import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/auth/register.dart';
+import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
 import 'package:ecommerce_app/presentation/pages/cart/cart.dart';
 import 'package:ecommerce_app/presentation/pages/cart/emptyCart.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/addCheckout.dart';
@@ -22,7 +23,7 @@ final routes = [
   GetPage(name: "/register", page: () => RegisterPage()),
   GetPage(name: "/forgotPassword", page: () => ForgotPassword()),
   GetPage(name: "/emailSent", page: () => EmailSent()),
-  GetPage(name: "/cart", page: () => Cart()),
+  GetPage(name: "/cart", page: () => Cart_cart()),
   // to be modified to conditional rendering for empty cart.
   GetPage(name: "/emptyCart", page: () => EmptyCart()),
   GetPage(name: "/addCheckout", page: () => AddCheckout()),
