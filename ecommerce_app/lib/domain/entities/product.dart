@@ -53,7 +53,7 @@ class Product {
 } 
 
 class SearchModel{
-  final String searchWord;
+  final String? searchWord;
   List<String>? filters;
   int? low;
   int? high;
@@ -61,11 +61,11 @@ class SearchModel{
   int? start;
   int? maxSize;
   
-  SearchModel( {this.high, this.category, required this.searchWord, this.filters, this.low, this.start, this.maxSize,});
+  SearchModel( {this.high, this.category, this.searchWord, this.filters, this.low, this.start, this.maxSize,});
 
   Map<String, String> toJson () {
     return {
-      "name": searchWord,
+      if(searchWord!=null)"name": searchWord!,
       if(category!=null)"category": category!,
       if(low!=null)"low":low.toString(),
       if(high!=null)"high": high.toString(),

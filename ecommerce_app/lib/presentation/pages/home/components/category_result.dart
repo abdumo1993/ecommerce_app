@@ -1,12 +1,12 @@
-import '../../controllers/search_page_controller.dart';
+import '../../../controllers/category_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../../../domain/entities/product.dart';
+import '../../../../domain/entities/product.dart';
 
-class SearchResult extends StatelessWidget {
- final SearchPageController productController = Get.find<SearchPageController>();
+class CategoryResult extends StatelessWidget {
+ final CategoryPageController productController = Get.find<CategoryPageController>();
 
  @override
  Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class SearchResult extends StatelessWidget {
       onRefresh: () => Future.sync(() => productController.refresh()),
       child: PagedGridView<int, Product>(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: (MediaQuery.of(context).size.width * 0.004).floor()>0? (MediaQuery.of(context).size.width * 0.007).floor(): 1,
+                    crossAxisCount: (MediaQuery.of(context).size.width * 0.007).floor(),
                     childAspectRatio: 1.0,
                   ),
         pagingController: productController.pagingController,
