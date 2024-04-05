@@ -70,7 +70,7 @@ class SearchPageController extends GetxController {
     validateSearchWord();
     if (valid && _pagingController.nextPageKey!=null) {
     try {
-
+      List<String> category = selectedFilters.map((element) => element ?? "").toList().cast<String>();
       int low = expansionController.range.value.start.toInt();
       int high = expansionController.range.value.end.toInt();
       int maxSize = int.tryParse(expansionController.pageSize.single) ?? 10;
@@ -79,6 +79,9 @@ class SearchPageController extends GetxController {
       _searchModel.high= high;
       _searchModel.start = pageKey;
       _searchModel.maxSize = maxSize;
+      if(category.isNotEmpty){
+      _searchModel.category = category;
+      }
       
       if (offset.value != -1){
         final newItem = await SearchProduct(

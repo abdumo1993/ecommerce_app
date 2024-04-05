@@ -64,7 +64,7 @@ class CategoryPageController extends GetxController {
       SearchModel _searchModel = SearchModel();
       _searchModel.start = pageKey;
       _searchModel.maxSize = maxSize;
-      _searchModel.category = Get.parameters["category"];
+      _searchModel.category = [Get.parameters["category"]];
       
       if (offset.value != -1){
         final newItem = await SearchProduct(

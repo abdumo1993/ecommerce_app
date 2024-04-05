@@ -74,8 +74,8 @@ class ProductCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Image.asset(
-                          'lib/assets/images/bag_1.png',
+                      child: Image.network(
+                          product.imageUrl[0]??'https://via.placeholder.com/250',
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
                         ),
@@ -84,7 +84,7 @@ class ProductCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 10 / 4, horizontal: 10),
                       child: Text(
-                        "$index${product.name}",
+                        "${product.name}",
                         style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                         overflow: TextOverflow.ellipsis,
                       ),
