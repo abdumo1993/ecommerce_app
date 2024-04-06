@@ -6,6 +6,7 @@ import 'package:ecommerce_app/presentation/pages/home/home.dart';
 import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
 import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +14,7 @@ void main() async {
   await dotenv.load();
   runApp(const MainApp());
 }
+
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -24,7 +26,7 @@ class MainApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       getPages: routes,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       home: LoginPage(),
     );
   }

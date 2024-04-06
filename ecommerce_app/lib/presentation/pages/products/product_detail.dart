@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
@@ -13,6 +12,7 @@ class ProductDetails extends StatefulWidget {
     super.key,
   });
 
+
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
 }
@@ -25,7 +25,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     print("sss");
     return Material(
       child: FutureBuilder(
-        future: pDetailController.retrieveProduct("1"),
+        future: pDetailController.retrieveProduct(1),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return page(
@@ -33,16 +33,23 @@ class _ProductDetailsState extends State<ProductDetails> {
             );
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data == null) {
-            return ErrorPage(
-              message: "Error loading.",
-            );
+                print("herere is the eror");
+            // return ErrorPage(
+            //   message: "Error loading.",
+            // );
+            
+            return SnackBar(content:Text( "Error loading"));
           } else if (snapshot.hasError) {
+                print("herere is the erorrrrr");
+
             return ErrorPage(
               message: "Error.",
             );
           } else {
             // print(
             //   "the data: ${snapshot.data!.name}");
+                print("herere is the eakfjakljflakjror");
+
             PDetailModel product = snapshot.data!;
             return page(
               product: product,

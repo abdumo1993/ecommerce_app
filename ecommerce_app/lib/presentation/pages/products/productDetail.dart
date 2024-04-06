@@ -36,7 +36,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
   void fetch() async {  
     try {
-      var a = await pDetailController.retrieveProduct("1");
+      var a = await pDetailController.retrieveProduct(1);
       print("a: $a");
       setState(() {
         

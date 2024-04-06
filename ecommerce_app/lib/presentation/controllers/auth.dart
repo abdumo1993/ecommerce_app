@@ -47,7 +47,7 @@ class PDetailController extends GetxController {
     // submit the reviews using a use case.
   }
 
-  Future<PDetailModel?> retrieveProduct(String id) async {
+  Future<PDetailModel?> retrieveProduct(int id) async {
     try {
       var use = PDetailUseCase(
           repo: PDetailRepositoryImp(dataSource: PDetailDataSource()));

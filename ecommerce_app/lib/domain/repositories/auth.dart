@@ -13,5 +13,5 @@ abstract class ReviewRepository {
 }
 
 abstract class PDetailRepository {
-  Future<PDetailModel?> fetch(String id);
+  Future<PDetailModel?> fetch(int id);
 }

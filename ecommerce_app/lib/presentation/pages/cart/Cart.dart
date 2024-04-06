@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/domain/entities/cart.dart';
 import 'package:ecommerce_app/presentation/controllers/cart.dart';
+import 'package:ecommerce_app/presentation/controllers/checkout.dart';
 import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/pages/cart/emptyCart.dart';
 import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
@@ -14,6 +15,7 @@ class Cart_cart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CartController controller = Get.put(CartController());
+    CheckoutController checkoutController = Get.put(CheckoutController());
     return FutureBuilder(
       future: controller.fetchItems(),
       builder: (context, snapshot) {
@@ -26,10 +28,10 @@ class Cart_cart extends StatelessWidget {
         } else {
           print(snapshot.data);
           if (snapshot.data!.length == 0) {
-            return CartView(shimmer: true);
+            return EmptyCart();
           } else {
             var cartitems = snapshot.data!;
-            return CartView(items: cartitems, shimmer: true);
+            return CartView(items: cartitems, shimmer: false);
           }
         }
       },
@@ -53,8 +55,10 @@ class CartView extends StatelessWidget {
             backgroundColor: Colors.transparent,
             bottomNavigationBar: GestureDetector(
               onTap: () {
-                Get.find<CartController>().addToCart(
-                    {"productId": Get.arguments["id"], "quantity": 1});
+                if (items != null) {
+                  Get.find<CheckoutController>().checkout(items!);
+                }
+                
               },
               child: Container(
                   decoration: BoxDecoration(
@@ -284,20 +288,23 @@ class myShimmerForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Form(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: 5,
-        itemBuilder:(context, index) {
+        child: ListView.builder(
+      shrinkWrap: true,
+      itemCount: 5,
+      itemBuilder: (context, index) {
         return Column(
           children: [
-            ShimmerContainer(width: double.infinity, height: 80,),
-                  SizedBox(
-            height: 20,
-          )
+            ShimmerContainer(
+              width: double.infinity,
+              height: 80,
+            ),
+            SizedBox(
+              height: 20,
+            )
           ],
         );
-          
-      },));
+      },
+    ));
   }
 }
 
@@ -311,22 +318,22 @@ class myForm extends StatelessWidget {
     return Form(
       child: ListView.builder(
         itemCount: 3,
-        itemBuilder:(context, index) {
-        return Column(
-          children: [
-            CartTile(
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              CartTile(
                   imageUrl: "lib/assets/images/Rectangle 9.png",
                   size: "M",
                   color: "black",
                   price: 148,
                   title: "Men's Harrington Jacket"),
-                  SizedBox(
-            height: 20,
-          )
-          ],
-        );
-          
-      },),
+              SizedBox(
+                height: 20,
+              )
+            ],
+          );
+        },
+      ),
       // child: Column(
       //   crossAxisAlignment: CrossAxisAlignment.stretch,
       //   children: [

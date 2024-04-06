@@ -37,7 +37,7 @@ class PDetailUseCase {
 
   PDetailUseCase({required this.repo});
 
-  Future<PDetailModel?> fetch (String id) async {
+  Future<PDetailModel?> fetch (int id) async {
     return await repo.fetch(id);
   }
   

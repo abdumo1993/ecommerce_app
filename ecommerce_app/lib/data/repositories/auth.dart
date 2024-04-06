@@ -41,7 +41,7 @@ class PDetailRepositoryImp implements PDetailRepository {
 
   PDetailRepositoryImp({required this.dataSource});
   @override
-  Future<PDetailModel?> fetch(String id) async {
+  Future<PDetailModel?> fetch(int id) async {
     return await dataSource.fetch(id);
   }
   

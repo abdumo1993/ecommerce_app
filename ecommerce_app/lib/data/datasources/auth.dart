@@ -90,7 +90,7 @@ class ReviewDataSource {
 class PDetailDataSource {
   DioClient dio = DioClient();
 
-  Future<PDetailModel?> fetch(String id) async {
+  Future<PDetailModel?> fetch(int id) async {
     try {
       var res = await dio.dio.get("/products/$id");
       print(res);
