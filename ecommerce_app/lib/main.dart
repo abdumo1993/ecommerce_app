@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 void main() async {
   await dotenv.load();
+  Get.put(ThemeController());
   runApp(const MainApp());
 }
 
@@ -21,13 +22,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      getPages: routes,
-      themeMode: ThemeMode.dark,
-      home: LoginPage(),
+    return Obx(
+      ()=>
+        GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          getPages: routes,
+          themeMode: Get.find<ThemeController>().theme.value,
+          home: LoginPage(),
+        ),
     );
   }
 }
@@ -51,3 +55,13 @@ ThemeData darkTheme = ThemeData(
   onSecondary: Color(0xFFFFFF).withOpacity(0.5),
   onTertiary: Color(0xFFFFFFF),
 ));
+
+class ThemeController extends GetxController {
+  RxBool isSwitched = false.obs;
+  Rx<ThemeMode> theme = ThemeMode.light.obs;
+  void onItemTapped() {
+    isSwitched.value = !isSwitched.value;
+    if(isSwitched.value)theme.value = ThemeMode.dark;
+    if(!isSwitched.value)theme.value = ThemeMode.light;
+  }
+}

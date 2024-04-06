@@ -2,7 +2,9 @@ import 'package:ecommerce_app/presentation/pages/home/components/categories_page
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 
+import '../../../../core/utils/category_enum.dart';
 import 'selected_category_page.dart';
 
 class Categories extends StatelessWidget {
@@ -49,10 +51,7 @@ class Categories extends StatelessWidget {
                   return Column(
                     children: [
                       IconButton(
-                        onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SelectedCategoryPage())),
+                        onPressed: () => Get.toNamed("/selectedCategory",parameters: {"category": Category.values[index].name}),
                         icon: Image.asset(
                           "lib/assets/images/bag_1.png",
                           fit: BoxFit.contain,
@@ -60,12 +59,9 @@ class Categories extends StatelessWidget {
                         ),
                       ),
                       GestureDetector(
-                          onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SelectedCategoryPage())),
+                          onTap: () => Get.toNamed("/selectedCategory",parameters: {"category": Category.values[index].name}),
                           child: Text(
-                            "Bags",
+                            Category.values[index].name,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary),
                           ))

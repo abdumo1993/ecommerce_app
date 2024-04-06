@@ -1,12 +1,26 @@
+import 'package:ecommerce_app/presentation/controllers/category_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../widgets/item_card.dart';
 
-class SelectedCategoryPage extends StatelessWidget {
-  const SelectedCategoryPage({super.key});
+import '../../../../data/data_sources/search_product_data_source.dart';
+import '../../../../data/data_sources/search_products_data_source_impl.dart';
+import '../../../../data/repositories/search_product_repository_impl.dart';
+import '../../../../domain/repositories/search_product_repository.dart';
+import '../../../../domain/usecases/search_product_usecase.dart';
+import '../../../../domain/usecases/search_product_usecase_impl.dart';
+import 'category_result.dart';
 
+class SelectedCategoryPage extends StatelessWidget {
+  SelectedCategoryPage({super.key});
+  final String selectedCategory = Get.parameters["category"]??"category";
   @override
   Widget build(BuildContext context) {
+final SearchProductsDataSource searchProductsDataSource = SearchProductsDataSourceImpl();
+ final SearchProductsRepository searchProductsRepository = SearchProductsRepositoryImpl(searchRepo: searchProductsDataSource);
+final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(searchRepo: searchProductsRepository);
+  final CategoryPageController controller = Get.put(CategoryPageController(searchProductsUseCase));
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Column(
@@ -33,7 +47,7 @@ class SelectedCategoryPage extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 20, top: 5),
             child: Text(
-              "Hoodies",
+              selectedCategory,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.bold,
@@ -42,19 +56,7 @@ class SelectedCategoryPage extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: GridView.builder(
-                  itemCount: 50,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        (MediaQuery.of(context).size.width * 0.009).floor(),
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemBuilder: (context, index) => ItemCard()),
-            ),
+            child: CategoryResult(),
           ),
         ],
       ),

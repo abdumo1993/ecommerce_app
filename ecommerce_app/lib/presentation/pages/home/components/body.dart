@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -30,8 +31,7 @@ class Body extends StatelessWidget {
                   )),
               SearchingBar(),
               IconButton(
-                  onPressed: () {},
-                      //=> Get.to(()=> Search(keyWord: "",)),
+                  onPressed: () {Get.find<ThemeController>().onItemTapped();},
                   icon: Icon(Icons.dark_mode_outlined),color: Theme.of(context).colorScheme.onPrimary,),
               IconButton(
                   onPressed: () => Navigator.push(

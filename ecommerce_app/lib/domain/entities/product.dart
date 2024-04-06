@@ -53,26 +53,33 @@ class Product {
 } 
 
 class SearchModel{
-  final String searchWord;
+  final String? searchWord;
   List<String>? filters;
   int? low;
   int? high;
-  String? category;
+  List<String?>? category;
   int? start;
   int? maxSize;
   
-  SearchModel( {this.high, this.category, required this.searchWord, this.filters, this.low, this.start, this.maxSize,});
+  SearchModel( {this.high, this.category, this.searchWord, this.filters, this.low, this.start, this.maxSize,});
 
-  Map<String, String> toJson () {
+  Map<String, dynamic> toJson () {
     return {
-      "name": searchWord,
-      if(category!=null)"category": category!,
+      if(searchWord!=null)"name": searchWord!,
+      if(category!=null)"categories": category,
       if(low!=null)"low":low.toString(),
       if(high!=null)"high": high.toString(),
       // if(start!=null)"start": start.toString(),
       // if(maxSize!=null)"maxSize": maxSize.toString(),
     };
     }  
+    String toQueryParameter() {
+    if (category != null) {
+      String qp = category!.join(',');
+      return qp;
+    }
+    return "";
+  }
 }
 
 class ProductResponseModel{
