@@ -35,6 +35,7 @@ class AuthDataSource {
   Future<bool> register(RegisterModel user) async {
     try {
       var res = await dio.dio.post("/auth/register", data: user.toJson());
+
       if (res.statusCode == 201) {
         // log in
         // return await login(
@@ -43,11 +44,16 @@ class AuthDataSource {
         return true;
       }
     } on AuthException catch (e) {
+      print("47");
       rethrow;
     } on DioException catch (e) {
       // handle dio exceptions.
+      print("${e.response?.statusCode} ${e.response?.data}");
+
       handledioExceptions(e);
     } catch (e) {
+      print("55");
+
       throw AuthException(message: "Registeration failed. try again.");
     }
     return false;
@@ -75,15 +81,12 @@ class ReviewDataSource {
     try {
       var res = await dio.dio.post("/review", data: review.toJson());
       print("wer a e re77");
-      if (res.statusCode == 200) {
+      if (res.statusCode == 204) {
         return true;
       }
     } on DioException catch (e) {
       print("in review source: $e");
-      if (e.type == DioExceptionType.badResponse) {
-        Get.toNamed("/error",
-            arguments: {"message": "Invalid request. Try again."});
-      }
+      handledioExceptions(e);
     }
     return false;
   }
@@ -94,24 +97,16 @@ class PDetailDataSource {
 
   Future<PDetailModel?> fetch(int id) async {
     try {
-      var res = await dio.dio.get("/products/$id");
-      print(res);
+      var res = await dio.dio.get("/product/$id");
+      print("res: $res");
       if (res.statusCode == 200) {
-        return PDetailModel.fromJson(res.data);
+        print("stats: ${res.statusCode}");
+        var b = PDetailModel.fromJson(res.data);
+        print("coreect herer");
+        return b;
       }
     } on DioException catch (e) {
-      handleDioExceptions(e);
-      var err = "";
-      if (e.type == DioExceptionType.badResponse) {
-        if (e.response?.statusCode == 404) {
-          err = "Product Not found!";
-        } else if (e.response?.statusCode == 400) {
-          err = "Invalid Request";
-        } else {
-          err = "Something went wrong ss";
-        }
-      }
-      throw CustomeException(message: err);
+      handledioExceptions(e);
     }
     return null;
   }

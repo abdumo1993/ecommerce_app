@@ -3,7 +3,7 @@ import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
 import 'package:ecommerce_app/core/routes/routes.dart';
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
-import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
+// import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
 import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:flutter/material.dart';
 
@@ -16,22 +16,20 @@ void main() async {
   runApp(const MainApp());
 }
 
-
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Obx(
-      ()=>
-        GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          getPages: routes,
-          themeMode: Get.find<ThemeController>().theme.value,
-          home: LoginPage(),
-        ),
+      () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        getPages: routes,
+        themeMode: Get.find<ThemeController>().theme.value,
+        home: LoginPage(),
+      ),
     );
   }
 }
@@ -61,7 +59,7 @@ class ThemeController extends GetxController {
   Rx<ThemeMode> theme = ThemeMode.light.obs;
   void onItemTapped() {
     isSwitched.value = !isSwitched.value;
-    if(isSwitched.value)theme.value = ThemeMode.dark;
-    if(!isSwitched.value)theme.value = ThemeMode.light;
+    if (isSwitched.value) theme.value = ThemeMode.dark;
+    if (!isSwitched.value) theme.value = ThemeMode.light;
   }
 }

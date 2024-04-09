@@ -31,6 +31,7 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       return await authProvider.register(user);
     } catch (e) {
+      print("repo: $e");
       rethrow;
     }
   }
@@ -43,7 +44,11 @@ class ReviewRepositoryImp implements ReviewRepository {
 
   @override
   Future<bool> send(ReviewModel review) async {
-    return await reviewSource.send(review);
+    try {
+      return await reviewSource.send(review);
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 
@@ -53,6 +58,10 @@ class PDetailRepositoryImp implements PDetailRepository {
   PDetailRepositoryImp({required this.dataSource});
   @override
   Future<PDetailModel?> fetch(int id) async {
-    return await dataSource.fetch(id);
+    try {
+      return await dataSource.fetch(id);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

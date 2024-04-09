@@ -4,11 +4,8 @@ class LoginModel {
 
   const LoginModel({required this.email, required this.password});
 
-  Map<String, String> toJson () {
-    return {
-      "Email": email,
-      "Password": password
-    };
+  Map<String, String> toJson() {
+    return {"Email": email, "Password": password};
   }
 }
 
@@ -19,10 +16,15 @@ class RegisterModel {
   final String lastname;
   final String confirmPassword;
 
+  const RegisterModel({
+    required this.email,
+    required this.password,
+    required this.firstname,
+    required this.lastname,
+    required this.confirmPassword,
+  });
 
-  const RegisterModel({required this.email, required this.password, required this.firstname, required this.lastname, required this.confirmPassword, });
-
-  Map<String, String> toJson () {
+  Map<String, String> toJson() {
     return {
       "Email": email,
       "Password": password,
@@ -31,6 +33,4 @@ class RegisterModel {
       "ConfirmPassword": confirmPassword,
     };
   }
-
-
 }

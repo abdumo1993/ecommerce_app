@@ -1,4 +1,3 @@
-
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
@@ -12,7 +11,6 @@ class ProductDetails extends StatefulWidget {
     super.key,
   });
 
-
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
 }
@@ -25,7 +23,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     print("sss");
     return Material(
       child: FutureBuilder(
-        future: pDetailController.retrieveProduct(1),
+        future: pDetailController.retrieveProduct(3),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return page(
@@ -33,14 +31,17 @@ class _ProductDetailsState extends State<ProductDetails> {
             );
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data == null) {
-                print("herere is the eror");
+            print("herere is the eror");
             // return ErrorPage(
             //   message: "Error loading.",
             // );
-            
-            return SnackBar(content:Text( "Error loading"));
+
+            return ErrorPage(
+              message: "Product Not Found.",
+              backDest: "/home",
+            );
           } else if (snapshot.hasError) {
-                print("herere is the erorrrrr");
+            print("herere is the erorrrrr");
 
             return ErrorPage(
               message: "Error.",
@@ -48,7 +49,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           } else {
             // print(
             //   "the data: ${snapshot.data!.name}");
-                print("herere is the eakfjakljflakjror");
+            print("herere is the eakfjakljflakjror");
 
             PDetailModel product = snapshot.data!;
             return page(
@@ -265,9 +266,9 @@ class DescriptionSection extends StatelessWidget {
         children: [
           Text(
             product != null
-                ? product!.description == null
-                    ? "No Description"
-                    : product!.description!
+                ? product!.details == null
+                    ? "No details"
+                    : product!.details!
                 : "",
             style: TextStyle(
                 fontSize: 12, color: Theme.of(context).colorScheme.onSecondary),
@@ -364,15 +365,17 @@ class ReviewWrite extends StatelessWidget {
               controller: detailController.reviewController,
               maxLines: 4,
               minLines: 4,
-              
-              style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 12),
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary, fontSize: 12),
               decoration: InputDecoration(
                 label: Text(
                   "review",
-                  style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                 ),
                 hintText: "Write you review of this product.",
-                hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+                hintStyle:
+                    TextStyle(color: Theme.of(context).colorScheme.onSecondary),
                 fillColor: Theme.of(context).colorScheme.secondary,
                 filled: true,
                 border: OutlineInputBorder(
@@ -429,7 +432,6 @@ class NameSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-    
       product == null ? "" : product!.name,
       style: TextStyle(
           fontSize: 16,
@@ -502,7 +504,7 @@ class ImageSection extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-            children: product.imageUrls!.map(
+            children: product.images!.map(
           (e) {
             var s;
             try {
@@ -519,7 +521,7 @@ class ImageSection extends StatelessWidget {
                 },
               );
             } catch (e) {
-              print("ljfaljflkajflkj: $e");
+              print("image error: $e");
               s = Container(
                 color: Theme.of(context).colorScheme.secondary,
                 width: 120,
@@ -562,7 +564,10 @@ class ratingWidget extends StatelessWidget {
                           Icons.star,
                           color: Colors.yellow,
                         )
-                      : Icon(Icons.star_border, color: Theme.of(context).colorScheme.secondary,),
+                      : Icon(
+                          Icons.star_border,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
                 ),
               )
               .toList(),
@@ -922,7 +927,6 @@ class myReviews extends StatelessWidget {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
-       
         Text(
           "${product.reviews!["rating"]} Ratings",
           style: TextStyle(
@@ -931,13 +935,11 @@ class myReviews extends StatelessWidget {
             color: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
-       
         Text(
           "213 Reviews",
           style: TextStyle(
               fontSize: 12, color: Theme.of(context).colorScheme.onSecondary),
         ),
-       
         Container(
           // height: MediaQuery.of(context).size.height,
           width: commentsWidth,

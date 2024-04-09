@@ -40,9 +40,22 @@ class PDetailController extends GetxController {
         res == true ? Get.toNamed("/productDetail") : null;
         changeRating(0);
         reviewController.text = "";
+      } on BadResponseException catch (e) {
+        if (e.statusCode == 500) {
+          Get.toNamed("/error", arguments: {
+            "message":
+                "An error has Occured on the server side. please try later."
+          });
+        } else if (e.statusCode == 400) {
+          Get.toNamed("/error",
+              arguments: {"message": "Invalid Request Format."});
+        } else {
+          Get.toNamed("/error",
+              arguments: {"message": "Something went wrong p"});
+        }
       } catch (e) {
         Get.toNamed("/error", arguments: {"message": "login is needed"});
-        Future.delayed(Duration(seconds: 3), () => Get.toNamed("/login"));
+        Future.delayed(const Duration(seconds: 2), () => Get.toNamed("/login"));
         // Get.toNamed("/login");
       }
     }
@@ -54,15 +67,20 @@ class PDetailController extends GetxController {
       var use = PDetailUseCase(
           repo: PDetailRepositoryImp(dataSource: PDetailDataSource()));
       var a = await use.fetch(id);
-      print(a);
       return a;
-    } on CustomeException catch (e) {
-      Get.toNamed("/error", arguments: {"message": e.toString()});
-      Future.delayed(Duration(seconds: 2), () => Get.back());
-    } on DioException catch (e) {
-      Get.offNamed("/home");
-      Get.snackbar("Error", "Product Detail loading failed.");
+    } on BadResponseException catch (e) {
+      print(e.statusCode);
+      if (e.statusCode == 500) {
+        Get.offNamed("/error", arguments: {
+          "message":
+              "An Error has occured on the server side. please try again later."
+        });
+      } else if (e.statusCode == 404) {
+        Get.offNamed("/home");
+        Get.snackbar("NotFound", "Product is not found.");
+      }
     }
+    return null;
   }
 }
 
@@ -114,7 +132,7 @@ class LoginController extends GetxController {
     } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
-      Get.toNamed("/error", arguments: {"message": "Something went wrong"});
+      Get.toNamed("/error", arguments: {"message": "Something went wrong l"});
     }
   }
 
@@ -171,6 +189,8 @@ class RegisterConroller extends LoginController {
     validateConfirm();
 
     try {
+      print("203");
+
       if (emailError.value == null &&
           passwordError.value == null &&
           firstNameError.value == null &&
@@ -192,16 +212,18 @@ class RegisterConroller extends LoginController {
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
-      print(e.toString());
+      print("how sie jfljalf");
       if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {"message": e.toString()});
       } else {
         Get.offAllNamed("/register", arguments: {"message": e.message});
       }
     } on CustomeException catch (e) {
+      print("here is hte erroer");
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
-      Get.toNamed("/error", arguments: {"message": "Something went wrong"});
+      print(e);
+      Get.toNamed("/error", arguments: {"message": "Something went wrong r"});
     }
   }
 

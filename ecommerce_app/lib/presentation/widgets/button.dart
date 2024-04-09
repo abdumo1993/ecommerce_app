@@ -17,7 +17,8 @@ class ContinueButton extends StatelessWidget {
         style: ButtonStyle(
           padding:
               MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(padding)),
-          backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.tertiary),
+          backgroundColor: MaterialStateProperty.all<Color>(
+              Theme.of(context).colorScheme.tertiary),
         ),
         onPressed: () => onPress(),
         child: child);
@@ -56,8 +57,8 @@ class _ChoiceButtonState extends State<ChoiceButton> {
     return TextButton(
       style: ButtonStyle(
         padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
-        backgroundColor:
-            MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
+        backgroundColor: MaterialStateProperty.all<Color>(
+            Theme.of(context).colorScheme.secondary),
       ),
       onPressed: () {
         showModalBottomSheet(
@@ -66,7 +67,6 @@ class _ChoiceButtonState extends State<ChoiceButton> {
           builder: (BuildContext context) {
             return Container(
               padding: EdgeInsets.all(10.0),
-              
               child: Column(
                 mainAxisSize: MainAxisSize
                     .min, // Use min to make the bottom sheet only as tall as its content
@@ -76,8 +76,10 @@ class _ChoiceButtonState extends State<ChoiceButton> {
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       widget.title,
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onPrimary),
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                   // Add a divider for better visual separation
@@ -93,7 +95,6 @@ class _ChoiceButtonState extends State<ChoiceButton> {
                             textColor: Theme.of(context).colorScheme.onPrimary,
                             tileColor: Theme.of(context).colorScheme.secondary,
                             hoverColor: Theme.of(context).colorScheme.tertiary,
-                            
                             shape: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(100),
                                 borderSide: BorderSide.none),
@@ -122,7 +123,9 @@ class _ChoiceButtonState extends State<ChoiceButton> {
         children: [
           Text(
             widget.title,
-            style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold),
           ),
           Row(
             children: [
@@ -130,7 +133,10 @@ class _ChoiceButtonState extends State<ChoiceButton> {
               SizedBox(
                 width: 10,
               ),
-              Image.asset("lib/assets/images/arrow_down.png", color: Theme.of(context).colorScheme.onSecondary,)
+              Image.asset(
+                "lib/assets/images/arrow_down.png",
+                color: Theme.of(context).colorScheme.onSecondary,
+              )
             ],
           )
         ],
@@ -205,7 +211,6 @@ class _HeartButtonState extends State<HeartButton> {
   }
 }
 
-
 class QuantityButton extends StatefulWidget {
   const QuantityButton({super.key});
 
@@ -225,7 +230,12 @@ class _QuantityButtonState extends State<QuantityButton> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text("Quantity", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontWeight: FontWeight.bold),),
+          Text(
+            "Quantity",
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold),
+          ),
           Row(
             children: [
               ContinueButton(
@@ -234,11 +244,18 @@ class _QuantityButtonState extends State<QuantityButton> {
                       _quantity += 1;
                     });
                   },
-                  child: Icon(Icons.add, color: Colors.white,)),
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  )),
               SizedBox(
                 width: 10,
               ),
-              Text("$_quantity", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+              Text(
+                "$_quantity",
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
               SizedBox(
                 width: 10,
               ),
@@ -249,7 +266,10 @@ class _QuantityButtonState extends State<QuantityButton> {
                       if (_quantity > 1) _quantity -= 1;
                     });
                   },
-                  child: Icon(Icons.remove, color: Colors.white,)),
+                  child: Icon(
+                    Icons.remove,
+                    color: Colors.white,
+                  )),
             ],
           ),
         ],
@@ -258,11 +278,11 @@ class _QuantityButtonState extends State<QuantityButton> {
   }
 }
 
-
 class backButton extends StatelessWidget {
- final String? nextPageName;
+  final String? nextPageName;
   const backButton({
-    super.key, this.nextPageName,
+    super.key,
+    this.nextPageName,
   });
 
   @override
@@ -281,8 +301,8 @@ class backButton extends StatelessWidget {
           size: 40, // Adjust the size as needed
         ),
         onPressed: () {
-
-         nextPageName != null ? Get.off(nextPageName) : Get.back();
+          print(nextPageName);
+          nextPageName != null ? Get.offNamed(nextPageName!) : Get.back();
         },
       ),
     );

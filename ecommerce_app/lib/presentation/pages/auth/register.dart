@@ -33,7 +33,9 @@ class RegisterPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const backButton(),
+                  const backButton(
+                    nextPageName: "/login",
+                  ),
                   (Get.arguments != null)
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,

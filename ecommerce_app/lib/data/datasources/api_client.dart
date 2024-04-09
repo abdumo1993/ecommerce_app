@@ -20,50 +20,50 @@ class DioClient {
     _dio = Dio();
     _dio.options.baseUrl = dotenv.env["BASE_URL"] ?? "http://localhost:3000";
     _dio.interceptors.add(
-      InterceptorsWrapper(onRequest: (options, handler) async {
-        print(options.path);
-        String? accessToken = await getAccessToken();
-        options.headers['Authorization'] = 'Bearer $accessToken';
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          print(options.path);
+          String? accessToken = await getAccessToken();
+          options.headers['Authorization'] = 'Bearer $accessToken';
 
-        return handler.next(options);
-      }, onError: (DioException e, handler) async {
-        // print("onError: $e");
-        try {
-          if (e.response?.statusCode == 401 &&
-              !(excludePaths.contains(e.requestOptions.path))) {
-            String newAccessToken = await refreshToken();
+          return handler.next(options);
+        },
+        onError: (DioException e, handler) async {
+          // print("onError: $e");
+          try {
+            if (e.response?.statusCode == 401 &&
+                !(excludePaths.contains(e.requestOptions.path))) {
+              String newAccessToken = await refreshToken();
 
-            e.requestOptions.headers['Authorization'] =
-                'Bearer $newAccessToken';
-            return handler.resolve(await _dio.fetch(e.requestOptions));
-          } else {
-            throw e;
+              e.requestOptions.headers['Authorization'] =
+                  'Bearer $newAccessToken';
+              return handler.resolve(await _dio.fetch(e.requestOptions));
+            } else {
+              throw e;
+            }
+          } on AuthException catch (e) {
+            Get.offNamed("/error", arguments: {
+              "message": "An Error has occured: ${e.toString()}"
+            });
+            Future.delayed(
+                Duration(seconds: 2), () => Get.offAllNamed("/login"));
+          } on DioException catch (e) {
+            if (e.requestOptions.path == "/auth/refresh") {
+              Get.offAllNamed("/login",
+                  arguments: {"message": "Session Expired. Please login."});
+              return;
+            } else {
+              handler.reject(e);
+            }
+          } catch (e) {
+            Get.offNamed("/error", arguments: {
+              "message": "An Error has occured. Please Login again."
+            });
+            Future.delayed(
+                const Duration(seconds: 2), () => Get.offAllNamed("/login"));
           }
-        } on AuthException catch (e) {
-          print("errere");
-          Get.offNamed("/error",
-              arguments: {"message": "An Error has occured: ${e.toString()}"});
-          Future.delayed(Duration(seconds: 2), () => Get.offAllNamed("/login"));
-        } on DioException catch (e) {
-          // handle dioexceptions.
-          print("handles");
-          print("errere");
-
-          print(e.type);
-          handler.reject(e);
-        } catch (e) {
-          print("errere");
-
-          Get.offNamed("/error", arguments: {
-            "message": "An Error has occured. Please Login again."
-          });
-          Future.delayed(Duration(seconds: 2), () => Get.offAllNamed("/login"));
-        }
-      }
-
-          // return;
-
-          ),
+        },
+      ),
     );
   }
 

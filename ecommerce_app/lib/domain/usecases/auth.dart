@@ -33,7 +33,11 @@ class ReviewUseCase {
 
   ReviewUseCase({required this.repo});
   Future<bool> send(ReviewModel review) async {
-    return await repo.send(review);
+    try {
+      return await repo.send(review);
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 
@@ -43,6 +47,10 @@ class PDetailUseCase {
   PDetailUseCase({required this.repo});
 
   Future<PDetailModel?> fetch(int id) async {
-    return await repo.fetch(id);
+    try {
+      return await repo.fetch(id);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

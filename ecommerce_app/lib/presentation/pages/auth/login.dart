@@ -4,7 +4,7 @@ import 'package:ecommerce_app/data/repositories/auth.dart';
 import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/domain/usecases/auth.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
-import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
+// import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:ecommerce_app/presentation/widgets/myTextField.dart';
 import 'package:flutter/material.dart';
@@ -30,20 +30,25 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  (Get.arguments != null) ? Column(
+                  (Get.arguments != null)
+                      ? Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Container(
-                                color: Colors.red.withOpacity(0.3),
-                                alignment: Alignment.center,
-                                child: Text("${Get.arguments["message"]}",
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary,
-                                    )))
-                          ]):  const SizedBox(width: 0,height: 0,),
+                              Container(
+                                  color: Colors.red.withOpacity(0.3),
+                                  alignment: Alignment.center,
+                                  child: Text("${Get.arguments["message"]}",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
+                                      )))
+                            ])
+                      : const SizedBox(
+                          width: 0,
+                          height: 0,
+                        ),
                   // Get.arguments ??
                   //     Column(
                   //         crossAxisAlignment: CrossAxisAlignment.stretch,

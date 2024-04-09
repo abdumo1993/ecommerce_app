@@ -4,18 +4,33 @@ import 'package:get/get.dart';
 
 class ErrorPage extends StatelessWidget {
   final String message;
-  const ErrorPage({super.key, this.message = "Something went Wrong."});
+  final String? backDest;
+  const ErrorPage(
+      {super.key, this.message = "Something went Wrong.", this.backDest});
 
   @override
   Widget build(BuildContext context) {
-        print('args ${Get.arguments}');
+    print('args ${Get.arguments}');
+    var errMessage = (Get.arguments == null
+        ? message
+        : Get.arguments!["message"] == null
+            ? message
+            : Get.arguments!["message"]!);
     return Scaffold(
-appBar: AppBar(leading: backButton() ,backgroundColor: Colors.transparent,),
+      appBar: AppBar(
+        leading: backButton(
+          nextPageName: backDest,
+        ),
+        backgroundColor: Colors.transparent,
+      ),
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Container(
         alignment: Alignment.center,
-        padding:const  EdgeInsets.all(30.0),
-        child: Text(Get.arguments!["message"]?? message, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+        padding: const EdgeInsets.all(30.0),
+        child: Text(
+          errMessage,
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
       ),
     );
   }
