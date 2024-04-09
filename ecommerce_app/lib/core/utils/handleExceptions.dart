@@ -25,6 +25,7 @@ void handleDioExceptions(DioException e) {
 }
 
 void handledioExceptions(DioException e) {
+  print("hadnlsdjfkaj $e");
   if (e.type == DioExceptionType.connectionError) {
     throw NetworkException(message: "Connection Error. Try again later");
   } else if (e.type == DioExceptionType.connectionTimeout) {
@@ -34,9 +35,11 @@ void handledioExceptions(DioException e) {
   } else if (e.type == DioExceptionType.receiveTimeout) {
     throw NetworkException(message: "Response TimeOut. Try again later");
   } else if (e.type == DioExceptionType.badResponse) {
+    print("jfjakjfaklj");
+    print("resached: ${e.response?.statusCode}");
     throw BadResponseException(
         message: e.response?.data, statusCode: e.response?.statusCode);
   } else {
-    throw CustomeException(message: "Something went wrong");
+    throw CustomeException(message: "Something went wrong jksjf");
   }
 }

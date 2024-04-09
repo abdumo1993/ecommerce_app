@@ -12,8 +12,6 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<bool> login(LoginModel user) async {
     try {
       return await authProvider.login(user);
-    } on AuthException catch (e) {
-      rethrow;
     } catch (e) {
       rethrow;
     }

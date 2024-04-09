@@ -1,7 +1,7 @@
-
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/core/utils/handleExceptions.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -20,35 +20,50 @@ class DioClient {
     _dio = Dio();
     _dio.options.baseUrl = dotenv.env["BASE_URL"] ?? "http://localhost:3000";
     _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          String? accessToken = await getAccessToken();
-          options.headers['Authorization'] = 'Bearer $accessToken';
+      InterceptorsWrapper(onRequest: (options, handler) async {
+        print(options.path);
+        String? accessToken = await getAccessToken();
+        options.headers['Authorization'] = 'Bearer $accessToken';
 
-          return handler.next(options);
-        },
-        onError: (DioException e, handler) async {
+        return handler.next(options);
+      }, onError: (DioException e, handler) async {
+        // print("onError: $e");
+        try {
           if (e.response?.statusCode == 401 &&
               !(excludePaths.contains(e.requestOptions.path))) {
-            try {
-              String newAccessToken = await refreshToken();
+            String newAccessToken = await refreshToken();
 
-              e.requestOptions.headers['Authorization'] =
-                  'Bearer $newAccessToken';
-              return handler.resolve(await _dio.fetch(e.requestOptions));
-            } on AuthException catch (e) {
-              rethrow;
-            } on DioException catch (e) {
-              // handle dioexceptions.
-              handledioExceptions(e);
-            } catch (e) {
-              throw CustomeException(message: "Something went wrong.");
-            }
+            e.requestOptions.headers['Authorization'] =
+                'Bearer $newAccessToken';
+            return handler.resolve(await _dio.fetch(e.requestOptions));
+          } else {
+            throw e;
           }
+        } on AuthException catch (e) {
+          print("errere");
+          Get.offNamed("/error",
+              arguments: {"message": "An Error has occured: ${e.toString()}"});
+          Future.delayed(Duration(seconds: 2), () => Get.offAllNamed("/login"));
+        } on DioException catch (e) {
+          // handle dioexceptions.
+          print("handles");
+          print("errere");
+
+          print(e.type);
+          handler.reject(e);
+        } catch (e) {
+          print("errere");
+
+          Get.offNamed("/error", arguments: {
+            "message": "An Error has occured. Please Login again."
+          });
+          Future.delayed(Duration(seconds: 2), () => Get.offAllNamed("/login"));
+        }
+      }
 
           // return;
-        },
-      ),
+
+          ),
     );
   }
 
