@@ -17,16 +17,15 @@ class AuthDataSource {
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
 
-        dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
+        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
         return true;
       }
-      // return false;
+    } on AuthException catch (e) {
+      throw AuthException(message: "Login Failed. ${e.toString()}");
     } on DioException catch (e) {
-      throw AuthException(message: e.response?.data ?? "Connection Error, try again later.");
+      handledioExceptions(e);
     } catch (e) {
-      Get.toNamed("/error",
-          arguments: {"message": "something went wrong. try again."});
-      Future.delayed(Duration(seconds: 2), () => Get.back());
+      throw AuthException(message: "Login Failed. Try again");
     }
     return false;
   }
@@ -34,19 +33,20 @@ class AuthDataSource {
   Future<bool> register(RegisterModel user) async {
     try {
       var res = await dio.dio.post("/auth/register", data: user.toJson());
-      print("line47");
-
-      if (res.statusCode == 200) {
+      if (res.statusCode == 201) {
         // log in
-        return await login(
-            LoginModel(email: user.email, password: user.password));
+        // return await login(
+        //     LoginModel(email: user.email, password: user.password));
+        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
+        return true;
       }
+    } on AuthException catch (e) {
+      rethrow;
     } on DioException catch (e) {
-      throw AuthException(message: e.response?.data ?? "Connection Error. try again later.");
+      // handle dio exceptions.
+      handledioExceptions(e);
     } catch (e) {
-      Get.toNamed("/error",
-          arguments: {"message": "something went wrong. try again."});
-      Future.delayed(Duration(seconds: 2), () => Get.back());
+      throw AuthException(message: "Registeration failed. try again.");
     }
     return false;
   }
@@ -65,6 +65,7 @@ class AuthDataSource {
     }
   }
 }
+
 
 class ReviewDataSource {
   DioClient dio = DioClient();

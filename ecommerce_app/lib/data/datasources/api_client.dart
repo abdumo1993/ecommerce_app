@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/core/utils/handleExceptions.dart';
@@ -27,65 +28,61 @@ class DioClient {
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
-          try {
-            if (e.response?.statusCode == 401 &&
-                !(excludePaths.contains(e.requestOptions.path))) {
-              String newAccessToken = await refreshToken(); // may throw customeExcepiton 
+          if (e.response?.statusCode == 401 &&
+              !(excludePaths.contains(e.requestOptions.path))) {
+            try {
+              String newAccessToken = await refreshToken();
 
               e.requestOptions.headers['Authorization'] =
                   'Bearer $newAccessToken';
               return handler.resolve(await _dio.fetch(e.requestOptions));
+            } on AuthException catch (e) {
+              rethrow;
+            } on DioException catch (e) {
+              // handle dioexceptions.
+              handledioExceptions(e);
+            } catch (e) {
+              throw CustomeException(message: "Something went wrong.");
             }
-
-            return handler.next(e);
-          } on DioException catch (e) {
-            handleDioExceptions(e);
-          } on CustomeException catch (e) {
-            Get.toNamed("/error", arguments: {"message" : e.toString()});
-            Future.delayed(Duration(seconds: 2), () => Get.back());
           }
+
           // return;
         },
       ),
     );
   }
 
-  Future<String?> getAccessToken() async {
-    var access = await _storage.read(key: 'accessToken');
+  Future<String?> getAccessToken() async =>
+      await _storage.read(key: 'accessToken');
 
-    return access;
-  }
-
-  Future<String?> getRefreshToken() async {
-    var refresh = await _storage.read(key: "refreshToken");
-    if (refresh == null) {
-      throw CustomeException(message: "Invalid Credentials line56");
-      
-    } else {
-      return refresh;
-    }
-  }
+  Future<String?> getRefreshToken() async =>
+      await _storage.read(key: "refreshToken");
 
   Future<String> refreshToken() async {
-    String? newAccessToken;
+    try {
+      var res = await dio.post("/auth/refresh", data: {
+        "refreshToken": await getRefreshToken(),
+        "accessToken": await getAccessToken()
+      });
+      if (res.statusCode == 200) {
+        print(
+            "refreshed successfully. returning new accesstoken... access:${res.data["accessToken"]}");
 
-    var res = await dio.post("/auth/refresh", data: {
-      "refreshToken": await getRefreshToken(),
-      "accessToken": await getAccessToken()
-    });
-    if (res.statusCode == 200) {
-      print(
-          "refreshed successfully. returning new accesstoken... access:${res.data["accessToken"]}");
-      newAccessToken = res.data["accessToken"];
-      await saveTokens(res.data["accessToken"], res.data["refreshToken"]);
+        await saveTokens(res.data["accessToken"], res.data["refreshToken"]);
+      }
+      var newAccesstoken = await getAccessToken();
+      if (newAccesstoken != null) {
+        return newAccesstoken;
+      } else {
+        throw AuthException(message: "Refresh failed.");
+      }
+    } on AuthException catch (e) {
+      rethrow;
+    } on DioException catch (e) {
+      rethrow;
+    } catch (e) {
+      throw AuthException(message: "Refresh failed for unkown reason.");
     }
-
-    if (newAccessToken == null) {
-      print("in api line 82");
-
-      throw CustomeException(message: "Invalid Credentials line77");
-    }
-    return newAccessToken;
   }
 
   Future<void> saveTokens(String? accessToken, String? refreshToken) async {
@@ -96,15 +93,12 @@ class DioClient {
       }
 
       if (accessToken == null || refreshToken == null) {
-        print("in api line 97");
-
-        throw CustomeException(message: "Invalid Credentials line93");
+        throw AuthException(message: "Saving Tokens Failed.");
       }
-      ;
+    } on AuthException catch (e) {
+      rethrow;
     } catch (e) {
-      print("105: $e");
-      throw CustomeException(
-          message: "something went wrong at: ${runtimeType.toString()}");
+      throw AuthException(message: "Saving Tokens Failed.");
     }
   }
 
@@ -113,7 +107,7 @@ class DioClient {
       _storage.delete(key: "accessToken");
       _storage.delete(key: "refreshToken");
     } catch (e) {
-      throw CustomeException(message: 'Logout failed. Try later.');
+      throw AuthException(message: 'Logout failed. Try later.');
     }
   }
 

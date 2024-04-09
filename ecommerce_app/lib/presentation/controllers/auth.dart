@@ -31,19 +31,21 @@ class PDetailController extends GetxController {
 
   void submitForm() async {
     validateReview();
-    if (valid.value == true){try {
-      var use = ReviewUseCase(
-          repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
-      var res = await use.send(
-          ReviewModel(review: reviewController.text, rating: rating.value!));
-      res == true ? Get.toNamed("/productDetail") : null;
-      changeRating(0);
-      reviewController.text = "";
-    } catch (e) {
-      Get.toNamed("/error", arguments: {"message": "login is needed"});
-      Future.delayed(Duration(seconds: 3), () => Get.toNamed("/login"));
-      // Get.toNamed("/login");
-    }}
+    if (valid.value == true) {
+      try {
+        var use = ReviewUseCase(
+            repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
+        var res = await use.send(
+            ReviewModel(review: reviewController.text, rating: rating.value!));
+        res == true ? Get.toNamed("/productDetail") : null;
+        changeRating(0);
+        reviewController.text = "";
+      } catch (e) {
+        Get.toNamed("/error", arguments: {"message": "login is needed"});
+        Future.delayed(Duration(seconds: 3), () => Get.toNamed("/login"));
+        // Get.toNamed("/login");
+      }
+    }
     // submit the reviews using a use case.
   }
 
@@ -99,11 +101,20 @@ class LoginController extends GetxController {
         res == true ? Get.toNamed("/home") : null;
       }
     } on AuthException catch (e) {
-      print("line 83");
-      Get.toNamed("/login", arguments: {"message": e.toString()});
+      // redendant with badresopnseexcepitonoi to be removed after verification.
+      Get.offAllNamed("/login", arguments: {"message": e.toString()});
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on BadResponseException catch (e) {
+      if (e.statusCode == 500) {
+        Get.toNamed("/error", arguments: {"message": e.toString()});
+      } else {
+        Get.offAllNamed("/login", arguments: {"message": e.message});
+      }
     } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
-      Future.delayed(Duration(seconds: 2), () => Get.back());
+    } catch (e) {
+      Get.toNamed("/error", arguments: {"message": "Something went wrong"});
     }
   }
 
@@ -165,7 +176,6 @@ class RegisterConroller extends LoginController {
           firstNameError.value == null &&
           lastNameError.value == null &&
           confirmError.value == null) {
-        print("line153");
         var use = AuthUserCase(
             repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
         var res = await use.register(RegisterModel(
@@ -174,18 +184,24 @@ class RegisterConroller extends LoginController {
             firstname: firstNameController.text,
             lastname: lastNameController.text,
             confirmPassword: confirmController.text));
-        print("line162");
-//
         res == true ? Get.toNamed("/home") : Get.toNamed("/login");
       }
     } on AuthException catch (e) {
-      print("go");
-      Get.to(RegisterPage(), arguments: {"message": e.message});
-      print("went");
-    } on CustomeException catch (e) {
-      print("line171");
+      // redendant with badresopnseexcepitonoi to be removed after verification.
+      Get.offAllNamed("/register", arguments: {"message": e.toString()});
+    } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
-      Future.delayed(Duration(seconds: 2), () => Get.back());
+    } on BadResponseException catch (e) {
+      print(e.toString());
+      if (e.statusCode == 500) {
+        Get.toNamed("/error", arguments: {"message": e.toString()});
+      } else {
+        Get.offAllNamed("/register", arguments: {"message": e.message});
+      }
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } catch (e) {
+      Get.toNamed("/error", arguments: {"message": "Something went wrong"});
     }
   }
 
@@ -196,9 +212,13 @@ class RegisterConroller extends LoginController {
 
 class LogoutController extends GetxController {
   Future<void> logout() async {
-    var use =
-        AuthUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
-    bool a = await use.logout();
-    a == true ? Get.offAllNamed("/login") : null;
+    try {
+      var use = AuthUserCase(
+          repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+      bool a = await use.logout();
+      a == true ? Get.offAllNamed("/login") : null;
+    } catch (e) {
+      Get.snackbar("Logout Failed.", "log out failed. try again.");
+    }
   }
 }

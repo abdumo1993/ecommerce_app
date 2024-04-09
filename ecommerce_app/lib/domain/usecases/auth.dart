@@ -8,28 +8,33 @@ class AuthUserCase {
   AuthUserCase({required this.repo});
 
   Future<bool> login(LoginModel user) async {
-    return await repo.login(user);
+    try {
+      return await repo.login(user);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<bool> register(RegisterModel user) async {
-    return await repo.register(user);
-
+    try {
+      return await repo.register(user);
+    } catch (e) {
+      rethrow;
+    }
   }
+
   Future<bool> logout() async {
     return await repo.logout();
   }
 }
 
-
 class ReviewUseCase {
   final ReviewRepository repo;
 
   ReviewUseCase({required this.repo});
-Future<bool> send(ReviewModel review) async {
-  
-  return await repo.send(review);
-}
-
+  Future<bool> send(ReviewModel review) async {
+    return await repo.send(review);
+  }
 }
 
 class PDetailUseCase {
@@ -37,8 +42,7 @@ class PDetailUseCase {
 
   PDetailUseCase({required this.repo});
 
-  Future<PDetailModel?> fetch (int id) async {
+  Future<PDetailModel?> fetch(int id) async {
     return await repo.fetch(id);
   }
-  
 }
