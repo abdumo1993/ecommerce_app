@@ -65,8 +65,8 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
                     (states) => Theme.of(context).colorScheme.secondary),
                 onSubmitted: (value) => ({
                   // controller.searchWord.value =value,
-                  controller.refresh(),
-                  controller.confirmError.value,
+                  controller.validateSearchWord(),
+                  if(controller.valid){controller.refresh()},
                   }),
                 padding: const MaterialStatePropertyAll(
                   EdgeInsets.only(left: 30, right: 10),

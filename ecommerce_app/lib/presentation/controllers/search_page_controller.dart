@@ -68,7 +68,7 @@ class SearchPageController extends GetxController {
   PagingController<int, Product> get pagingController => _pagingController;
 
   void loadPage(int pageKey) async {
-      await Future.delayed(Duration(seconds: 5));
+      await Future.delayed(Duration(milliseconds: 500));
     validateSearchWord();
     if (valid && _pagingController.nextPageKey!=null) {
     try {
