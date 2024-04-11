@@ -25,10 +25,7 @@ class Categories extends StatelessWidget {
                     TextStyle(color: Theme.of(context).colorScheme.onPrimary,fontWeight: FontWeight.bold),
               ),
               GestureDetector(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => CategoriesPage())),
+                  onTap: () => Get.toNamed("/category"),
                   child: Text(
                     "See All",
                     style: TextStyle(

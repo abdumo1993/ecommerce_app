@@ -66,6 +66,7 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
                 onSubmitted: (value) => ({
                   // controller.searchWord.value =value,
                   controller.refresh(),
+                  controller.confirmError.value,
                   }),
                 padding: const MaterialStatePropertyAll(
                   EdgeInsets.only(left: 30, right: 10),

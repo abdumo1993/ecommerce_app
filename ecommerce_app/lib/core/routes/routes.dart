@@ -8,6 +8,7 @@ import 'package:ecommerce_app/presentation/pages/checkout/addCheckout.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
 import 'package:ecommerce_app/presentation/pages/confirmPage.dart';
 import 'package:ecommerce_app/presentation/pages/entry_page.dart';
+import 'package:ecommerce_app/presentation/pages/home/components/categories_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/components/selected_category_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
 // import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
@@ -15,6 +16,7 @@ import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:ecommerce_app/presentation/pages/search/search_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/address_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/edit_address_page.dart';
+import 'package:ecommerce_app/presentation/pages/settings/edit_profile_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/settings_page.dart';
 import 'package:get/get.dart';
 
@@ -40,6 +42,8 @@ final routes = [
             createNewAddress: true,
           )),
   GetPage(name: "/error", page: () => ErrorPage()),
-  GetPage(name: "/selectedCategory", page: () => SelectedCategoryPage())
+  GetPage(name: "/category", page: () => CategoriesPage()),
+  GetPage(name: "/selectedCategory", page: () => SelectedCategoryPage()),
+  GetPage(name: "/editProfile", page: () => EditProfilePage())
   // GetPage(name: "/search", page: () => HomePage()),
 ];

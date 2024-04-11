@@ -1,3 +1,6 @@
+import 'package:ecommerce_app/presentation/widgets/button.dart';
+import 'package:flutter/widgets.dart';
+
 import '../../../controllers/category_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,9 +35,8 @@ class CategoryResult extends StatelessWidget {
             children: [
               Text("NO More Items",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: ElevatedButton(
-                  onPressed: () {},
+                child: TextButton(
+                  onPressed: () => Get.back(),
                   child: Text("Explore"),
                   style: ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(
@@ -51,6 +53,42 @@ class CategoryResult extends StatelessWidget {
           firstPageProgressIndicatorBuilder: (context) => ListTile(title: Text("Loading More Items......",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),),
           // newPageProgressIndicatorBuilder: (_) => ListTile(title: Text("Loading More Items......",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),tileColor: Colors.green.shade200,),
           newPageProgressIndicatorBuilder: (context) => CircularProgressIndicator(color: Theme.of(context).colorScheme.onPrimary,backgroundColor: Theme.of(context).colorScheme.secondary),
+          firstPageErrorIndicatorBuilder: (context) => Column(
+            children: [
+              Text("A problem was encountered. Please check your network and try again",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+              SizedBox(
+                child: TextButton(
+                  onPressed: () => productController.refresh(),
+                  child: Icon(Icons.refresh),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.tertiary),
+                      foregroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.onPrimary),
+                      // minimumSize: MaterialStatePropertyAll(25 as Size?),
+                      ),
+                ),
+              ),
+            ],
+          ),
+          newPageErrorIndicatorBuilder: (context) => Column(
+            children: [
+              Text("A problem was encountered. Please check your network and try again",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+              SizedBox(
+                child: TextButton(
+                  onPressed: () => productController.pagingController.retryLastFailedRequest(),
+                  child: Icon(Icons.refresh),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.tertiary),
+                      foregroundColor: MaterialStatePropertyAll(
+                          Theme.of(context).colorScheme.onPrimary),
+                      // minimumSize: MaterialStatePropertyAll(25 as Size?),
+                      ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -66,40 +104,50 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed("/productDetail",arguments: {"id":"1"}),
-      child: Card(
-                color: Theme.of(context).colorScheme.secondary,
-                elevation: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Image.network(
-                          product.imageUrl[0]??'https://via.placeholder.com/250',
+      onTap: () => Get.toNamed("/productDetail",arguments: {"id":"$index"}),
+      child: Stack(
+        children: [
+          Card(
+                  color: Theme.of(context).colorScheme.secondary,
+                  elevation: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: product.imageUrl.isNotEmpty?  Image.network(
+                          product.imageUrl.isNotEmpty? product.imageUrl[0]:'https://via.placeholder.com/250',
+                          width: double.maxFinite,
+                          fit: BoxFit.contain, // Cover the available space
+                        ): Image.asset(
+                          "lib/assets/images/bag_1.png",
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
                         ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10 / 4, horizontal: 10),
-                      child: Text(
-                        "${product.name}",
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        "\$${product.price}",
-                        style: TextStyle(fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onPrimary),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10 / 4, horizontal: 10),
+                        child: Text(
+                          "${product.name}",
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          "\$${product.price}",
+                          style: TextStyle(fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onPrimary),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Positioned(top: -10,right: -10,
+                  child: HeartButton()),
+                ],
+      ),
     );
   }
 }

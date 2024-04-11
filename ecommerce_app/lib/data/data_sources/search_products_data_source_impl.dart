@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/utils/handleExceptions.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:get/get.dart';
@@ -45,12 +46,11 @@ class SearchProductsDataSourceImpl implements SearchProductsDataSource {
           // print(e);
         }
       }
-    } catch (e) {
-      // print(e.runtimeType);
-      // e as DioException;
-      // print(e.requestOptions.uri);
+    } on DioException catch (e) {
+      handledioExceptions(e);
     }
-    throw UnimplementedError("error requesting products");
+    return ProductResponseModel(productDtos: [], nextIndex: -1, total: 0);
+    // throw UnimplementedError("error requesting products");
   }
 
   // Mock data

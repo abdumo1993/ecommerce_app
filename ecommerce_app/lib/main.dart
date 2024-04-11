@@ -56,10 +56,10 @@ ThemeData darkTheme = ThemeData(
 
 class ThemeController extends GetxController {
   RxBool isSwitched = false.obs;
-  Rx<ThemeMode> theme = ThemeMode.light.obs;
+  Rx<ThemeMode> theme = ThemeMode.dark.obs;
   void onItemTapped() {
     isSwitched.value = !isSwitched.value;
-    if (isSwitched.value) theme.value = ThemeMode.dark;
-    if (!isSwitched.value) theme.value = ThemeMode.light;
+    if (isSwitched.value) theme.value = ThemeMode.light;
+    if (!isSwitched.value) theme.value = ThemeMode.dark;
   }
 }

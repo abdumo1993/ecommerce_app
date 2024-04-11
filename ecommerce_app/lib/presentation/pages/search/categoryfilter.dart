@@ -23,6 +23,23 @@ class categoryfilter extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
+                    "Filters",
+                    style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                  Spacer(),
+                  ContinueButton(onPress: (){
+                  Get.find<SearchPageController>().refresh();
+                  }, child: Text(
+                            "Apply",
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),padding: 10,)
+                ],
+              ),
+            ),
+            
+                  Text(
                     "Items per page",
                     style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                   ),
@@ -75,18 +92,6 @@ class categoryfilter extends StatelessWidget {
                             Theme.of(context).colorScheme.onSecondary),
                         minimumSize: MaterialStatePropertyAll(Size(50, 50))),
                   ),
-                  Spacer(),
-                  ContinueButton(onPress: (){
-                  Get.find<SearchPageController>().refresh();
-                  }, child: Text(
-                            "Apply",
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                          ),padding: 10,)
-                ],
-              ),
-            ),
             ExpansionPanelList(
               expansionCallback: (panelIndex, isExpanded) => expController
                   .isOpen[panelIndex] = !expController.isOpen[panelIndex],

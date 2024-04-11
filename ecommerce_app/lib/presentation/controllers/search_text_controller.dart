@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 
 class SearchTextController extends GetxController {
   SearchController searchController = SearchController();
+  final RegExp alphanumericRegex = RegExp(r'^[a-zA-Z0-9]+$');
   validateSearchWord(){
-    if(searchController.value.text.trim().isAlphabetOnly&&searchController.value.text.trim().isNotEmpty)
+    if(alphanumericRegex.hasMatch(searchController.value.text.removeAllWhitespace)&&searchController.value.text.removeAllWhitespace.isNotEmpty)
     {
       Get.toNamed("/search", arguments : {"keyword" :searchController.value.text});
     }

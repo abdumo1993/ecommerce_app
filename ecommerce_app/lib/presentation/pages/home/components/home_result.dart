@@ -1,12 +1,15 @@
-import '../../controllers/search_page_controller.dart';
+import 'package:ecommerce_app/presentation/widgets/button.dart';
+import 'package:flutter/widgets.dart';
+
+import '../../../controllers/home_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../../../domain/entities/product.dart';
+import '../../../../domain/entities/product.dart';
 
-class SearchResult extends StatelessWidget {
- final SearchPageController productController = Get.find<SearchPageController>();
+class HomeResult extends StatelessWidget {
+ final HomePageController productController = Get.find<HomePageController>();
 
  @override
  Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class SearchResult extends StatelessWidget {
       onRefresh: () => Future.sync(() => productController.refresh()),
       child: PagedGridView<int, Product>(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: (MediaQuery.of(context).size.width * 0.004).floor()>0? (MediaQuery.of(context).size.width * 0.007).floor(): 1,
+                    crossAxisCount: (MediaQuery.of(context).size.width * 0.007).floor(),
                     childAspectRatio: 1.0,
                   ),
         pagingController: productController.pagingController,
@@ -33,7 +36,7 @@ class SearchResult extends StatelessWidget {
               Text("NO More Items",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
               SizedBox(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => Get.toNamed("/category"),
                   child: Text("Explore"),
                   style: ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(
@@ -102,14 +105,16 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Get.toNamed("/productDetail",arguments: {"id":"$index"}),
-      child: Card(
-                color: Theme.of(context).colorScheme.secondary,
-                elevation: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: product.imageUrl.isNotEmpty?  Image.network(
+      child: Stack(
+        children: [
+          Card(
+                  color: Theme.of(context).colorScheme.secondary,
+                  elevation: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: product.imageUrl.isNotEmpty?  Image.network(
                           product.imageUrl.isNotEmpty? product.imageUrl[0]:'https://via.placeholder.com/250',
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
@@ -118,27 +123,31 @@ class ProductCard extends StatelessWidget {
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
                         ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10 / 4, horizontal: 10),
-                      child: Text(
-                        "${product.name}",
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        "\$${product.price}",
-                        style: TextStyle(fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onPrimary),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10 / 4, horizontal: 10),
+                        child: Text(
+                          "${product.name}",
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          "\$${product.price}",
+                          style: TextStyle(fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onPrimary),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Positioned(top: -10,right: -10,
+                  child: HeartButton()),
+                ],
+      ),
     );
   }
 }

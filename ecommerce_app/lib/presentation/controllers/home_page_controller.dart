@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../domain/entities/product.dart';
@@ -6,19 +5,14 @@ import '../../domain/usecases/search_product_usecase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'expansion_controller.dart';
-import 'search_text_controller.dart';
 
-class SearchPageController extends GetxController {
+class HomePageController extends GetxController {
   RxInt offset = 0.obs;
   RxInt total = 0.obs;
   // String? initialWord;
   var selectedFilters = [].obs;
   // var searchWord = ''.obs;
-  bool valid = false;
   RxnString confirmError = RxnString(null);
-
-  SearchController searchWordController =
-      Get.find<SearchTextController>().searchController;
 
   late ExpansionController expansionController;
 
@@ -29,66 +23,27 @@ class SearchPageController extends GetxController {
   final List<Product> newItems = [];
   final SearchProductsUseCase searchProductsUseCase;
 
-  SearchPageController(this.searchProductsUseCase) {
+  HomePageController(this.searchProductsUseCase) {
     _pagingController.addPageRequestListener((pageKey) {
       loadPage(pageKey);
     });
-    // Load the first page
-    // if(initialWord!=null) {searchWordController.=initialWord!;}
-    expansionController = Get.put(ExpansionController());
-    // loadPage(offset.value);
-  }
-
-  void addFilter(String filter) {
-    selectedFilters.add(filter);
-  }
-
-  void removeFilter(String filter) {
-    selectedFilters.remove(filter);
-  }
-
-
-
-
-
-
-  final RegExp alphanumericRegex = RegExp(r'^[a-zA-Z0-9]+$');
-  void validateSearchWord() {
-    if (alphanumericRegex
-            .hasMatch(searchWordController.value.text.removeAllWhitespace) &&
-        searchWordController.value.text.removeAllWhitespace.isNotEmpty) {
-      valid = true;
-    } else {
-      valid = false;
-      confirmError.value = 'Please enter a valid search';
-    }
   }
 
 
   PagingController<int, Product> get pagingController => _pagingController;
 
   void loadPage(int pageKey) async {
-      await Future.delayed(Duration(seconds: 5));
-    validateSearchWord();
-    if (valid && _pagingController.nextPageKey!=null) {
+      // await Future.delayed(Duration(seconds: 2));
+    if ( _pagingController.nextPageKey!=null) {
     try {
-      List<String> category = selectedFilters.map((element) => element ?? "").toList().cast<String>();
-      int low = expansionController.range.value.start.toInt();
-      int high = expansionController.range.value.end.toInt();
-      int maxSize = int.tryParse(expansionController.pageSize.single) ?? 10;
-      SearchModel _searchModel = SearchModel(searchWord: searchWordController.value.text);
-      _searchModel.low = low;
-      _searchModel.high= high;
+      int maxSize = 10;
+      SearchModel _searchModel = SearchModel();
       _searchModel.start = pageKey;
       _searchModel.maxSize = maxSize;
-      if(category.isNotEmpty){
-      _searchModel.category = category;
-      }
       
       if (offset.value != -1){
         final newItem = await SearchProduct(
           searchModel:_searchModel);
-              // SearchModel(searchWord: searchWordController.value.text,low: low,high: high,maxSize: maxSize,start: pageKey, category: "Elec"));
       if (newItem.data != null) {
         newItems.clear();
         newItems.addAll(newItem.data!.productDtos);
@@ -110,6 +65,8 @@ class SearchPageController extends GetxController {
       }
     } catch (error) {
       _pagingController.error = error;
+      
+      print(_pagingController.error.runtimeType);
       //log error
       // print(error);
     }
@@ -118,6 +75,9 @@ class SearchPageController extends GetxController {
 
   @override
   void onClose() {
+    offset.value=0;
+    total.value = 0;
+    newItems.clear();
     _pagingController.dispose();
     super.onClose();
   }

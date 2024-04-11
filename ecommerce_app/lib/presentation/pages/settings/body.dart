@@ -2,6 +2,7 @@ import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/pages/settings/edit_profile_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/payment_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'address_page.dart';
 
@@ -55,8 +56,7 @@ class SettingsBody extends StatelessWidget {
                     color: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
-                press: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EditProfilePage())),
+                press: () => Get.toNamed("/editProfile"),
               ),
               SizedBox(height: 10),
               CustomTextBtn(

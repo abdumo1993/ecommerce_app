@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/main.dart';
+import 'package:ecommerce_app/presentation/pages/home/components/home_result.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -34,31 +35,19 @@ class Body extends StatelessWidget {
                   onPressed: () {Get.find<ThemeController>().onItemTapped();},
                   icon: Icon(Icons.dark_mode_outlined),color: Theme.of(context).colorScheme.onPrimary,),
               IconButton(
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProductListScreen())),
+                  onPressed: () {},
+                  // => Get.toNamed("/checkout"),
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => ProductListScreen())),
                   icon: Icon(Icons.shopping_bag_outlined),color: Theme.of(context).colorScheme.onPrimary,),
             ],
           ),
         ),
         SizedBox(height: 10),
         Categories(),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: GridView.builder(
-                itemCount: 20,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount:
-                      (MediaQuery.of(context).size.width * 0.009).floor(),
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  childAspectRatio: 0.75,
-                ),
-                itemBuilder: (context, index) => ItemCard()),
-          ),
-        ),
+        Expanded(child: HomeResult()),
       ],
     );
   }

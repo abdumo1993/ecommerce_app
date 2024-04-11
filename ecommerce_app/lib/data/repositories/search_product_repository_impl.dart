@@ -20,7 +20,8 @@ class SearchProductsRepositoryImpl implements SearchProductsRepository{
     //  return Result(error: 'No products found');
    } catch (e) {
     print(e);
-     return Result(error: 'Failed to fetch products');
+    rethrow;
+    //  return Result(error: 'Failed to fetch products');
    }  
     }
 
