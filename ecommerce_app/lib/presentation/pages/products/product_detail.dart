@@ -3,6 +3,7 @@ import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -42,7 +43,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               backDest: "/home",
             );
           } else if (snapshot.hasError) {
-            print("herere is the erorrrrr");
+            print("herere is the erorrrrr \n ${snapshot.error}");
 
             return ErrorPage(
               message:
@@ -52,9 +53,9 @@ class _ProductDetailsState extends State<ProductDetails> {
           } else {
             // print(
             //   "the data: ${snapshot.data!.name}");
-            print("herere is the eakfjakljflakjror");
 
             PDetailModel product = snapshot.data!;
+            print(product.reviews);
             return page(
               product: product,
               shimmer: false,
@@ -147,6 +148,7 @@ class page extends StatelessWidget {
                           shimmer
                               ? ReviewWriteShimmer()
                               : ReviewWrite(
+                                  pid: product!.id,
                                   formKey: _formKey,
                                   detailController: detailController),
                           // end of name and choices
@@ -167,7 +169,7 @@ class page extends StatelessWidget {
                             )
                           : shimmer
                               ? myReveiwsShimmer()
-                              : myReviews(product: product!),
+                              : Expanded(child: myReviews(product: product!)),
                     ],
                   ),
                 ),
@@ -328,8 +330,10 @@ class ReviewWriteShimmer extends StatelessWidget {
 }
 
 class ReviewWrite extends StatelessWidget {
+  final int pid;
   const ReviewWrite({
     super.key,
+    required this.pid,
     required GlobalKey<FormState> formKey,
     required this.detailController,
   }) : _formKey = formKey;
@@ -387,7 +391,7 @@ class ReviewWrite extends StatelessWidget {
             IconButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    detailController.submitForm();
+                    detailController.submitForm(pid);
                     // Get.offNamed("/productDetail");
                   }
                 },
@@ -569,185 +573,6 @@ class ratingWidget extends StatelessWidget {
   }
 }
 
-class choiceContainer extends StatelessWidget {
-  const choiceContainer({
-    super.key,
-    required this.product,
-  });
-
-  final PDetailModel product;
-
-  @override
-  Widget build(BuildContext context) {
-    print(product);
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            product.name,
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onPrimary),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Text(
-            "\$${product.price}",
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.tertiary),
-          ),
-          const SizedBox(
-            height: 25,
-          ),
-          ChoiceButton(
-            values: ["S", "M", "L", "XL", "2XL"],
-            representations: [
-              Text(
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                  "S"),
-              Text(
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                  "Mi"),
-              Text(
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                  "L"),
-              Text(
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                  "XL"),
-              Text(
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                  "2XL"),
-            ],
-            choices: [
-              Text("S"),
-              Text("Me"),
-              Text("L"),
-              Text("XL"),
-              Text("2XL"),
-            ],
-            title: "Size",
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          ChoiceButton(
-            values: [Colors.orange, Colors.black, Colors.red, Colors.yellow],
-            representations: [
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.orange,
-                ),
-              ),
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.black,
-                ),
-              ),
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.red,
-                ),
-              ),
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.yellow,
-                ),
-              ),
-            ],
-            choices: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Orange"),
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.orange,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Black"),
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Red"),
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Yellow"),
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.yellow,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-            title: "Color",
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          QuantityButton(),
-        ],
-      ),
-    );
-  }
-}
-
 class myReveiwsShimmer extends StatelessWidget {
   final bool side;
   const myReveiwsShimmer({
@@ -895,6 +720,10 @@ class myReviews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (product!.reviews == null) {
+      return Text("No Review To Show");
+    }
+    print("the revews: ${product.reviews}");
     return Container(
       alignment: Alignment.topLeft,
       padding: EdgeInsets.all(10.0),
@@ -908,9 +737,10 @@ class myReviews extends StatelessWidget {
   }
 
   Column reColumns(BuildContext context, PDetailModel product) {
-    double commentsWidth = 350;
+    double commentsWidth = 400;
     var rating = product.reviews!["rating"];
     var reviews = product.reviews!["reviews"];
+    print("$rating and and and $reviews");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -923,7 +753,7 @@ class myReviews extends StatelessWidget {
           ),
         ),
         Text(
-          "${rating} Ratings",
+          "${rating} Rating",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -931,7 +761,7 @@ class myReviews extends StatelessWidget {
           ),
         ),
         Text(
-          "213 Reviews",
+          "${reviews.length} Reviews",
           style: TextStyle(
               fontSize: 12, color: Theme.of(context).colorScheme.onSecondary),
         ),
@@ -955,44 +785,107 @@ class myReviews extends StatelessWidget {
                           Row(
                             children: [
                               CircleAvatar(
-                                child: Text(reviews[index]["name"]![0]),
+                                child: Text(reviews[index].name![0]),
                               ),
                               const SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                reviews[index]["name"]!,
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
+                              Container(
+                                width: 120,
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(),
+                                child: Text(
+                                  reviews[index].name!,
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                ),
                               ),
                             ],
                           ),
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: 5,
-                            itemBuilder: (context, ind) {
-                              var icon = Icons.star_border;
-                              var color =
-                                  Theme.of(context).colorScheme.onSecondary;
-                              if (reviews[index]['rating'] <= index + 1) {
-                                icon = Icons.star;
-                                color = Colors.yellow;
+
+                          Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [1, 2, 3, 4, 5].map(
+                                (e) {
+                                  var color =
+                                      Theme.of(context).colorScheme.onSecondary;
+                                  var icon = Icons.star_border;
+                                  if (e <= reviews[index].rating) {
+                                    icon = Icons.star;
+                                    color = Colors.yellow;
+                                  }
+                                  return Icon(icon, color: color);
+                                },
+                              ).toList()),
+                          // IconButton(
+                          //   onPressed: () {},
+                          //   icon: Icon(
+                          //     Icons.more_vert,
+                          //     color: Theme.of(context).colorScheme.onSecondary,
+                          //   ),
+                          // ),
+
+                          PopupMenuButton<String>(
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: Theme.of(context).colorScheme.onSecondary,
+                            ),
+                            onSelected: (String result) async {
+                              // Handle your logic here based on the selected menu item
+                              if (result == 'edit') {
+                                print("edit");
+                              } else if (result == 'delete') {
+                                var r = await Get.find<PDetailController>()
+                                    .delete(product.id);
+                                if (r == true)
+                                // Get.find<PDetailController>()
+                                //     .retrieveProduct(product.id);
+                                {
+                                  Get.offNamed("/productDetail",
+                                      arguments: {"id": product.id});
+                                }
                               }
-                              return Icon(
-                                icon,
-                                color: color,
-                              );
                             },
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<String>>[
+                              const PopupMenuItem<String>(
+                                value: 'edit',
+                                child: Text('Edit'),
+                              ),
+                              const PopupMenuItem<String>(
+                                value: 'delete',
+                                child: Text('Delete'),
+                              ),
+                            ],
                           )
+
+                          // ListView.builder(
+                          //   shrinkWrap: true,
+                          //   itemCount: 5,
+                          //   itemBuilder: (context, ind) {
+                          //     print("$ind, ${reviews[index].name}");
+                          //     var icon = Icons.star_border;
+                          //     var color =
+                          //         Theme.of(context).colorScheme.onSecondary;
+                          //     if (reviews[index].rating <= index + 1) {
+                          //       icon = Icons.star;
+                          //       color = Colors.yellow;
+                          //     }
+                          //     return Icon(
+                          //       icon,
+                          //       color: color,
+                          //     );
+                          //   },
+                          // )
                         ],
                       ),
                       const SizedBox(
                         height: 30,
                       ),
                       Text(
-                        reviews[index]["review"],
+                        reviews[index].review,
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onSecondary),
                       ),

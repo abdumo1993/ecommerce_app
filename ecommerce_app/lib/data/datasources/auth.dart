@@ -71,13 +71,15 @@ class AuthDataSource {
 class ReviewDataSource {
   DioClient dio = DioClient();
 
-  Future<bool> send(ReviewModel review) async {
+  Future<bool> send(ReviewModel review, int pid) async {
     try {
-      var res = await dio.dio.post("/review", data: review.toJson());
+      var res =
+          await dio.dio.put("/product/$pid/rating", data: review.toJson());
       if (res.statusCode == 204) {
         return true;
       }
     } on DioException catch (e) {
+      print("review err? e: $e");
       handledioExceptions(e);
     }
     return false;
@@ -85,18 +87,46 @@ class ReviewDataSource {
 
   Future<Map<String, dynamic>> fetch(int pid) async {
     try {
-      var res = await dio.dio.get("/product/$pid/rating");
+      var res = await dio.dio.get("/product/$pid/review");
+      var resR = await dio.dio.get("/product/$pid/rating");
+      print(
+          "${res.data?.map((e) => ReviewModel.fromJson(e)).toList()[0].rating} and ${resR.data}");
+      print("${resR.statusCode} and ${res.statusCode}");
+      var returnee = {"reviews": [], "rating": 0};
       if (res.statusCode == 200) {
-        return {
-          "reviews":
-              res.data["reviews"]?.map((e) => ReviewModel.fromJson(e)).toList(),
-          "rating": res.data["rating"] ?? 3
-        };
+        returnee["reviews"] =
+            res.data?.map((e) => ReviewModel.fromJson(e)).toList();
+
+        // return {
+        //   "reviews": res.data?.map((e) => ReviewModel.fromJson(e)).toList(),
+        //   "rating": resR.data ?? 3
+        // };
+      }
+      print("false here ;${resR.statusCode}");
+      if (resR.statusCode == 200) {
+        print('true there');
+
+        returnee["rating"] = resR.data ?? 3;
+      }
+
+      return returnee;
+    } on DioException catch (e) {
+      print("hree is teh : $e");
+      handledioExceptions(e);
+    }
+    return {};
+  }
+
+  Future<bool> delete(int pid) async {
+    try {
+      var res = await dio.dio.delete("/product/$pid/rating");
+      if (res.statusCode == 200 || res.statusCode == 204) {
+        return true;
       }
     } on DioException catch (e) {
       handledioExceptions(e);
     }
-    return {};
+    return false;
   }
 }
 

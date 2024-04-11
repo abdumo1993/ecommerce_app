@@ -43,9 +43,9 @@ class ReviewRepositoryImp implements ReviewRepository {
   ReviewRepositoryImp({required this.reviewSource});
 
   @override
-  Future<bool> send(ReviewModel review) async {
+  Future<bool> send(ReviewModel review, int pid) async {
     try {
-      return await reviewSource.send(review);
+      return await reviewSource.send(review, pid);
     } catch (e) {
       rethrow;
     }
@@ -55,6 +55,15 @@ class ReviewRepositoryImp implements ReviewRepository {
   Future<Map<String, dynamic>> fetch(int pid) async {
     try {
       return await reviewSource.fetch(pid);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> delete(int pid) async {
+    try {
+      return await reviewSource.delete(pid);
     } catch (e) {
       rethrow;
     }

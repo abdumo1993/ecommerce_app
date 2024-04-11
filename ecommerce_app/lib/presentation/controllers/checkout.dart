@@ -18,6 +18,8 @@ class CheckoutController extends GetxController {
         Get.snackbar("Failed",
             "Your Cart couldn't be checked out successfully. please try again.");
       }
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
 // bandle different badresoponses
     } on NetworkException catch (e) {

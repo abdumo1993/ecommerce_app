@@ -32,9 +32,9 @@ class ReviewUseCase {
   final ReviewRepository repo;
 
   ReviewUseCase({required this.repo});
-  Future<bool> send(ReviewModel review) async {
+  Future<bool> send(ReviewModel review, int pid) async {
     try {
-      return await repo.send(review);
+      return await repo.send(review, pid);
     } catch (e) {
       rethrow;
     }
@@ -43,6 +43,14 @@ class ReviewUseCase {
   Future<Map<String, dynamic>> fetch(int pid) async {
     try {
       return await repo.fetch(pid);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> delete(int pid) async {
+    try {
+      return await repo.delete(pid);
     } catch (e) {
       rethrow;
     }

@@ -29,17 +29,20 @@ class PDetailController extends GetxController {
     ;
   }
 
-  void submitForm() async {
+  void submitForm(int pid) async {
     validateReview();
     if (valid.value == true) {
       try {
         var use = ReviewUseCase(
             repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
         var res = await use.send(
-            ReviewModel(review: reviewController.text, rating: rating.value!));
+            ReviewModel(review: reviewController.text, rating: rating.value!),
+            pid);
         res == true ? Get.toNamed("/productDetail") : null;
         changeRating(0);
         reviewController.text = "";
+      } on CustomeException catch (e) {
+        Get.toNamed("/error", arguments: {"message": e.toString()});
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.toNamed("/error", arguments: {
@@ -68,15 +71,22 @@ class PDetailController extends GetxController {
   }
 
   Future<PDetailModel?> retrieveProduct(int id) async {
+    PDetailModel? a;
     try {
       var usePd = PDetailUseCase(
           repo: PDetailRepositoryImp(dataSource: PDetailDataSource()));
-      var a = await usePd.fetch(id);
+      a = await usePd.fetch(id);
+      print("heeer : ${a!.count}");
+
       var useR = ReviewUseCase(
           repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
       var reviews = await useR.fetch(a!.id);
+      print("her : $reviews");
       a.reviews = reviews;
+      print("a $a");
       return a;
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
       print(e.statusCode);
       if (e.statusCode == 500) {
@@ -87,12 +97,35 @@ class PDetailController extends GetxController {
       } else if (e.statusCode == 404 && e.path == "/products/$id") {
         Get.offNamed("/home");
         Get.snackbar("NotFound", "Product is not found.");
+      } else if (e.path != "/product/$id") {
+        return a;
       }
     } on NetworkException catch (e) {
       Get.toNamed("/error",
           arguments: {"messsage": e.toString(), "backDest": "/home"});
+    } catch (e) {
+      print(a?.reviews);
+      return a;
     }
+    print("hfkajflkjaklfja");
     return null;
+  }
+
+  Future<bool> delete(int pid) async {
+    try {
+      var useR = ReviewUseCase(
+          repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
+      return await useR.delete(pid);
+    } on BadResponseException catch (e) {
+      if (e.statusCode == 404) {
+        Get.toNamed("/error", arguments: {
+          "message": "This review doesn't exist. please refresh your page."
+        });
+      } else if (e.statusCode == 401 && e.path != '/auth/refresh') {
+        Get.snackbar("Unauthorised", e.toString());
+      }
+      return false;
+    }
   }
 }
 
@@ -135,14 +168,15 @@ class LoginController extends GetxController {
       Get.offAllNamed("/login", arguments: {"message": e.toString()});
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
       if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {"message": e.toString()});
       } else {
         Get.offAllNamed("/login", arguments: {"message": e.message});
       }
-    }  
-    on CustomeException catch (e) {
+    } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
       Get.toNamed("/error", arguments: {"message": "Something went wrong l"});
@@ -227,6 +261,8 @@ class RegisterConroller extends LoginController {
       // redendant with badresopnseexcepitonoi to be removed after verification.
       Get.offAllNamed("/register", arguments: {"message": e.toString()});
     } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
       if (e.statusCode == 500) {
