@@ -6,6 +6,7 @@ import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
 import 'package:ecommerce_app/presentation/pages/cart/emptyCart.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/addCheckout.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
+import 'package:ecommerce_app/presentation/pages/confirmPage.dart';
 import 'package:ecommerce_app/presentation/pages/entry_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/components/selected_category_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
@@ -32,6 +33,7 @@ final routes = [
   GetPage(name: "/search", page: () => SearchPage()),
   GetPage(name: "/settings", page: () => SettingsPage()),
   GetPage(name: "/address", page: () => AddressPage()),
+  GetPage(name: "/confirm", page: () => ConfirmPage()),
   GetPage(
       name: "/addAddress",
       page: () => EditAddressPage(

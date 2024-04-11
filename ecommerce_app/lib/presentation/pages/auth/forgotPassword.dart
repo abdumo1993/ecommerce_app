@@ -57,7 +57,6 @@ class ForgotPassword extends StatelessWidget {
                         ),
                         ContinueButton(
                           onPress: () {
-                            print("here");
                             if (_formKey.currentState!.validate()) {
                               // Proceed with form submission
                             Get.toNamed("/productDetail");

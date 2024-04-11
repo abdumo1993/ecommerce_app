@@ -28,8 +28,10 @@ class NetworkException implements Exception {
 class BadResponseException implements Exception {
   final String message;
   final dynamic statusCode;
+  final String? path;
 
-  BadResponseException({required this.message, this.statusCode = 400});
+  BadResponseException(
+      {required this.message, this.statusCode = 400, this.path});
   @override
   String toString() => "lksjfkajfklj$statusCode: $message";
 }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/core/utils/handleExceptions.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/cart.dart';
@@ -13,6 +14,8 @@ class CartDataSource {
       if (res.statusCode == 200) {
         return true;
       }
+    } on DioException catch (e) {
+      handledioExceptions(e);
     } catch (e) {
       return false;
     }
@@ -27,6 +30,8 @@ class CartDataSource {
       if (res.statusCode == 200) {
         return true;
       }
+    } on DioException catch (e) {
+      handledioExceptions(e);
     } catch (e) {
       return false;
     }
@@ -41,6 +46,8 @@ class CartDataSource {
       if (res.statusCode == 200) {
         return true;
       }
+    } on DioException catch (e) {
+      handledioExceptions(e);
     } catch (e) {
       return false;
     }
@@ -57,11 +64,7 @@ class CartDataSource {
         return itemsList;
       }
     } on DioException catch (e) {
-      handleDioExceptions(e);
-      if (e.type == DioExceptionType.badResponse) {
-        Get.toNamed("/error", arguments: {"message": e.toString()});
-      }
-      return [];
+      handledioExceptions(e);
     }
     return [];
   }
@@ -70,8 +73,9 @@ class CartDataSource {
     try {
       var res = await dio.dio.delete("/api/ShoppingCart/clear");
       if (res.statusCode == 200) return true;
+    } on DioException catch (e) {
+      handledioExceptions(e);
     } catch (e) {
-      print("${runtimeType.toString()} $e");
       return false;
     }
     return false;

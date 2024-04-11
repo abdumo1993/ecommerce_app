@@ -39,6 +39,14 @@ class ReviewUseCase {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> fetch(int pid) async {
+    try {
+      return await repo.fetch(pid);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class PDetailUseCase {

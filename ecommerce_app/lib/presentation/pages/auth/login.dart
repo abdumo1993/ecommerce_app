@@ -107,7 +107,6 @@ class LoginPage extends StatelessWidget {
                         ),
                         ContinueButton(
                           onPress: () {
-                            print("here");
                             if (_formKey.currentState!.validate()) {
                               loginController.submitForm();
 

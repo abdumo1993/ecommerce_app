@@ -2,7 +2,7 @@ class PDetailModel {
   final String name;
   final double price;
   final String? details;
-  final Map<String, dynamic>? reviews;
+  Map<String, dynamic>? reviews;
   final List<dynamic>? images;
   final int id;
   final int count;
@@ -40,10 +40,20 @@ class PDetailModel {
 class ReviewModel {
   final String review;
   final int rating;
+  final String? name;
 
-  ReviewModel({required this.review, required this.rating});
+  ReviewModel({
+    required this.review,
+    required this.rating,
+    this.name,
+  });
   Map<String, dynamic> toJson() {
-    return {"Review": review, "Rating": rating};
+    return {"Review": review, "Rating": rating, "name": name};
+  }
+
+  static ReviewModel fromJson(Map<String, dynamic> json) {
+    return ReviewModel(
+        review: json["review"], rating: json['rating'], name: json["name"]);
   }
 }
 

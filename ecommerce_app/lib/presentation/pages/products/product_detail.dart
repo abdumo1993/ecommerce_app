@@ -20,7 +20,6 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    print("sss");
     return Material(
       child: FutureBuilder(
         future: pDetailController.retrieveProduct(3),
@@ -30,21 +29,25 @@ class _ProductDetailsState extends State<ProductDetails> {
               shimmer: true,
             );
           } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data == null) {
+              snapshot.data == null &&
+              !snapshot.hasError) {
             print("herere is the eror");
             // return ErrorPage(
             //   message: "Error loading.",
             // );
 
             return ErrorPage(
-              message: "Product Not Found.",
+              message:
+                  "An Unexpected Error has occured while fetching product. please try again later.",
               backDest: "/home",
             );
           } else if (snapshot.hasError) {
             print("herere is the erorrrrr");
 
             return ErrorPage(
-              message: "Error.",
+              message:
+                  "Error: ${snapshot.error.runtimeType} has occured while trying to fetch data. please try again.",
+              backDest: "/home",
             );
           } else {
             // print(
@@ -292,22 +295,13 @@ class ReviewWriteShimmer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text(
-            //   "Write Review",
-            //   style: TextStyle(
-            //       color: Theme.of(context).colorScheme.onPrimary,
-            //       fontSize: 16,
-            //       fontWeight: FontWeight.bold),
-            // ),
             ShimmerContainer(
               width: double.infinity,
               height: 30,
             ),
-
             const SizedBox(
               height: 10,
             ),
-
             ShimmerContainer(
               width: double.infinity,
               height: 200,
@@ -915,7 +909,8 @@ class myReviews extends StatelessWidget {
 
   Column reColumns(BuildContext context, PDetailModel product) {
     double commentsWidth = 350;
-
+    var rating = product.reviews!["rating"];
+    var reviews = product.reviews!["reviews"];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -928,7 +923,7 @@ class myReviews extends StatelessWidget {
           ),
         ),
         Text(
-          "${product.reviews!["rating"]} Ratings",
+          "${rating} Ratings",
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -945,7 +940,7 @@ class myReviews extends StatelessWidget {
           width: commentsWidth,
           child: ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            itemCount: product.reviews!["reviews"].length,
+            itemCount: reviews!.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
               return Card(
@@ -960,14 +955,13 @@ class myReviews extends StatelessWidget {
                           Row(
                             children: [
                               CircleAvatar(
-                                child: Text(product.reviews!["reviews"][index]
-                                    ["name"]![0]),
+                                child: Text(reviews[index]["name"]![0]),
                               ),
                               const SizedBox(
                                 width: 10,
                               ),
                               Text(
-                                product.reviews!["reviews"][index]["name"]!,
+                                reviews[index]["name"]!,
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -975,38 +969,30 @@ class myReviews extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                              ),
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                              ),
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                              ),
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                              ),
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow,
-                              ),
-                            ],
-                          ),
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: 5,
+                            itemBuilder: (context, ind) {
+                              var icon = Icons.star_border;
+                              var color =
+                                  Theme.of(context).colorScheme.onSecondary;
+                              if (reviews[index]['rating'] <= index + 1) {
+                                icon = Icons.star;
+                                color = Colors.yellow;
+                              }
+                              return Icon(
+                                icon,
+                                color: color,
+                              );
+                            },
+                          )
                         ],
                       ),
                       const SizedBox(
                         height: 30,
                       ),
                       Text(
-                        product.reviews!["reviews"][index]["comment"],
+                        reviews[index]["review"],
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onSecondary),
                       ),

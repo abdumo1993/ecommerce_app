@@ -50,6 +50,15 @@ class ReviewRepositoryImp implements ReviewRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Map<String, dynamic>> fetch(int pid) async {
+    try {
+      return await reviewSource.fetch(pid);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class PDetailRepositoryImp implements PDetailRepository {

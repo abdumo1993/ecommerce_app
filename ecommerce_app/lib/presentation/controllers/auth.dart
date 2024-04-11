@@ -53,6 +53,11 @@ class PDetailController extends GetxController {
           Get.toNamed("/error",
               arguments: {"message": "Something went wrong p"});
         }
+      } on NetworkException catch (e) {
+        Get.toNamed("/error", arguments: {
+          "message": "Network Error: ${e.toString()}",
+          "backDest": "/home"
+        });
       } catch (e) {
         Get.toNamed("/error", arguments: {"message": "login is needed"});
         Future.delayed(const Duration(seconds: 2), () => Get.toNamed("/login"));
@@ -64,9 +69,13 @@ class PDetailController extends GetxController {
 
   Future<PDetailModel?> retrieveProduct(int id) async {
     try {
-      var use = PDetailUseCase(
+      var usePd = PDetailUseCase(
           repo: PDetailRepositoryImp(dataSource: PDetailDataSource()));
-      var a = await use.fetch(id);
+      var a = await usePd.fetch(id);
+      var useR = ReviewUseCase(
+          repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
+      var reviews = await useR.fetch(a!.id);
+      a.reviews = reviews;
       return a;
     } on BadResponseException catch (e) {
       print(e.statusCode);
@@ -75,10 +84,13 @@ class PDetailController extends GetxController {
           "message":
               "An Error has occured on the server side. please try again later."
         });
-      } else if (e.statusCode == 404) {
+      } else if (e.statusCode == 404 && e.path == "/products/$id") {
         Get.offNamed("/home");
         Get.snackbar("NotFound", "Product is not found.");
       }
+    } on NetworkException catch (e) {
+      Get.toNamed("/error",
+          arguments: {"messsage": e.toString(), "backDest": "/home"});
     }
     return null;
   }
@@ -129,7 +141,8 @@ class LoginController extends GetxController {
       } else {
         Get.offAllNamed("/login", arguments: {"message": e.message});
       }
-    } on CustomeException catch (e) {
+    }  
+    on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
       Get.toNamed("/error", arguments: {"message": "Something went wrong l"});
@@ -189,8 +202,6 @@ class RegisterConroller extends LoginController {
     validateConfirm();
 
     try {
-      print("203");
-
       if (emailError.value == null &&
           passwordError.value == null &&
           firstNameError.value == null &&
@@ -204,7 +215,13 @@ class RegisterConroller extends LoginController {
             firstname: firstNameController.text,
             lastname: lastNameController.text,
             confirmPassword: confirmController.text));
-        res == true ? Get.toNamed("/home") : Get.toNamed("/login");
+        res == true
+            ? (
+                Get.toNamed("/confirm"),
+                Future.delayed(
+                    Duration(seconds: 2), () => Get.offAllNamed("/login"))
+              )
+            : Get.toNamed("/login");
       }
     } on AuthException catch (e) {
       // redendant with badresopnseexcepitonoi to be removed after verification.
@@ -212,17 +229,15 @@ class RegisterConroller extends LoginController {
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
-      print("how sie jfljalf");
       if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {"message": e.toString()});
       } else {
         Get.offAllNamed("/register", arguments: {"message": e.message});
       }
     } on CustomeException catch (e) {
-      print("here is hte erroer");
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
-      print(e);
+      print(e.runtimeType);
       Get.toNamed("/error", arguments: {"message": "Something went wrong r"});
     }
   }

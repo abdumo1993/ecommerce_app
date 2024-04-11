@@ -189,7 +189,6 @@ class myShimmerTotal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("herllow");
     return Container(
       alignment: Alignment.bottomLeft,
       child: Column(

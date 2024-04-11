@@ -10,6 +10,7 @@ abstract class AuthRepository {
 
 abstract class ReviewRepository {
   Future<bool> send(ReviewModel review);
+  Future<Map<String, dynamic>> fetch(int pid);
 }
 
 abstract class PDetailRepository {

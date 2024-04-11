@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'button.dart';
-import '../pages/products/productDetail.dart';
+// import '../pages/products/productDetail.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard({super.key});
@@ -37,7 +37,8 @@ class ItemCard extends StatelessWidget {
                         vertical: 10 / 4, horizontal: 10),
                     child: Text(
                       "Shopping Bag",
-                      style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -45,8 +46,9 @@ class ItemCard extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       "\$531",
-                      style: TextStyle(fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onPrimary),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 ],

@@ -14,7 +14,6 @@ class AuthDataSource {
     try {
       var res = await dio.dio.post("/auth/login", data: user.toJson());
 
-      print("statuscode : ${res.statusCode}");
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
 
@@ -35,7 +34,6 @@ class AuthDataSource {
   Future<bool> register(RegisterModel user) async {
     try {
       var res = await dio.dio.post("/auth/register", data: user.toJson());
-
       if (res.statusCode == 201) {
         // log in
         // return await login(
@@ -44,16 +42,12 @@ class AuthDataSource {
         return true;
       }
     } on AuthException catch (e) {
-      print("47");
       rethrow;
     } on DioException catch (e) {
       // handle dio exceptions.
-      print("${e.response?.statusCode} ${e.response?.data}");
 
       handledioExceptions(e);
     } catch (e) {
-      print("55");
-
       throw AuthException(message: "Registeration failed. try again.");
     }
     return false;
@@ -80,15 +74,29 @@ class ReviewDataSource {
   Future<bool> send(ReviewModel review) async {
     try {
       var res = await dio.dio.post("/review", data: review.toJson());
-      print("wer a e re77");
       if (res.statusCode == 204) {
         return true;
       }
     } on DioException catch (e) {
-      print("in review source: $e");
       handledioExceptions(e);
     }
     return false;
+  }
+
+  Future<Map<String, dynamic>> fetch(int pid) async {
+    try {
+      var res = await dio.dio.get("/product/$pid/rating");
+      if (res.statusCode == 200) {
+        return {
+          "reviews":
+              res.data["reviews"]?.map((e) => ReviewModel.fromJson(e)).toList(),
+          "rating": res.data["rating"] ?? 3
+        };
+      }
+    } on DioException catch (e) {
+      handledioExceptions(e);
+    }
+    return {};
   }
 }
 
@@ -98,11 +106,8 @@ class PDetailDataSource {
   Future<PDetailModel?> fetch(int id) async {
     try {
       var res = await dio.dio.get("/product/$id");
-      print("res: $res");
       if (res.statusCode == 200) {
-        print("stats: ${res.statusCode}");
         var b = PDetailModel.fromJson(res.data);
-        print("coreect herer");
         return b;
       }
     } on DioException catch (e) {

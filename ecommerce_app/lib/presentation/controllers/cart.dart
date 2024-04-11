@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/data/datasources/cart.dart';
 import 'package:ecommerce_app/data/repositories/cart.dart';
 import 'package:ecommerce_app/domain/entities/cart.dart';
@@ -10,22 +11,50 @@ class CartController extends GetxController {
   CartUseCase useCase =
       CartUseCase(repo: CartRepositoryImp(cartDataSource: CartDataSource()));
   void addToCart(Map<String, int> product) async {
-    await useCase.addToCart(CartItem.fromJson(product));
+    try {
+      await useCase.addToCart(CartItem.fromJson(product));
+    } on BadResponseException catch (e) {
+      if (e.statusCode == 200) {}
+      // somethings/
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    }
   }
 
   void removeFromCart(Map<String, int> product) async {
-    await useCase.removeFromCart(CartItem.fromJson(product));
+    try {
+      await useCase.removeFromCart(CartItem.fromJson(product));
+    } on BadResponseException catch (e) {
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } catch (e) {}
   }
 
   void updateCartItem(Map<String, int> product) async {
-    await useCase.updateCartItem(CartItem.fromJson(product));
+    try {
+      await useCase.updateCartItem(CartItem.fromJson(product));
+    } on BadResponseException catch (e) {
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } catch (e) {}
   }
 
   Future<List<CartItem?>> fetchItems() async {
-    return await useCase.fetchItems();
+    try {
+      return await useCase.fetchItems();
+    } on BadResponseException catch (e) {
+      return [];
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+      return [];
+    } catch (e) {
+      return [];
+    }
   }
 
   void removeAll() async {
-await useCase.removeAll();
+    try {
+      await useCase.removeAll();
+    } catch (e) {}
   }
 }

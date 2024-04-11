@@ -20,7 +20,6 @@ class RegisterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("argsR: ${Get.arguments}");
     return Material(
       child: Container(
         color: Theme.of(context).colorScheme.primary,
@@ -151,9 +150,9 @@ class RegisterPage extends StatelessWidget {
                         // ),
                         ContinueButton(
                           onPress: () {
-                            print("regisetered");
                             if (_formKey.currentState!.validate()) {
                               registerConroller.submitForm();
+                              print("regisetered");
                               // Proceed with form submission
                               // Get.toNamed("/home");
                             }

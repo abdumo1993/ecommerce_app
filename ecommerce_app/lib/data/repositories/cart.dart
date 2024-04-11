@@ -8,26 +8,46 @@ class CartRepositoryImp implements ICartRepository {
   CartRepositoryImp({required this.cartDataSource});
   @override
   Future<bool> addToCart(CartItem item) async {
-    return await cartDataSource.addToCart(item);
+    try {
+      return await cartDataSource.addToCart(item);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Future<List<CartItem?>> fetchItems() async {
-   return await cartDataSource.fetchItems();
+    try {
+      return await cartDataSource.fetchItems();
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Future<bool> removeFromCart(CartItem item) async {
-    return await cartDataSource.removeFromCart(item);
+    try {
+      return await cartDataSource.removeFromCart(item);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Future<bool> updateCartItem(CartItem item) async {
-   return await cartDataSource.updateCartItem(item);
+    try {
+      return await cartDataSource.updateCartItem(item);
+    } catch (e) {
+      rethrow;
+    }
   }
-  
+
   @override
   Future<bool> removeAll() async {
-    return await cartDataSource.removeAll();
+    try {
+      return await cartDataSource.removeAll();
+    } catch (e) {
+      rethrow;
+    }
   }
 }

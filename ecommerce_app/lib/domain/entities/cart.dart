@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/core/utils/exceptions.dart';
+
 class CartItem {
   final int productId;
   final int quantity;
@@ -6,10 +8,11 @@ class CartItem {
 
   static fromJson(Map<String, int> json) {
     if (json["productId"] == null) {
-      throw Exception("productID must not be null.");
+      throw CustomeException(message: "productID must not be null.");
     }
     if (json["quantity"] == null || json["quantity"]! < 1) {
-      throw Exception("quantity must not be null and must be between 1 and 5.");
+      throw CustomeException(
+          message: "quantity must not be null and must be between 1 and 5.");
     }
     return CartItem(productId: json["productId"]!, quantity: json["quantity"]!);
   }

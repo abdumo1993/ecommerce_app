@@ -22,14 +22,12 @@ class DioClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          print(options.path);
           String? accessToken = await getAccessToken();
           options.headers['Authorization'] = 'Bearer $accessToken';
 
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
-          // print("onError: $e");
           try {
             if (e.response?.statusCode == 401 &&
                 !(excludePaths.contains(e.requestOptions.path))) {

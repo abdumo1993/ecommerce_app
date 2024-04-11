@@ -16,10 +16,13 @@ class ErrorPage extends StatelessWidget {
         : Get.arguments!["message"] == null
             ? message
             : Get.arguments!["message"]!);
+    var backdest = (Get.arguments != null && Get.arguments!["backDest"] != null)
+        ? Get.arguments["backDest"]
+        : backDest;
     return Scaffold(
       appBar: AppBar(
         leading: backButton(
-          nextPageName: backDest,
+          nextPageName: backdest,
         ),
         backgroundColor: Colors.transparent,
       ),

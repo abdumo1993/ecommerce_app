@@ -5,10 +5,44 @@ class CartUseCase {
   final ICartRepository repo;
 
   CartUseCase({required this.repo});
-  
-  Future<bool> addToCart(CartItem item) async => await repo.addToCart(item);
-  Future<bool> removeFromCart(CartItem item) async => await repo.removeFromCart(item);
-  Future<bool> updateCartItem(CartItem item) async => await repo.updateCartItem(item);
-  Future<bool> removeAll() async => await repo.removeAll();
-  Future<List<CartItem?>> fetchItems() async => await repo.fetchItems();
+
+  Future<bool> addToCart(CartItem item) async {
+    try {
+      return await repo.addToCart(item);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> removeFromCart(CartItem item) async {
+    try {
+      return await repo.removeFromCart(item);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> updateCartItem(CartItem item) async {
+    try {
+      return await repo.updateCartItem(item);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> removeAll() async {
+    try {
+      return await repo.removeAll();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<CartItem?>> fetchItems() async {
+    try {
+      return await repo.fetchItems();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
