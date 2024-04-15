@@ -25,23 +25,32 @@ class Body extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                  onPressed: (){},
+                  onPressed: () {},
                   //  onPressed: () => Get.toNamed("/settings"),
                   icon: Icon(
-                    Icons.person,color: Theme.of(context).colorScheme.onPrimary,
+                    Icons.person,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   )),
               SearchingBar(),
               IconButton(
-                  onPressed: () {Get.find<ThemeController>().onItemTapped();},
-                  icon: Icon(Icons.dark_mode_outlined),color: Theme.of(context).colorScheme.onPrimary,),
+                onPressed: () {
+                  Get.find<ThemeController>().onItemTapped();
+                },
+                icon: Icon(Icons.dark_mode_outlined),
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
               IconButton(
-                  onPressed: () {},
-                  // => Get.toNamed("/checkout"),
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => ProductListScreen())),
-                  icon: Icon(Icons.shopping_bag_outlined),color: Theme.of(context).colorScheme.onPrimary,),
+                onPressed: () {
+                  Get.toNamed("/cart");
+                },
+                // => Get.toNamed("/checkout"),
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => ProductListScreen())),
+                icon: Icon(Icons.shopping_bag_outlined),
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ],
           ),
         ),

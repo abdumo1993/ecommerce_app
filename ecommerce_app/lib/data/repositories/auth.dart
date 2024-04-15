@@ -31,7 +31,6 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       return await authProvider.register(user);
     } catch (e) {
-      print("repo: $e");
       rethrow;
     }
   }

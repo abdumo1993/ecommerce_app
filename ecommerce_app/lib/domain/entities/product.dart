@@ -6,17 +6,16 @@ class PDetailModel {
   final List<dynamic>? images;
   final int id;
   final int count;
-  final String? category;
 
-  PDetailModel(
-      {required this.name,
-      required this.price,
-      this.details,
-      this.reviews,
-      this.images,
-      required this.id,
-      required this.count,
-      this.category});
+  PDetailModel({
+    required this.name,
+    required this.price,
+    this.details,
+    this.reviews,
+    this.images,
+    required this.id,
+    required this.count,
+  });
 
   static PDetailModel fromJson(Map<String, dynamic> json) {
     try {
@@ -26,13 +25,11 @@ class PDetailModel {
         details: json["details"],
         count: json["count"],
         images: json["images"],
-        category: json["category"],
         price: json["price"].toDouble(),
       );
       return b;
     } catch (e) {
-      print(e);
-      throw Exception("jdfakljf");
+      throw Exception("jdfakljf ${e.runtimeType}");
     }
   }
 }
@@ -41,19 +38,24 @@ class ReviewModel {
   final String review;
   final int rating;
   final String? name;
+  final bool isMine;
 
   ReviewModel({
+    required this.isMine,
     required this.review,
     required this.rating,
     this.name,
   });
   Map<String, dynamic> toJson() {
-    return {"Review": review, "Rating": rating, "name": name};
+    return {"Review": review, "Rating": rating, "name": name, "isMine": isMine};
   }
 
   static ReviewModel fromJson(Map<String, dynamic> json) {
     return ReviewModel(
-        review: json["review"], rating: json['rating'], name: json["name"]);
+        review: json["review"],
+        rating: json['rating'],
+        name: json["name"],
+        isMine: json["isMine"]);
   }
 }
 

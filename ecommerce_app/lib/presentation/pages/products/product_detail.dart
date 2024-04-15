@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
+import 'package:ecommerce_app/presentation/controllers/cart.dart';
 import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class ProductDetails extends StatefulWidget {
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  PDetailController pDetailController = PDetailController();
+  PDetailController pDetailController = Get.put(PDetailController());
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +33,7 @@ class _ProductDetailsState extends State<ProductDetails> {
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data == null &&
               !snapshot.hasError) {
-            print("herere is the eror");
+            print("herere is the eror, ${snapshot.error}");
             // return ErrorPage(
             //   message: "Error loading.",
             // );
@@ -71,6 +72,7 @@ class page extends StatelessWidget {
   final PDetailModel? product;
   final bool shimmer;
   PDetailController detailController = Get.put(PDetailController());
+  CartController cartController = Get.put(CartController());
   final _formKey = GlobalKey<FormState>();
   page({
     super.key,
@@ -177,6 +179,9 @@ class page extends StatelessWidget {
               bottomNavigationBar: GestureDetector(
                 onTap: () async {
                   print("line 80 in productDetail.dart");
+
+                  Get.find<CartController>()
+                      .addToCart({"productId": product!.id, "quantity": 1});
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -504,6 +509,7 @@ class ImageSection extends StatelessWidget {
         child: Row(
             children: product.images!.map(
           (e) {
+            print("image: $e");
             var s;
             try {
               s = Image.network(
@@ -740,6 +746,7 @@ class myReviews extends StatelessWidget {
     double commentsWidth = 400;
     var rating = product.reviews!["rating"];
     var reviews = product.reviews!["reviews"];
+
     print("$rating and and and $reviews");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -827,58 +834,54 @@ class myReviews extends StatelessWidget {
                           //   ),
                           // ),
 
-                          PopupMenuButton<String>(
-                            icon: Icon(
-                              Icons.more_vert,
-                              color: Theme.of(context).colorScheme.onSecondary,
-                            ),
-                            onSelected: (String result) async {
-                              // Handle your logic here based on the selected menu item
-                              if (result == 'edit') {
-                                print("edit");
-                              } else if (result == 'delete') {
-                                var r = await Get.find<PDetailController>()
-                                    .delete(product.id);
-                                if (r == true)
-                                // Get.find<PDetailController>()
-                                //     .retrieveProduct(product.id);
-                                {
-                                  Get.offNamed("/productDetail",
-                                      arguments: {"id": product.id});
-                                }
-                              }
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<String>>[
-                              const PopupMenuItem<String>(
-                                value: 'edit',
-                                child: Text('Edit'),
-                              ),
-                              const PopupMenuItem<String>(
-                                value: 'delete',
-                                child: Text('Delete'),
-                              ),
-                            ],
-                          )
+                          reviews[index].isMine == true
+                              ? PopupMenuButton<String>(
+                                  icon: Icon(
+                                    Icons.more_vert,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
+                                  ),
+                                  onSelected: (String result) async {
+                                    // Handle your logic here based on the selected menu item
+                                    if (result == 'edit') {
+                                      Get.find<PDetailController>()
+                                          .reviewController
+                                          .text = reviews[index].review;
 
-                          // ListView.builder(
-                          //   shrinkWrap: true,
-                          //   itemCount: 5,
-                          //   itemBuilder: (context, ind) {
-                          //     print("$ind, ${reviews[index].name}");
-                          //     var icon = Icons.star_border;
-                          //     var color =
-                          //         Theme.of(context).colorScheme.onSecondary;
-                          //     if (reviews[index].rating <= index + 1) {
-                          //       icon = Icons.star;
-                          //       color = Colors.yellow;
-                          //     }
-                          //     return Icon(
-                          //       icon,
-                          //       color: color,
-                          //     );
-                          //   },
-                          // )
+                                      Get.find<PDetailController>()
+                                          .changeRating(reviews[index].rating);
+
+                                      print("edit");
+                                    } else if (result == 'delete') {
+                                      var r =
+                                          await Get.find<PDetailController>()
+                                              .delete(product.id);
+                                      if (r == true)
+                                      // Get.find<PDetailController>()
+                                      //     .retrieveProduct(product.id);
+                                      {
+                                        Get.offNamed("/productDetail",
+                                            arguments: {"id": product.id});
+                                      }
+                                    }
+                                  },
+                                  itemBuilder: (BuildContext context) =>
+                                      <PopupMenuEntry<String>>[
+                                    const PopupMenuItem<String>(
+                                      value: 'edit',
+                                      child: Text('Edit'),
+                                    ),
+                                    const PopupMenuItem<String>(
+                                      value: 'delete',
+                                      child: Text('Delete'),
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(
+                                  width: 0,
+                                  height: 0,
+                                ),
                         ],
                       ),
                       const SizedBox(

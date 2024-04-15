@@ -9,6 +9,7 @@ import 'package:ecommerce_app/domain/repositories/auth.dart';
 import 'package:ecommerce_app/domain/usecases/auth.dart';
 import 'package:ecommerce_app/presentation/pages/auth/register.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
 // to be moved to product controller file.
@@ -36,13 +37,17 @@ class PDetailController extends GetxController {
         var use = ReviewUseCase(
             repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
         var res = await use.send(
-            ReviewModel(review: reviewController.text, rating: rating.value!),
+            ReviewModel(
+                review: reviewController.text,
+                rating: rating.value!,
+                isMine: true),
             pid);
-        res == true ? Get.toNamed("/productDetail") : null;
+        Get.offAndToNamed("/productDetail", arguments: {"id": pid});
+
         changeRating(0);
         reviewController.text = "";
       } on CustomeException catch (e) {
-        Get.toNamed("/error", arguments: {"message": e.toString()});
+        Get.offAllNamed("/error", arguments: {"message": e.toString()});
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.toNamed("/error", arguments: {
@@ -76,19 +81,20 @@ class PDetailController extends GetxController {
       var usePd = PDetailUseCase(
           repo: PDetailRepositoryImp(dataSource: PDetailDataSource()));
       a = await usePd.fetch(id);
-      print("heeer : ${a!.count}");
 
       var useR = ReviewUseCase(
           repo: ReviewRepositoryImp(reviewSource: ReviewDataSource()));
       var reviews = await useR.fetch(a!.id);
-      print("her : $reviews");
       a.reviews = reviews;
-      print("a $a");
+      // removable if image provided from the server.
+      if (a.images!.isEmpty) {
+        a.images!
+            .add("https://red-ecommerce.onrender.com/images/DefaultImage.jpg");
+      }
       return a;
     } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
-      print(e.statusCode);
       if (e.statusCode == 500) {
         Get.offNamed("/error", arguments: {
           "message":
@@ -104,10 +110,8 @@ class PDetailController extends GetxController {
       Get.toNamed("/error",
           arguments: {"messsage": e.toString(), "backDest": "/home"});
     } catch (e) {
-      print(a?.reviews);
       return a;
     }
-    print("hfkajflkjaklfja");
     return null;
   }
 

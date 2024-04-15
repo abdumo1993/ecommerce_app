@@ -1,10 +1,9 @@
 import 'package:ecommerce_app/domain/entities/cart.dart';
 
 abstract class ICartRepository {
-  Future<bool> addToCart(CartItem item);
-  Future<bool> removeFromCart(CartItem item);
-  Future<bool> updateCartItem(CartItem item);
+  Future<bool> addToCart(Map<String, dynamic> item);
+  Future<bool> removeFromCart(Map<String, dynamic> item);
+  Future<bool> updateCartItem(Map<String, dynamic> item);
   Future<bool> removeAll();
-  Future<List<CartItem?>> fetchItems();
-
+  Future<List> fetchItems();
 }

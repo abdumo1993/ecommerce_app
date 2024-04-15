@@ -79,7 +79,6 @@ class ReviewDataSource {
         return true;
       }
     } on DioException catch (e) {
-      print("review err? e: $e");
       handledioExceptions(e);
     }
     return false;
@@ -89,9 +88,6 @@ class ReviewDataSource {
     try {
       var res = await dio.dio.get("/product/$pid/review");
       var resR = await dio.dio.get("/product/$pid/rating");
-      print(
-          "${res.data?.map((e) => ReviewModel.fromJson(e)).toList()[0].rating} and ${resR.data}");
-      print("${resR.statusCode} and ${res.statusCode}");
       var returnee = {"reviews": [], "rating": 0};
       if (res.statusCode == 200) {
         returnee["reviews"] =
@@ -102,16 +98,13 @@ class ReviewDataSource {
         //   "rating": resR.data ?? 3
         // };
       }
-      print("false here ;${resR.statusCode}");
       if (resR.statusCode == 200) {
-        print('true there');
 
         returnee["rating"] = resR.data ?? 3;
       }
 
       return returnee;
     } on DioException catch (e) {
-      print("hree is teh : $e");
       handledioExceptions(e);
     }
     return {};

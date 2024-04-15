@@ -33,5 +33,5 @@ class BadResponseException implements Exception {
   BadResponseException(
       {required this.message, this.statusCode = 400, this.path});
   @override
-  String toString() => "lksjfkajfklj$statusCode: $message";
+  String toString() => "$statusCode: $message";
 }

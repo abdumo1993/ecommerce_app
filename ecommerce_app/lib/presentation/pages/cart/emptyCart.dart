@@ -1,5 +1,7 @@
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 class EmptyCart extends StatelessWidget {
   const EmptyCart({super.key});
 
@@ -30,7 +32,7 @@ class EmptyCart extends StatelessWidget {
                       height: 15,
                     ),
                     ContinueButton(
-                      onPress: () => print("Explore Categories"),
+                      onPress: () => Get.offNamed("/home"),
                       child: Text(
                         "Explore Categories",
                         style: TextStyle(color: Colors.white, fontSize: 16),

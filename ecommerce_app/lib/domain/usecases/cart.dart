@@ -6,7 +6,9 @@ class CartUseCase {
 
   CartUseCase({required this.repo});
 
-  Future<bool> addToCart(CartItem item) async {
+  Future<bool> addToCart(Map<String, dynamic> item) async {
+    print("call call ");
+
     try {
       return await repo.addToCart(item);
     } catch (e) {
@@ -14,7 +16,7 @@ class CartUseCase {
     }
   }
 
-  Future<bool> removeFromCart(CartItem item) async {
+  Future<bool> removeFromCart(Map<String, dynamic> item) async {
     try {
       return await repo.removeFromCart(item);
     } catch (e) {
@@ -22,7 +24,7 @@ class CartUseCase {
     }
   }
 
-  Future<bool> updateCartItem(CartItem item) async {
+  Future<bool> updateCartItem(Map<String, dynamic> item) async {
     try {
       return await repo.updateCartItem(item);
     } catch (e) {
@@ -38,10 +40,11 @@ class CartUseCase {
     }
   }
 
-  Future<List<CartItem?>> fetchItems() async {
+  Future<List> fetchItems() async {
     try {
       return await repo.fetchItems();
     } catch (e) {
+      print(e);
       rethrow;
     }
   }

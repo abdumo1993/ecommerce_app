@@ -1,10 +1,12 @@
 import 'package:ecommerce_app/domain/entities/cart.dart';
+import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/controllers/cart.dart';
 import 'package:ecommerce_app/presentation/controllers/checkout.dart';
 import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/pages/cart/emptyCart.dart';
 import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -15,23 +17,29 @@ class Cart_cart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CartController controller = Get.put(CartController());
-    CheckoutController checkoutController = Get.put(CheckoutController());
+    Get.put(CheckoutController());
     return FutureBuilder(
       future: controller.fetchItems(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
+          print("we are waiting");
           return CartView(shimmer: true);
         } else if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.data == null) {
+            snapshot.data == null &&
+            !snapshot.hasError) {
           return ErrorPage(
               message: "Couldn't fetch cart items. try again later.");
+        } else if (snapshot.hasError) {
+          return EmptyCart();
         } else {
           print(snapshot.data);
-          if (snapshot.data!.length == 0) {
+          var returnedData = snapshot.data!;
+          print("items empty: ${snapshot.data![2]}");
+          if (returnedData[2].isEmpty) {
             return EmptyCart();
           } else {
-            var cartitems = snapshot.data!;
-            return CartView(items: cartitems, shimmer: false);
+            print("returned: $returnedData, snapshot: $snapshot");
+            return CartView(returnees: returnedData, shimmer: false);
           }
         }
       },
@@ -41,11 +49,20 @@ class Cart_cart extends StatelessWidget {
 
 class CartView extends StatelessWidget {
   final bool shimmer;
-  final List<CartItem?>? items;
-  const CartView({super.key, this.shimmer = false, this.items});
+  final List? returnees;
+  const CartView({super.key, this.shimmer = false, this.returnees});
 
   @override
   Widget build(BuildContext context) {
+    print("returennes: $returnees");
+    var cartID;
+    var totalPrice;
+    var itemss;
+    if (returnees != null) {
+      [cartID, totalPrice, itemss] = returnees!;
+      print("CartID: $cartID, totalPrice: $totalPrice, itemss : $itemss");
+    }
+
     return Container(
       color: Theme.of(context).colorScheme.primary,
       child: Center(
@@ -55,10 +72,11 @@ class CartView extends StatelessWidget {
             backgroundColor: Colors.transparent,
             bottomNavigationBar: GestureDetector(
               onTap: () {
-                if (items != null) {
-                  Get.find<CheckoutController>().checkout(items!);
+                if (returnees != null) {
+                  if (itemss != null) {
+                    Get.find<CheckoutController>().checkout(itemss!);
+                  }
                 }
-                
               },
               child: Container(
                   decoration: BoxDecoration(
@@ -113,7 +131,7 @@ class CartView extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.find<CartController>();
+                            Get.find<CartController>().removeAll();
                           },
                           child: Text(
                             "Remove All",
@@ -125,52 +143,18 @@ class CartView extends StatelessWidget {
                         SizedBox(
                           height: 10,
                         ),
-                        shimmer ? myShimmerForm() : myForm(),
+                        shimmer ? myShimmerForm() : myForm(items: itemss!),
                         SizedBox(
                           height: 120,
                         ),
-                        shimmer ? myShimmerTotal() : myTotal(),
+                        shimmer
+                            ? myShimmerTotal()
+                            : myTotal(
+                                total: totalPrice,
+                              ),
                         SizedBox(
                           height: 100,
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 15),
-                          color: Theme.of(context).colorScheme.secondary,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "lib/assets/images/Vector2.png",
-                                      fit: BoxFit.contain,
-                                    ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    Text(
-                                      "Enter Coupon Code",
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSecondary,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              ContinueButton(
-                                  onPress: () => print('hello'),
-                                  child: Image.asset(
-                                    "lib/assets/images/arrowright2.png",
-                                    fit: BoxFit.contain,
-                                    color: Colors.white,
-                                  ))
-                            ],
-                          ),
-                        )
                       ],
                     ),
                   ),
@@ -220,14 +204,14 @@ class myShimmerTotal extends StatelessWidget {
 }
 
 class myTotal extends StatelessWidget {
-  const myTotal({
-    super.key,
-  });
+  final num total;
+  const myTotal({super.key, required this.total});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.bottomLeft,
+      height: 40,
       child: Column(
         children: [
           Row(
@@ -236,43 +220,9 @@ class myTotal extends StatelessWidget {
               Text("Subtotal",
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondary)),
-              Text("\$200",
+              Text("\$$total",
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimary)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Shipping Cost",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary)),
-              Text("\$8.00",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Tax",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary)),
-              Text("\$0.00",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary)),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("Total",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary)),
-              Text("\$208",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold)),
             ],
           ),
         ],
@@ -308,82 +258,140 @@ class myShimmerForm extends StatelessWidget {
 }
 
 class myForm extends StatelessWidget {
+  final List<CartItem?> items;
   const myForm({
     super.key,
+    required this.items,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      child: ListView.builder(
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              CartTile(
-                  imageUrl: "lib/assets/images/Rectangle 9.png",
-                  size: "M",
-                  color: "black",
-                  price: 148,
-                  title: "Men's Harrington Jacket"),
-              SizedBox(
-                height: 20,
-              )
-            ],
-          );
-        },
-      ),
-      // child: Column(
-      //   crossAxisAlignment: CrossAxisAlignment.stretch,
-      //   children: [
-      //     CartTile(
-      //         imageUrl: "lib/assets/images/Rectangle 9.png",
-      //         size: "M",
-      //         color: "black",
-      //         price: 148,
-      //         title: "Men's Harrington Jacket"),
-      //     SizedBox(
-      //       height: 20,
-      //     ),
-      //     CartTile(
-      //         imageUrl: "lib/assets/images/Rectangle 9.png",
-      //         size: "M",
-      //         color: "black",
-      //         price: 148,
-      //         title: "Men's Harrington Jacket"),
-      //     SizedBox(
-      //       height: 20,
-      //     ),
-      //     CartTile(
-      //         imageUrl: "lib/assets/images/Rectangle 9.png",
-      //         size: "M",
-      //         color: "black",
-      //         price: 148,
-      //         title: "Men's Harrington Jacket"),
-      //   ],
-      // ),
-    );
+    print("items ss : ${items.length}");
+    return Obx(() {
+      return Form(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: Get.find<CartController>().cItemCount.value,
+          itemBuilder: (context, index) {
+            var item = items[index]!;
+            var product = item.product;
+            print("277 : $item, $product");
+            return Column(
+              children: [
+                GestureDetector(
+                  onHorizontalDragEnd: (details) {
+                    if (details.primaryVelocity == null) {
+                    } else if (details.primaryVelocity! > 0.0 ||
+                        details.primaryVelocity! < 0) {
+                      Get.find<CartController>().removeFromCart(item.toJson());
+                      Get.offAndToNamed("/cart");
+                    }
+                  },
+                  child: CartTile(
+                      item: item,
+                      imageUrl:
+                          product.images!.map((e) => e.toString()).toList(),
+                      price: product.price,
+                      count: product.count,
+                      title: product.name),
+                ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            );
+          },
+        ),
+      );
+    });
+    // return Form(
+    //   child: ListView.builder(
+    //     shrinkWrap: true,
+    //     itemCount: items.length,
+    //     itemBuilder: (context, index) {
+    //       var item = items[index]!;
+    //       var product = item.product;
+    //       print("277 : $item, $product");
+    //       return Column(
+    //         children: [
+    //           GestureDetector(
+    //             onHorizontalDragEnd: (details) {
+    //               if (details.primaryVelocity == null) {
+    //               } else if (details.primaryVelocity! > 0.0 ||
+    //                   details.primaryVelocity! < 0) {
+    //                 Get.find<CartController>().removeFromCart(item.toJson());
+    //                 Get.snackbar("Removed",
+    //                     "Product ${product.name} has been removed from your cart.");
+    //               }
+    //             },
+    //             child: CartTile(
+    //                 item: item,
+    //                 imageUrl: product.images!.map((e) => e.toString()).toList(),
+    //                 price: product.price,
+    //                 count: product.count,
+    //                 title: product.name),
+    //           ),
+    //           SizedBox(
+    //             height: 20,
+    //           )
+    //         ],
+    //       );
+
+    //       // Get.find<PDetailController>()
+    //       //     .retrieveProduct(items[index]!.productId)
+    //       //     .then((value) {
+    //       //   return Column(
+    //       //     children: [
+    //       //       GestureDetector(
+    //       //         onHorizontalDragEnd: (details) {
+    //       //           if (details.primaryVelocity == null) {
+    //       //           } else if (details.primaryVelocity! > 0.0 ||
+    //       //               details.primaryVelocity! < 0) {
+    //       //             Get.find<CartController>()
+    //       //                 .removeFromCart(items[index]!.toJson());
+    //       //             Get.snackbar("Removed",
+    //       //                 "Product ${value.name} has been removed from your cart.");
+    //       //           }
+    //       //         },
+    //       //         child: CartTile(
+    //       //             item: items[index]!,
+    //       //             imageUrl:
+    //       //                 value!.images!.map((e) => e.toString()).toList(),
+    //       //             price: value.price,
+    //       //             count: value.count,
+    //       //             title: value.name),
+    //       //       ),
+    //       //       SizedBox(
+    //       //         height: 20,
+    //       //       )
+    //       //     ],
+    //       //   );
+    //       // });
+    //     },
+    //   ),
+    // );
   }
 }
 
 class CartTile extends StatelessWidget {
   final String title;
-  final String? size;
-  final String? color;
+  final CartItem item;
+  final int count;
   final double price;
-  final String imageUrl;
+  final List<String?> imageUrl;
 
   const CartTile({
     super.key,
     required this.title,
-    this.size,
-    this.color,
+    required this.count,
     required this.price,
     required this.imageUrl,
+    required this.item,
   });
 
   @override
   Widget build(BuildContext context) {
+    print("cat tile: $item, $title, $count, $price, $imageUrl");
     return Container(
         padding: EdgeInsets.all(10),
         height: 80,
@@ -399,10 +407,15 @@ class CartTile extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
-              ),
+              child: !imageUrl.isEmpty
+                  ? Image.network(
+                      imageUrl[0]!,
+                      fit: BoxFit.cover,
+                    )
+                  : SizedBox(
+                      width: 32,
+                      height: 64,
+                    ),
             ),
             SizedBox(
               width: 15,
@@ -436,53 +449,19 @@ class CartTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          child: Row(
-                            children: [
-                              Text(
-                                "Size - ",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary),
-                              ),
-                              Text(
-                                size!,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
-                          child: Row(
-                            children: [
-                              Text(
-                                "Color - ",
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSecondary),
-                              ),
-                              Text(
-                                color!,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
-                              )
-                            ],
-                          ),
-                        ),
-                        Container(
                           height: 24,
                           child: Row(
                             children: [
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (item.quantity <= count) {
+                                    Get.find<CartController>()
+                                        .updateCartItem(item.toJson());
+                                  } else {
+                                    Get.snackbar("Invalid",
+                                        "Max Quantity for this product has been reached.");
+                                  }
+                                },
                                 icon: Icon(Icons.add),
                                 style: ButtonStyle(
                                   alignment: Alignment.center,
@@ -499,12 +478,31 @@ class CartTile extends StatelessWidget {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text("${0}"),
+                              Text(
+                                "${item.quantity}",
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
                               SizedBox(
                                 width: 10,
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (item.quantity > 1) {
+                                    Get.find<CartController>()
+                                        .updateCartItem(item.toJson());
+                                  } else if (item.quantity <= 1) {
+                                    Get.find<CartController>()
+                                        .removeFromCart(item.toJson());
+                                    Get.snackbar("Removed",
+                                        "Product ${title} has been removed from your cart");
+                                  } else {
+                                    Get.snackbar("Invalid",
+                                        "Min Quantity for this product has been reached.");
+                                  }
+                                },
                                 icon: Icon(Icons.remove),
                                 style: ButtonStyle(
                                   alignment: Alignment.center,
