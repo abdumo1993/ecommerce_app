@@ -60,19 +60,39 @@ class ReviewModel {
 }
 
 class Product {
+  final int id;
   final String name;
   final double price;
   final List<dynamic> imageUrl;
-
+  final String brand;
+  final String details;
+  final String category;
+  final int count;
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
+      id: json['id'].toInt(),
       name: json['name'],
       price: json['price'].toDouble(),
       imageUrl: json['images'],
+      brand: json["brand"],
+      details: json["details"],
+      count: json["count"].toInt(),
+      category: json["category"]
     );
   }
-
-  Product({required this.name, required this.price, required this.imageUrl});
+Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "price": price,
+      "imageUrl": imageUrl,
+      "brand": brand,
+      "details": details,
+      "count": count,
+      "category": category,
+    };
+  }
+  Product({required this.name, required this.price, required this.imageUrl, required this.id, required this.brand, required this.details, required this.count, required this.category});
 }
 
 class SearchModel {
@@ -130,5 +150,45 @@ class ProductResponseModel {
       nextIndex: json['nextIndex'].toInt(),
       total: json['total'],
     );
+  }
+}
+
+
+
+class AdminProduct {
+  int? id;
+  String? name;
+  double? price;
+  List<dynamic>? imageUrl;
+  String? brand;
+  String? details;
+  String? category;
+  int? count;
+  factory AdminProduct.fromJson(Map<String, dynamic> json) {
+    return AdminProduct(
+      id: json['id'].toInt(),
+      name: json['name'],
+      price: json['price'].toDouble(),
+      imageUrl: json['images'],
+      brand: json["brand"],
+      details: json["details"],
+      count: json["count"].toInt(),
+      category: json["category"]
+    );
+  }
+
+  AdminProduct({this.name, this.price, this.imageUrl, this.id, this.brand, this.details, this.count, this.category});
+
+  Map<String, dynamic> toJson() {
+    return {
+      if (id != null) "id": id!,
+      if (name != null && name != "") "name": name!,
+      if (price != null) "price": price!,
+      if (imageUrl != null && imageUrl!.isNotEmpty) "imageUrl": imageUrl!,
+      if (brand != null && brand != "") "brand": brand!,
+      if (details != null && details != "") "details": details!,
+      if (count != null) "count": count!,
+      if (category != null && category != "") "category": category!,
+    };
   }
 }

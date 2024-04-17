@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
 import 'package:ecommerce_app/presentation/pages/settings/settings_page.dart';
+import 'package:ecommerce_app/presentation/pages/admin/store_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +9,7 @@ class NavigationController extends GetxController {
   List<Widget> pages = [
     HomePage(),
     SettingsPage(),
+    StorePage()
   ];
 
   void onItemTapped(int index) {

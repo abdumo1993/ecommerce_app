@@ -37,6 +37,12 @@ class SafeNavRail extends StatelessWidget {
                   color: Theme.of(context).colorScheme.tertiary),
               label: Text('Settings'),
             ),
+            NavigationRailDestination(
+              icon: Icon(Icons.monetization_on_outlined),
+              selectedIcon: Icon(Icons.monetization_on_outlined,
+                  color: Theme.of(context).colorScheme.tertiary),
+              label: Text('Admin'),
+            ),
           ],
         ),
       ),

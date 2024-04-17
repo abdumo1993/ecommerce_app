@@ -33,6 +33,12 @@ class SafeNavBar extends StatelessWidget {
                 color: Theme.of(context).colorScheme.tertiary),
             label: 'Settings',
           ),
+          NavigationDestination(
+              icon: Icon(Icons.monetization_on_outlined),
+              selectedIcon: Icon(Icons.monetization_on_outlined,
+                  color: Theme.of(context).colorScheme.tertiary),
+              label: 'Admin',
+            ),
         ],
       ),
     );
