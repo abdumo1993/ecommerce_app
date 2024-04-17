@@ -28,6 +28,7 @@ class CartUseCase {
     try {
       return await repo.updateCartItem(item);
     } catch (e) {
+      print("use: $e");
       rethrow;
     }
   }
@@ -40,11 +41,18 @@ class CartUseCase {
     }
   }
 
-  Future<List> fetchItems() async {
+  Future<CartModel?> fetchItems() async {
     try {
       return await repo.fetchItems();
     } catch (e) {
-      print(e);
+      rethrow;
+    }
+  }
+
+  Future<CartItem?> fetch(int cartItemId) async {
+    try {
+      return await repo.fetch(cartItemId);
+    } catch (e) {
       rethrow;
     }
   }

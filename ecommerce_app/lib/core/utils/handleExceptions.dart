@@ -25,6 +25,7 @@ import 'package:get/get.dart';
 // }
 
 void handledioExceptions(DioException e) {
+
   if (e.type == DioExceptionType.connectionError) {
     throw NetworkException(message: "Connection Error. Try again later");
   } else if (e.type == DioExceptionType.connectionTimeout) {
@@ -34,8 +35,9 @@ void handledioExceptions(DioException e) {
   } else if (e.type == DioExceptionType.receiveTimeout) {
     throw NetworkException(message: "Response TimeOut. Try again later");
   } else if (e.type == DioExceptionType.badResponse) {
+    // print('status: ${e.response?.statusCode}\tmessage: ${e.response?.data}\t')
     throw BadResponseException(
-        message: e.response?.data,
+        message: e.response?.data["message"],
         statusCode: e.response?.statusCode,
         path: e.requestOptions.path);
   } else {

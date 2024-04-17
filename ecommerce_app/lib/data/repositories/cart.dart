@@ -17,7 +17,7 @@ class CartRepositoryImp implements ICartRepository {
   }
 
   @override
-  Future<List> fetchItems() async {
+  Future<CartModel?> fetchItems() async {
     try {
       return await cartDataSource.fetchItems();
     } catch (e) {
@@ -39,6 +39,8 @@ class CartRepositoryImp implements ICartRepository {
     try {
       return await cartDataSource.updateCartItem(item);
     } catch (e) {
+      print("repo: $e");
+
       rethrow;
     }
   }
@@ -48,6 +50,15 @@ class CartRepositoryImp implements ICartRepository {
     try {
       return await cartDataSource.removeAll();
     } catch (e) {
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<CartItem?> fetch(int cartItemId) async {
+    try {
+      return await cartDataSource.fetch(cartItemId);
+    }catch (e) {
       rethrow;
     }
   }

@@ -1,0 +1,11 @@
+/payment/makePayment => { "currency": "ETB", "returnUrl": "https://example.com", "phoneNumber": "0912345678" }
+		return url to open a page in app to verify using the returns.
+		- Returns the txref and checoutUrl in an apiresponse object- 
+		- use checkout url to open in web
+		- make your pay
+		- redirected to return url
+/payment/verifypayment
+		- in it verify using txref
+		- which returns a order number
+		
+		

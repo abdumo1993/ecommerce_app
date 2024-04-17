@@ -42,6 +42,7 @@ class PDetailController extends GetxController {
                 rating: rating.value!,
                 isMine: true),
             pid);
+        print("res: $res");
         Get.offAndToNamed("/productDetail", arguments: {"id": pid});
 
         changeRating(0);
@@ -139,6 +140,8 @@ class LoginController extends GetxController {
   final password = "".obs;
   RxnString emailError = RxnString(null);
   RxnString passwordError = RxnString(null);
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   void validateEmail() {
     if (!GetUtils.isEmail(emailController.text)) {
@@ -166,6 +169,8 @@ class LoginController extends GetxController {
         var res = await use.login(LoginModel(
             email: emailController.text, password: passwordController.text));
         res == true ? Get.toNamed("/home") : null;
+        emailController.dispose();
+        passwordController.dispose();
       }
     } on AuthException catch (e) {
       // redendant with badresopnseexcepitonoi to be removed after verification.
@@ -180,15 +185,10 @@ class LoginController extends GetxController {
       } else {
         Get.offAllNamed("/login", arguments: {"message": e.message});
       }
-    } on CustomeException catch (e) {
-      Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
       Get.toNamed("/error", arguments: {"message": "Something went wrong l"});
     }
   }
-
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   updateEmail(String Email) {
     email(Email);
@@ -260,6 +260,11 @@ class RegisterConroller extends LoginController {
                     Duration(seconds: 2), () => Get.offAllNamed("/login"))
               )
             : Get.toNamed("/login");
+        emailController.dispose();
+        passwordController.dispose();
+        firstNameController.dispose();
+        lastNameController.dispose();
+        confirmController.dispose();
       }
     } on AuthException catch (e) {
       // redendant with badresopnseexcepitonoi to be removed after verification.
@@ -274,8 +279,6 @@ class RegisterConroller extends LoginController {
       } else {
         Get.offAllNamed("/register", arguments: {"message": e.message});
       }
-    } on CustomeException catch (e) {
-      Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
       print(e.runtimeType);
       Get.toNamed("/error", arguments: {"message": "Something went wrong r"});

@@ -1,7 +1,9 @@
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
+import 'package:ecommerce_app/presentation/pages/checkout/addCheckout.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/checkout.dart';
 import 'package:ecommerce_app/core/routes/routes.dart';
+import 'package:ecommerce_app/presentation/pages/entry_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
 // import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
 import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
@@ -28,7 +30,7 @@ class MainApp extends StatelessWidget {
         darkTheme: darkTheme,
         getPages: routes,
         themeMode: Get.find<ThemeController>().theme.value,
-        home: LoginPage(),
+        home:AddCheckout(),
       ),
     );
   }

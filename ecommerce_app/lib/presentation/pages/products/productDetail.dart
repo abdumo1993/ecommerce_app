@@ -33,7 +33,6 @@ class _ProductDetailsState extends State<ProductDetails> {
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data == null &&
               !snapshot.hasError) {
-          
             // return ErrorPage(
             //   message: "Error loading.",
             // );
@@ -44,16 +43,12 @@ class _ProductDetailsState extends State<ProductDetails> {
               backDest: "/home",
             );
           } else if (snapshot.hasError) {
-          
-
             return ErrorPage(
               message:
                   "Error: ${snapshot.error.runtimeType} has occured while trying to fetch data. please try again.",
               backDest: "/home",
             );
           } else {
-        
-
             PDetailModel product = snapshot.data!;
             return page(
               product: product,
@@ -83,7 +78,7 @@ class page extends StatelessWidget {
     bool side = false;
     var screenWidth = MediaQuery.of(context).size.width;
     print(screenWidth);
-    double minWidth = 500;
+ double minWidth = 500;
     double minDiff = 500;
     double maxGap = 150;
     final diff = (() {
@@ -127,18 +122,21 @@ class page extends StatelessWidget {
                         children: [
                           // image part >
                           // ImageSection(product: product),
-                          shimmer
-                              ? ImageSectionShimmer()
-                              : ImageSection(product: product!),
+                          // shimmer
+                          //     ? ImageSectionShimmer()
+                          //     : ImageSection(product: product!),
+
+                          Image_section(shimmer: shimmer, product: product),
                           // end of image part
                           // start of name and choices
                           // NameSection(product: product),
                           const SizedBox(
                             height: 30,
                           ),
-                          shimmer
-                              ? NameSectionShimmer()
-                              : NameSection(product: product!),
+                          // shimmer
+                          //     ? NameSectionShimmer()
+                          //     : NameSection(product: product!),
+                          Name_section(shimmer: shimmer, product: product,),
                           // choiceContainer(product: product),
                           const SizedBox(
                             height: 30,
@@ -177,7 +175,6 @@ class page extends StatelessWidget {
               ),
               bottomNavigationBar: GestureDetector(
                 onTap: () async {
-
                   Get.find<CartController>()
                       .addToCart({"productId": product!.id, "quantity": 1});
                 },
@@ -410,6 +407,31 @@ class ReviewWrite extends StatelessWidget {
   }
 }
 
+class Name_section extends StatelessWidget {
+  final PDetailModel? product;
+  final bool shimmer;
+
+  const Name_section({super.key, this.product, required this.shimmer});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget ret = ShimmerContainer(
+      height: 30,
+      width: 200,
+    );
+    if (!shimmer) {
+      ret = Text(
+        product == null ? "" : product!.name,
+        style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onPrimary),
+      );
+    }
+    return ret;
+  }
+}
+
 class NameSectionShimmer extends StatelessWidget {
   const NameSectionShimmer({super.key});
 
@@ -439,6 +461,70 @@ class NameSection extends StatelessWidget {
           fontWeight: FontWeight.bold,
           color: Theme.of(context).colorScheme.onPrimary),
     );
+  }
+}
+
+class Image_section extends StatelessWidget {
+  final bool shimmer;
+  final PDetailModel? product;
+  const Image_section({super.key, required this.shimmer, this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> children = [1, 2, 3, 4, 5]
+        .map((e) => Row(
+              children: [
+                ShimmerContainer(width: 200),
+                const SizedBox(
+                  width: 10,
+                )
+              ],
+            ))
+        .toList();
+
+    if (!shimmer) {
+      children = product!.images!.map(
+        (e) {
+          var s;
+          try {
+            s = Image.network(
+              e,
+              fit: BoxFit.contain,
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                // Return a Container as a fallback if the image fails to load
+                return Container(
+                  color: Theme.of(context).colorScheme.secondary,
+                  width: 120,
+                );
+              },
+            );
+          } catch (e) {
+            s = Container(
+              color: Theme.of(context).colorScheme.secondary,
+              width: 120,
+            );
+          }
+          return Row(
+            children: [
+              s,
+              const SizedBox(
+                width: 10,
+              )
+            ],
+          );
+        },
+      ).toList();
+    }
+    return Container(
+        height: 248,
+        width: double.infinity,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: children,
+          ),
+        ));
   }
 }
 
@@ -845,8 +931,6 @@ class myReviews extends StatelessWidget {
 
                                       Get.find<PDetailController>()
                                           .changeRating(reviews[index].rating);
-
-                                     
                                     } else if (result == 'delete') {
                                       var r =
                                           await Get.find<PDetailController>()

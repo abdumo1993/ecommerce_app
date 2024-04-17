@@ -5,5 +5,6 @@ abstract class ICartRepository {
   Future<bool> removeFromCart(Map<String, dynamic> item);
   Future<bool> updateCartItem(Map<String, dynamic> item);
   Future<bool> removeAll();
-  Future<List> fetchItems();
+  Future<CartModel?> fetchItems();
+  Future<CartItem?> fetch(int cartItemId);
 }

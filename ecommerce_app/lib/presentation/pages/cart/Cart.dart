@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/domain/entities/cart.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/controllers/cart.dart';
@@ -22,26 +23,30 @@ class Cart_cart extends StatelessWidget {
       future: controller.fetchItems(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          print("we are waiting");
-          return CartView(shimmer: true);
+          // return shimmer;
+          return CartView(
+              shimmer: true,
+              cart: CartModel(data: null, success: false, message: "Failed."));
         } else if (snapshot.connectionState == ConnectionState.done &&
             snapshot.data == null &&
             !snapshot.hasError) {
-          return ErrorPage(
-              message: "Couldn't fetch cart items. try again later.");
-        } else if (snapshot.hasError) {
+          // null data but not from error;
           return EmptyCart();
-        } else {
-          print(snapshot.data);
-          var returnedData = snapshot.data!;
-          print("items empty: ${snapshot.data![2]}");
-          if (returnedData[2].isEmpty) {
+        } else if (snapshot.hasError) {
+          if (snapshot.error.runtimeType == BadResponseException) {
             return EmptyCart();
           } else {
-            print("returned: $returnedData, snapshot: $snapshot");
-            return CartView(returnees: returnedData, shimmer: false);
+            return ErrorPage(
+                message:
+                    "Couldn't fetch cart items. Error Message:\n${snapshot.error.toString()}",
+                backDest: "/home");
           }
+        } else {
+          // return real show;
+          print(snapshot.data);
+          return CartView(shimmer: false, cart: snapshot.data!);
         }
+        // return SnackBar(content: Text("jflkajf"));
       },
     );
   }
@@ -49,20 +54,27 @@ class Cart_cart extends StatelessWidget {
 
 class CartView extends StatelessWidget {
   final bool shimmer;
-  final List? returnees;
-  const CartView({super.key, this.shimmer = false, this.returnees});
+  final CartModel cart;
+  const CartView({super.key, this.shimmer = false, required this.cart});
 
   @override
   Widget build(BuildContext context) {
-    print("returennes: $returnees");
-    var cartID;
-    var totalPrice;
-    var itemss;
-    if (returnees != null) {
-      [cartID, totalPrice, itemss] = returnees!;
-      print("CartID: $cartID, totalPrice: $totalPrice, itemss : $itemss");
-    }
+    // bool success = cart.success;
+    // String message = cart.message;
+    // dataModel? data = cart.data;
+    int? cartId = cart.data?.cartId;
+    num? totalPrice = cart.data?.totalPrice;
+    List<CartItem>? items = cart.data?.items;
 
+    if (shimmer == false &&
+        (cartId == null || totalPrice == null || items == null)) {
+      return const ErrorPage(
+        backDest: "/home",
+        message:
+            "something went wrong. Most likely a server Error. please try again later",
+      );
+    }
+    print("cartId: $cartId, totalPrice: $totalPrice, items: $items");
     return Container(
       color: Theme.of(context).colorScheme.primary,
       child: Center(
@@ -71,13 +83,7 @@ class CartView extends StatelessWidget {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             bottomNavigationBar: GestureDetector(
-              onTap: () {
-                if (returnees != null) {
-                  if (itemss != null) {
-                    Get.find<CheckoutController>().checkout(itemss!);
-                  }
-                }
-              },
+              onTap: () {},
               child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
@@ -131,7 +137,7 @@ class CartView extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.find<CartController>().removeAll();
+                            // Get.find<CartController>();
                           },
                           child: Text(
                             "Remove All",
@@ -143,14 +149,14 @@ class CartView extends StatelessWidget {
                         SizedBox(
                           height: 10,
                         ),
-                        shimmer ? myShimmerForm() : myForm(items: itemss!),
+                        shimmer ? myShimmerForm() : myForm(items: items!),
                         SizedBox(
                           height: 120,
                         ),
                         shimmer
                             ? myShimmerTotal()
                             : myTotal(
-                                total: totalPrice,
+                                total: totalPrice!,
                               ),
                         SizedBox(
                           height: 100,
@@ -220,9 +226,13 @@ class myTotal extends StatelessWidget {
               Text("Subtotal",
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondary)),
-              Text("\$$total",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary)),
+              Obx(() {
+                var total =
+                    Get.find<CartController>().cart.value.data!.totalPrice;
+                return Text("\$${total}",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary));
+              }),
             ],
           ),
         ],
@@ -259,23 +269,24 @@ class myShimmerForm extends StatelessWidget {
 
 class myForm extends StatelessWidget {
   final List<CartItem?> items;
-  const myForm({
+  final cartConroller = Get.put(CartController());
+  myForm({
     super.key,
     required this.items,
   });
 
   @override
   Widget build(BuildContext context) {
-    print("items ss : ${items.length}");
+    print(Get.find<CartController>().cart);
     return Obx(() {
       return Form(
         child: ListView.builder(
           shrinkWrap: true,
-          itemCount: Get.find<CartController>().cItemCount.value,
+          itemCount:
+              Get.find<CartController>().cart.value.data?.items.length ?? 0,
           itemBuilder: (context, index) {
-            var item = items[index]!;
-            var product = item.product;
-            print("277 : $item, $product");
+            // var item = items[index]!;
+            // var product = item.product;
             return Column(
               children: [
                 GestureDetector(
@@ -283,17 +294,25 @@ class myForm extends StatelessWidget {
                     if (details.primaryVelocity == null) {
                     } else if (details.primaryVelocity! > 0.0 ||
                         details.primaryVelocity! < 0) {
-                      Get.find<CartController>().removeFromCart(item.toJson());
-                      Get.offAndToNamed("/cart");
+                      print("here?");
+                      Get.find<CartController>().deleteItem(
+                          Get.find<CartController>()
+                              .cart
+                              .value
+                              .data!
+                              .items[index]
+                              .updateToJson(0)!);
+                      // Get.offAndToNamed("/cart");
                     }
                   },
-                  child: CartTile(
-                      item: item,
-                      imageUrl:
-                          product.images!.map((e) => e.toString()).toList(),
-                      price: product.price,
-                      count: product.count,
-                      title: product.name),
+                  // child: CartTile(
+                  //     item: item,
+                  //     imageUrl:
+                  //         product.images!.map((e) => e.toString()).toList(),
+                  //     price: product.price,
+                  //     count: product.count,
+                  //     title: product.name),
+                  child: CartTile(index: index),
                 ),
                 SizedBox(
                   height: 20,
@@ -304,94 +323,33 @@ class myForm extends StatelessWidget {
         ),
       );
     });
-    // return Form(
-    //   child: ListView.builder(
-    //     shrinkWrap: true,
-    //     itemCount: items.length,
-    //     itemBuilder: (context, index) {
-    //       var item = items[index]!;
-    //       var product = item.product;
-    //       print("277 : $item, $product");
-    //       return Column(
-    //         children: [
-    //           GestureDetector(
-    //             onHorizontalDragEnd: (details) {
-    //               if (details.primaryVelocity == null) {
-    //               } else if (details.primaryVelocity! > 0.0 ||
-    //                   details.primaryVelocity! < 0) {
-    //                 Get.find<CartController>().removeFromCart(item.toJson());
-    //                 Get.snackbar("Removed",
-    //                     "Product ${product.name} has been removed from your cart.");
-    //               }
-    //             },
-    //             child: CartTile(
-    //                 item: item,
-    //                 imageUrl: product.images!.map((e) => e.toString()).toList(),
-    //                 price: product.price,
-    //                 count: product.count,
-    //                 title: product.name),
-    //           ),
-    //           SizedBox(
-    //             height: 20,
-    //           )
-    //         ],
-    //       );
-
-    //       // Get.find<PDetailController>()
-    //       //     .retrieveProduct(items[index]!.productId)
-    //       //     .then((value) {
-    //       //   return Column(
-    //       //     children: [
-    //       //       GestureDetector(
-    //       //         onHorizontalDragEnd: (details) {
-    //       //           if (details.primaryVelocity == null) {
-    //       //           } else if (details.primaryVelocity! > 0.0 ||
-    //       //               details.primaryVelocity! < 0) {
-    //       //             Get.find<CartController>()
-    //       //                 .removeFromCart(items[index]!.toJson());
-    //       //             Get.snackbar("Removed",
-    //       //                 "Product ${value.name} has been removed from your cart.");
-    //       //           }
-    //       //         },
-    //       //         child: CartTile(
-    //       //             item: items[index]!,
-    //       //             imageUrl:
-    //       //                 value!.images!.map((e) => e.toString()).toList(),
-    //       //             price: value.price,
-    //       //             count: value.count,
-    //       //             title: value.name),
-    //       //       ),
-    //       //       SizedBox(
-    //       //         height: 20,
-    //       //       )
-    //       //     ],
-    //       //   );
-    //       // });
-    //     },
-    //   ),
-    // );
   }
 }
 
 class CartTile extends StatelessWidget {
-  final String title;
-  final CartItem item;
-  final int count;
-  final double price;
-  final List<String?> imageUrl;
-
-  const CartTile({
-    super.key,
-    required this.title,
-    required this.count,
-    required this.price,
-    required this.imageUrl,
-    required this.item,
-  });
-
+  // final String title;
+  // final CartItem item;
+  // final int count;
+  // final double price;
+  // final List<String?> imageUrl;
+  final int index;
+  const CartTile(
+      {super.key,
+      // required this.title,
+      // required this.count,
+      // required this.price,
+      // required this.imageUrl,
+      // required this.item,
+      required this.index});
   @override
   Widget build(BuildContext context) {
-    print("cat tile: $item, $title, $count, $price, $imageUrl");
+    // print("cat tile: $item, $title, $count, $price, $imageUrl");
+    String title =
+        Get.find<CartController>().cart.value.data!.items[index].product.name;
+    CartItem item = Get.find<CartController>().cart.value.data!.items[index];
+    // final int count;
+    // final double price;
+    // final List<String?> imageUrl
     return Container(
         padding: EdgeInsets.all(10),
         height: 80,
@@ -407,9 +365,22 @@ class CartTile extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: !imageUrl.isEmpty
+              child: Get.find<CartController>()
+                      .cart
+                      .value
+                      .data!
+                      .items[index]
+                      .product
+                      .images!
+                      .isNotEmpty
                   ? Image.network(
-                      imageUrl[0]!,
+                      Get.find<CartController>()
+                          .cart
+                          .value
+                          .data
+                          ?.items[index]
+                          .product
+                          .images![0]!,
                       fit: BoxFit.cover,
                     )
                   : SizedBox(
@@ -432,13 +403,19 @@ class CartTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          title,
+                          Get.find<CartController>()
+                              .cart
+                              .value
+                              .data!
+                              .items[index]
+                              .product
+                              .name,
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
                               fontSize: 12),
                         ),
                         Text(
-                          "\$$price",
+                          "\$${item.price}",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.onPrimary),
@@ -454,12 +431,14 @@ class CartTile extends StatelessWidget {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  if (item.quantity <= count) {
-                                    Get.find<CartController>()
-                                        .updateCartItem(item.toJson());
+                                  if (item.quantity >= item.product.count) {
+                                    Get.snackbar("Excess",
+                                        "Quantity has exceeded our stock.");
                                   } else {
-                                    Get.snackbar("Invalid",
-                                        "Max Quantity for this product has been reached.");
+                                    var value =
+                                        item.updateToJson(item.quantity + 1);
+                                    Get.find<CartController>()
+                                        .updateItem(value!);
                                   }
                                 },
                                 icon: Icon(Icons.add),
@@ -490,18 +469,13 @@ class CartTile extends StatelessWidget {
                               ),
                               IconButton(
                                 onPressed: () {
-                                  if (item.quantity > 1) {
+                                  if (item.quantity <= 1) {
                                     Get.find<CartController>()
-                                        .updateCartItem(item.toJson());
-                                  } else if (item.quantity <= 1) {
-                                    Get.find<CartController>()
-                                        .removeFromCart(item.toJson());
-                                    Get.snackbar("Removed",
-                                        "Product ${title} has been removed from your cart");
-                                  } else {
-                                    Get.snackbar("Invalid",
-                                        "Min Quantity for this product has been reached.");
+                                        .deleteItem(item.updateToJson(0)!);
                                   }
+                                  var value =
+                                      item.updateToJson(item.quantity - 1);
+                                  Get.find<CartController>().updateItem(value!);
                                 },
                                 icon: Icon(Icons.remove),
                                 style: ButtonStyle(
@@ -518,7 +492,8 @@ class CartTile extends StatelessWidget {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                              Text("in Stock: ${item.product.count}", style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),)
                       ],
                     )
                   ],
