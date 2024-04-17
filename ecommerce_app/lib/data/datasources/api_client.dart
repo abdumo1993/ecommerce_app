@@ -71,6 +71,7 @@ class DioClient {
 
   Future<String?> getRefreshToken() async =>
       await _storage.read(key: "refreshToken");
+  Future<String?> getRole() async => await _storage.read(key: "role");
 
   Future<String> refreshToken() async {
     try {
@@ -82,7 +83,8 @@ class DioClient {
         print(
             "refreshed successfully. returning new accesstoken... access:${res.data["accessToken"]}");
 
-        await saveTokens(res.data["accessToken"], res.data["refreshToken"]);
+        await saveTokens(res.data["accessToken"], res.data["refreshToken"],
+            res.data["role"]);
       }
       var newAccesstoken = await getAccessToken();
       if (newAccesstoken != null) {
@@ -99,15 +101,21 @@ class DioClient {
     }
   }
 
-  Future<void> saveTokens(String? accessToken, String? refreshToken) async {
+  Future<void> saveTokens(
+      String? accessToken, String? refreshToken, String? role) async {
+    print("role: $role");
     try {
-      if (accessToken != null && refreshToken != null) {
+      if (accessToken != null && refreshToken != null && role != null) {
         await _storage.write(key: 'accessToken', value: accessToken);
         await _storage.write(key: 'refreshToken', value: refreshToken);
+        await _storage.write(key: 'role', value: role);
       }
 
       if (accessToken == null || refreshToken == null) {
         throw AuthException(message: "Saving Tokens Failed.");
+      }
+      if (role == null) {
+        throw AuthException(message: "Role not Provided.");
       }
     } on AuthException catch (e) {
       rethrow;

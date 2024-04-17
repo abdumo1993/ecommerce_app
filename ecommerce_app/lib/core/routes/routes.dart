@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
+import 'package:ecommerce_app/presentation/pages/admin/store_page.dart';
 import 'package:ecommerce_app/presentation/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/auth/register.dart';
@@ -21,6 +22,11 @@ import 'package:ecommerce_app/presentation/pages/settings/settings_page.dart';
 import 'package:get/get.dart';
 
 final routes = [
+// admin
+GetPage(name: "/admin-home", page: ()=> StorePage()),
+// admin 
+
+
   GetPage(name: "/home", page: () => EntryPage()),
   GetPage(name: "/login", page: () => LoginPage()),
   GetPage(name: "/register", page: () => RegisterPage()),

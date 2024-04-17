@@ -15,7 +15,8 @@ class AuthDataSource {
       var res = await dio.dio.post("/auth/login", data: user.toJson());
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
-        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
+        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"], res.data["role"]);
+
         return true;
       }
     } on AuthException catch (e) {
@@ -38,7 +39,7 @@ class AuthDataSource {
         // log in
         // return await login(
         //     LoginModel(email: user.email, password: user.password));
-        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
+        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"], res.data["role"]);
         return true;
       }
     } on AuthException catch (e) {

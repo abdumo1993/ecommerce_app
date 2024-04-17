@@ -168,7 +168,17 @@ class LoginController extends GetxController {
         var data = LoginModel(
             email: emailController.text, password: passwordController.text);
         var res = await use.login(data);
-        res == true ? Get.toNamed("/home") : null;
+        if (res == true) {
+          print(res);
+            print(await dio.getRole());
+          if (await dio.getRole() == 'Admin') {
+            Get.toNamed("/admin-home");
+          } else {
+            Get.toNamed("/home");
+          }
+        } else {
+          null;
+        }
         emailController.dispose();
         passwordController.dispose();
       }
@@ -180,7 +190,6 @@ class LoginController extends GetxController {
     } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
-
       if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {"message": e.toString()});
       } else {
