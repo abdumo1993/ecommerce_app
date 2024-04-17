@@ -14,8 +14,12 @@ class CheckoutController extends GetxController {
   final shippingAddress = RxnInt(null);
   final dynamic orderNumber = Rxn(null);
   final RxList<Map<String, dynamic>> shippingAddressChoices = RxList();
+
+
+
   var useCase = checkoutUseCase(
       repo: CheckoutRepositoryImp(checkoutDataSource: CheckoutDataSource()));
+
   void launchUrl(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrlString(url);
@@ -65,31 +69,4 @@ class CheckoutController extends GetxController {
     } on CustomeException catch (e) {
     } catch (e) {}
   }
-
-//   void checkout(List<CartItem?> checkoutItems) async {
-//     try {
-//       var use = checkoutUseCase(
-//           repo:
-//               CheckoutRepositoryImp(checkoutDataSource: CheckoutDataSource()));
-//       bool checkedout = await use.checkout(checkoutItems);
-//       if (checkedout == true) {
-//         Get.toNamed("/Checkout");
-//       } else {
-//         Get.snackbar("Failed",
-//             "Your Cart couldn't be checked out successfully. please try again.");
-//       }
-//     } on CustomeException catch (e) {
-//       Get.toNamed("/error", arguments: {"message": e.toString()});
-//     } on BadResponseException catch (e) {
-// // bandle different badresoponses
-//     } on NetworkException catch (e) {
-//       Get.toNamed("/error",
-//           arguments: {"message": e.toString(), "backDest": "/cart"});
-//     } catch (e) {
-//       Get.toNamed("/error", arguments: {
-//         "message": "Unexpected Error occured with: \n$e",
-//         "backDest": "/cart"
-//       });
-//     }
-//   }
 }
