@@ -43,7 +43,6 @@ class Cart_cart extends StatelessWidget {
           }
         } else {
           // return real show;
-          print(snapshot.data);
           return CartView(shimmer: false, cart: snapshot.data!);
         }
         // return SnackBar(content: Text("jflkajf"));
@@ -74,7 +73,6 @@ class CartView extends StatelessWidget {
             "something went wrong. Most likely a server Error. please try again later",
       );
     }
-    print("cartId: $cartId, totalPrice: $totalPrice, items: $items");
     return Container(
       color: Theme.of(context).colorScheme.primary,
       child: Center(
@@ -277,7 +275,6 @@ class myForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(Get.find<CartController>().cart);
     return Obx(() {
       return Form(
         child: ListView.builder(
@@ -294,7 +291,6 @@ class myForm extends StatelessWidget {
                     if (details.primaryVelocity == null) {
                     } else if (details.primaryVelocity! > 0.0 ||
                         details.primaryVelocity! < 0) {
-                      print("here?");
                       Get.find<CartController>().deleteItem(
                           Get.find<CartController>()
                               .cart
@@ -343,13 +339,10 @@ class CartTile extends StatelessWidget {
       required this.index});
   @override
   Widget build(BuildContext context) {
-    // print("cat tile: $item, $title, $count, $price, $imageUrl");
     String title =
         Get.find<CartController>().cart.value.data!.items[index].product.name;
     CartItem item = Get.find<CartController>().cart.value.data!.items[index];
-    // final int count;
-    // final double price;
-    // final List<String?> imageUrl
+
     return Container(
         padding: EdgeInsets.all(10),
         height: 80,

@@ -7,7 +7,6 @@ class CartUseCase {
   CartUseCase({required this.repo});
 
   Future<bool> addToCart(Map<String, dynamic> item) async {
-    print("call call ");
 
     try {
       return await repo.addToCart(item);
@@ -28,7 +27,6 @@ class CartUseCase {
     try {
       return await repo.updateCartItem(item);
     } catch (e) {
-      print("use: $e");
       rethrow;
     }
   }

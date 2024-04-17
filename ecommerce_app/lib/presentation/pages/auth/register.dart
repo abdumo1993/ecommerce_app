@@ -152,7 +152,6 @@ class RegisterPage extends StatelessWidget {
                           onPress: () {
                             if (_formKey.currentState!.validate()) {
                               registerConroller.submitForm();
-                              print("regisetered");
                               // Proceed with form submission
                               // Get.toNamed("/home");
                             }

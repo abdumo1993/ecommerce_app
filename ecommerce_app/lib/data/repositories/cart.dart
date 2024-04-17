@@ -8,7 +8,6 @@ class CartRepositoryImp implements ICartRepository {
   CartRepositoryImp({required this.cartDataSource});
   @override
   Future<bool> addToCart(Map<String, dynamic> item) async {
-    print("calle calle ");
     try {
       return await cartDataSource.addToCart(item);
     } catch (e) {

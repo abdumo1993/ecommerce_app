@@ -13,20 +13,20 @@ class AuthDataSource {
   Future<bool> login(LoginModel user) async {
     try {
       var res = await dio.dio.post("/auth/login", data: user.toJson());
-
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
-
         await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"]);
         return true;
       }
     } on AuthException catch (e) {
+
       rethrow;
     } on DioException catch (e) {
+
       // handle dio exceptions.
       handledioExceptions(e);
     } catch (e) {
-      throw AuthException(message: "Registeration failed. try again.");
+      throw AuthException(message: "Login failed. try again.");
     }
     return false;
   }
@@ -99,7 +99,6 @@ class ReviewDataSource {
         // };
       }
       if (resR.statusCode == 200) {
-
         returnee["rating"] = resR.data ?? 3;
       }
 

@@ -75,7 +75,6 @@ class dataModel {
 
     // items = items as List<CartItem>;
 
-    print("entities: ${items}");
     return dataModel(
         cartId: json["cartId"], totalPrice: json["totalPrice"], items: items);
   }

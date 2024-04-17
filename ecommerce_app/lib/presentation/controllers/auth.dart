@@ -42,7 +42,6 @@ class PDetailController extends GetxController {
                 rating: rating.value!,
                 isMine: true),
             pid);
-        print("res: $res");
         Get.offAndToNamed("/productDetail", arguments: {"id": pid});
 
         changeRating(0);
@@ -166,8 +165,9 @@ class LoginController extends GetxController {
       if (emailError.value == null && passwordError.value == null) {
         var use = AuthUserCase(
             repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
-        var res = await use.login(LoginModel(
-            email: emailController.text, password: passwordController.text));
+        var data = LoginModel(
+            email: emailController.text, password: passwordController.text);
+        var res = await use.login(data);
         res == true ? Get.toNamed("/home") : null;
         emailController.dispose();
         passwordController.dispose();
@@ -180,6 +180,7 @@ class LoginController extends GetxController {
     } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
+
       if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {"message": e.toString()});
       } else {
@@ -280,7 +281,6 @@ class RegisterConroller extends LoginController {
         Get.offAllNamed("/register", arguments: {"message": e.message});
       }
     } catch (e) {
-      print(e.runtimeType);
       Get.toNamed("/error", arguments: {"message": "Something went wrong r"});
     }
   }

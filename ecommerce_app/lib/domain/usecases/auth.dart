@@ -9,7 +9,8 @@ class AuthUserCase {
 
   Future<bool> login(LoginModel user) async {
     try {
-      return await repo.login(user);
+      var data = await repo.login(user);
+      return data;
     } catch (e) {
       rethrow;
     }

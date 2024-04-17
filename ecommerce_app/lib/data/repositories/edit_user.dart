@@ -12,8 +12,6 @@ class EditUserRepositoryImpl implements EditUserRepository{
     try {
       return await editUserProvider.editUser(user);
     } catch (e) {
-      print("repo: $e");
-      print("repo ${e.runtimeType}");
       rethrow;
     }
   }

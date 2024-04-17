@@ -11,7 +11,8 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<bool> login(LoginModel user) async {
     try {
-      return await authProvider.login(user);
+      var data = await authProvider.login(user);
+      return data;
     } catch (e) {
       rethrow;
     }

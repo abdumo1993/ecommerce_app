@@ -47,7 +47,6 @@ class AddCheckout extends StatelessWidget {
                     // ),
                     ContinueButton(
                         onPress: () {
-                          print("yes");
                           Get.find<CheckoutController>().verify();
                         },
                         child: Text(

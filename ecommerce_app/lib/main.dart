@@ -1,3 +1,5 @@
+import 'package:app_links/app_links.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
 import 'package:ecommerce_app/presentation/pages/checkout/addCheckout.dart';
@@ -15,7 +17,10 @@ import 'package:get/get.dart';
 void main() async {
   await dotenv.load();
   Get.put(ThemeController());
+  setPathUrlStrategy();
+
   runApp(const MainApp());
+  // handleDeepLink();
 }
 
 class MainApp extends StatelessWidget {
@@ -30,7 +35,7 @@ class MainApp extends StatelessWidget {
         darkTheme: darkTheme,
         getPages: routes,
         themeMode: Get.find<ThemeController>().theme.value,
-        home:AddCheckout(),
+        home: EntryPage(),
       ),
     );
   }
