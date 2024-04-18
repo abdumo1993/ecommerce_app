@@ -28,3 +28,20 @@ class EditUserDataSource{
     return false;
   }
 }
+
+class GetUserDataSource{
+  DioClient dio = DioClient();
+  Future<GetUserModel> getUserDetails() async {
+    try {
+      var res = await dio.dio.get("/user");
+      if (res.statusCode == 200) {
+        GetUserModel user = GetUserModel();
+        // print(res.data);
+        return user.fromJson(res.data!);
+      }
+    } on DioException catch (e) {
+      handledioExceptions(e);
+    }
+    return GetUserModel();
+  }
+}

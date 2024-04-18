@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/presentation/controllers/settings_controller.dart';
 import 'package:ecommerce_app/presentation/pages/home/components/body.dart';
 import 'package:ecommerce_app/presentation/pages/settings/body.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,7 @@ class EntryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(NavigationController());
+    Get.put(SettingsController());
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: LayoutBuilder(builder: (context, constraints) {
