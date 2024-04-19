@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:app_links/app_links.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
+import 'package:uni_links/uni_links.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/cart/Cart.dart';
@@ -17,9 +22,14 @@ import 'package:get/get.dart';
 void main() async {
   await dotenv.load();
   Get.put(ThemeController());
+  WidgetsFlutterBinding.ensureInitialized();
+  Core core = Core();
+  await core.setUserData();
   setPathUrlStrategy();
 
+  initUniLinks();
   runApp(const MainApp());
+
   // handleDeepLink();
 }
 
@@ -28,6 +38,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // launchUrl(Uri.parse("http://localhost:3000"));
     return Obx(
       () => GetMaterialApp(
         debugShowCheckedModeBanner: false,
@@ -69,4 +80,27 @@ class ThemeController extends GetxController {
     if (isSwitched.value) theme.value = ThemeMode.light;
     if (!isSwitched.value) theme.value = ThemeMode.dark;
   }
+}
+
+StreamSubscription? sub;
+
+void initUniLinks() {
+  print("was here");
+
+  sub = linkStream.listen((String? link) {
+    print("lins: $link");
+    // Handle the received link
+    handleLink(link);
+  }, onError: (err) {
+    // Handle any errors
+    print("here ? ");
+    print(err);
+  });
+  print("subb: ${sub}");
+}
+
+void handleLink(String? link) {
+  // Implement logic to handle the Uni_Link
+  print('Received link: $link');
+  // Here you can navigate to a specific screen or perform an action based on the link
 }

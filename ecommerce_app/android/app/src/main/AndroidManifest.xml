@@ -23,15 +23,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!-- to be seen here. -->
+            <!-- to be seen here. -->P
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="${applicationId}" />
-                <data android:host="verifyPayment" />
-                <data android:host="verifyRegistration" />
+                <data android:scheme="red"/>
+               
             </intent-filter>
 
 

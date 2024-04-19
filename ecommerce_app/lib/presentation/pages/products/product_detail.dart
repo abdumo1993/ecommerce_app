@@ -1,3 +1,5 @@
+import "package:http/http.dart" as http;
+import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/controllers/cart.dart';
@@ -33,7 +35,6 @@ class _ProductDetailsState extends State<ProductDetails> {
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data == null &&
               !snapshot.hasError) {
-          
             // return ErrorPage(
             //   message: "Error loading.",
             // );
@@ -44,16 +45,12 @@ class _ProductDetailsState extends State<ProductDetails> {
               backDest: "/home",
             );
           } else if (snapshot.hasError) {
-          
-
             return ErrorPage(
               message:
                   "Error: ${snapshot.error.runtimeType} has occured while trying to fetch data. please try again.",
               backDest: "/home",
             );
           } else {
-        
-
             PDetailModel product = snapshot.data!;
             return page(
               product: product,
@@ -177,7 +174,6 @@ class page extends StatelessWidget {
               ),
               bottomNavigationBar: GestureDetector(
                 onTap: () async {
-
                   Get.find<CartController>()
                       .addToCart({"productId": product!.id, "quantity": 1});
                 },
@@ -392,9 +388,18 @@ class ReviewWrite extends StatelessWidget {
               detailController: detailController,
             ),
             IconButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     detailController.submitForm(pid);
+                    try {
+                      var uri =
+                          Uri.https("red-ecommerce.onrender.com", "/test");
+                      var res = await http.get(uri);
+                    
+                      print("here is the res: $res");
+                    } catch (e) {
+                      print("the error is there : \n\n\n: $e\n\n");
+                    }
                     // Get.offNamed("/productDetail");
                   }
                 },
@@ -845,8 +850,6 @@ class myReviews extends StatelessWidget {
 
                                       Get.find<PDetailController>()
                                           .changeRating(reviews[index].rating);
-
-                                     
                                     } else if (result == 'delete') {
                                       var r =
                                           await Get.find<PDetailController>()
