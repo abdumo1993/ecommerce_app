@@ -6,6 +6,8 @@ abstract class AuthRepository {
   Future<bool> register(RegisterModel user);
   Future<bool> refresh();
   Future<bool> logout();
+  Future<bool> forgotPasswordEmail(String email);
+  Future<bool> forgotPasswordNew(Map<String, String> json);
 }
 
 abstract class ReviewRepository {

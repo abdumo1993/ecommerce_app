@@ -8,6 +8,7 @@ import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/domain/repositories/auth.dart';
 import 'package:ecommerce_app/domain/usecases/auth.dart';
 import 'package:ecommerce_app/presentation/pages/auth/register.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -170,7 +171,7 @@ class LoginController extends GetxController {
         var res = await use.login(data);
         if (res == true) {
           print(res);
-            print(await dio.getRole());
+          print(await dio.getRole());
           if (await dio.getRole() == 'Admin') {
             Get.toNamed("/admin-home");
           } else {
@@ -181,6 +182,8 @@ class LoginController extends GetxController {
         }
         emailController.dispose();
         passwordController.dispose();
+        Core core = Core();
+        core.setUserData();
       }
     } on AuthException catch (e) {
       // redendant with badresopnseexcepitonoi to be removed after verification.
@@ -305,9 +308,186 @@ class LogoutController extends GetxController {
       var use = AuthUserCase(
           repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
       bool a = await use.logout();
-      a == true ? Get.offAllNamed("/login") : null;
+      if (a == true) {
+        Get.offAllNamed("/login");
+        DioClient().getRefreshToken().then(
+              (value) => print(" teh role : $value"),
+            );
+
+        Core core = Core();
+        core.setUserData();
+        print(core.role);
+      }
     } catch (e) {
       Get.snackbar("Logout Failed.", "log out failed. try again.");
     }
   }
 }
+
+class ForgotPasswordController extends GetxController {
+  /*
+  final email = "".obs;
+  final password = "".obs;
+  RxnString emailError = RxnString(null);
+  RxnString passwordError = RxnString(null);
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+   */
+  final email = "".obs;
+  final emailController = TextEditingController();
+
+  final token = "".obs;
+  RxnString emailError = RxnString(null);
+  RxnString passwordError = RxnString(null);
+
+  RxnString confirmPasswordError = RxnString(null);
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmNewPasswordController = TextEditingController();
+
+  var use =
+      AuthUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+  void validateEmail(value) {
+    if (!GetUtils.isEmail(value)) {
+      emailError.value = "Email is not valid";
+    } else {
+      emailError.value = null;
+    }
+  }
+
+  void validateConfirm() {
+    if (confirmNewPasswordController.text != newPasswordController.text) {
+      confirmPasswordError.value =
+          "Cofirm Password and Password must be similar";
+    } else {
+      confirmPasswordError.value = null;
+    }
+  }
+
+  void validatePassword() {
+    if (newPasswordController.text.length < 6) {
+      passwordError.value = "Password must be at least 6 characters";
+    } else {
+      passwordError.value = null;
+    }
+  }
+
+  void initiate() async {
+    validateEmail(emailController.text);
+    try {
+      if (emailError.value == null) {
+        var res = await use.forgotPasswordEmail(emailController.text);
+        if (res == true) {
+          emailController.dispose();
+          Get.snackbar("Success",
+              "Your Request has been sent. Please wait a few minutes.");
+        }
+      }
+    } on AuthException catch (e) {
+      // redendant with badresopnseexcepitonoi to be removed after verification.
+      Get.offAllNamed("/login", arguments: {"message": e.toString()});
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on BadResponseException catch (e) {
+      if (e.statusCode == 500) {
+        Get.toNamed("/error", arguments: {
+          "message": e.toString(),
+        });
+      } else {
+        Get.offAllNamed("/login", arguments: {"message": e.message});
+      }
+    } catch (e) {
+      Get.toNamed("/error", arguments: {"message": "Something went wrong f"});
+    }
+  }
+
+  void submit() async {
+    validateEmail(email.value);
+    validatePassword();
+    validateConfirm();
+    try {
+      if (emailError.value == null &&
+          passwordError.value == null &&
+          confirmPasswordError.value == null) {
+        var data = {
+          "email": email.value,
+          "resetToken": token.value,
+          "password": newPasswordController.text,
+          "confirmPassword": confirmNewPasswordController.text
+        };
+
+        var res = await use.forgotPasswordNew(data);
+        if (res == true) {
+          Get.snackbar("Success",
+              "Your Request has been sent. Please wait a few minutes.");
+        }
+
+        email.value = '';
+        newPasswordController.dispose();
+        confirmNewPasswordController.dispose();
+        token.value = "";
+      }
+    } on AuthException catch (e) {
+      // redendant with badresopnseexcepitonoi to be removed after verification.
+      Get.offAllNamed("/login", arguments: {"message": e.toString()});
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on BadResponseException catch (e) {
+      if (e.statusCode == 500) {
+        Get.toNamed("/error", arguments: {
+          "message": e.toString(),
+        });
+      } else {
+        Get.offAllNamed("/login", arguments: {"message": e.message});
+      }
+    } catch (e) {
+      Get.toNamed("/error", arguments: {"message": "Something went wrong f"});
+    }
+  }
+}
+
+
+/*
+try {
+      if (emailError.value == null && passwordError.value == null) {
+        var use = AuthUserCase(
+            repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
+        var data = LoginModel(
+            email: emailController.text, password: passwordController.text);
+        var res = await use.login(data);
+        if (res == true) {
+          print(res);
+          print(await dio.getRole());
+          if (await dio.getRole() == 'Admin') {
+            Get.toNamed("/admin-home");
+          } else {
+            Get.toNamed("/home");
+          }
+        } else {
+          null;
+        }
+        emailController.dispose();
+        passwordController.dispose();
+        Core core = Core();
+        core.setUserData();
+      }
+    } on AuthException catch (e) {
+      // redendant with badresopnseexcepitonoi to be removed after verification.
+      Get.offAllNamed("/login", arguments: {"message": e.toString()});
+    } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on CustomeException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } on BadResponseException catch (e) {
+      if (e.statusCode == 500) {
+        Get.toNamed("/error", arguments: {"message": e.toString()});
+      } else {
+        Get.offAllNamed("/login", arguments: {"message": e.message});
+      }
+    } catch (e) {
+      Get.toNamed("/error", arguments: {"message": "Something went wrong l"});
+    }
+ */

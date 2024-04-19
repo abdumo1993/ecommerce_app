@@ -27,6 +27,22 @@ class AuthUserCase {
   Future<bool> logout() async {
     return await repo.logout();
   }
+
+  Future<bool> forgotPasswordEmail(String email) async {
+    try {
+      return await repo.forgotPasswordEmail(email);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> forgotPasswordNew(Map<String, String> json) async {
+    try {
+      return await repo.forgotPasswordNew(json);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class ReviewUseCase {

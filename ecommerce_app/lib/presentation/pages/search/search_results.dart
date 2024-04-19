@@ -103,7 +103,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed("/productDetail",arguments: {"id":"$index"}),
+      onTap: () => Get.toNamed("/productDetail",arguments: {"id":index}),
       child: Card(
                 color: Theme.of(context).colorScheme.secondary,
                 elevation: 3,

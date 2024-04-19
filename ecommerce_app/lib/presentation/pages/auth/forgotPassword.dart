@@ -8,7 +8,8 @@ import 'package:get/instance_manager.dart';
 class ForgotPassword extends StatelessWidget {
   ForgotPassword({super.key});
 
-  LoginController loginController = Get.put(LoginController());
+  ForgotPasswordController forgotPasswordController =
+      Get.put(ForgotPasswordController());
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -40,10 +41,13 @@ class ForgotPassword extends StatelessWidget {
                       children: [
                         Container(
                           child: myTextField(
-                            controller: loginController.emailController,
+                            controller:
+                                forgotPasswordController.emailController,
                             validator: (value) {
-                              loginController.validateEmail();
-                              return loginController.emailError.value;
+                              forgotPasswordController.validateEmail(
+                                  forgotPasswordController
+                                      .emailController.text);
+                              return forgotPasswordController.emailError.value;
                             },
                             keyboardType: TextInputType.emailAddress,
                             palceholder: "Email Address",
@@ -59,7 +63,7 @@ class ForgotPassword extends StatelessWidget {
                           onPress: () {
                             if (_formKey.currentState!.validate()) {
                               // Proceed with form submission
-                            Get.toNamed("/productDetail");
+                              forgotPasswordController.initiate();
                             }
                           },
                           child: Text(
@@ -81,7 +85,10 @@ class ForgotPassword extends StatelessWidget {
 }
 
 class EmailSent extends StatelessWidget {
-  const EmailSent({super.key});
+  EmailSent({super.key});
+  ForgotPasswordController forgotController =
+      Get.put(ForgotPasswordController());
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -109,12 +116,55 @@ class EmailSent extends StatelessWidget {
                     SizedBox(
                       height: 15,
                     ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          Container(
+                            child: myTextField(
+                              controller:
+                                  forgotController.newPasswordController,
+                              validator: (value) {
+                                forgotController.validatePassword();
+                                return forgotController.passwordError.value;
+                              },
+                              keyboardType: TextInputType.visiblePassword,
+                              obscure: true,
+                              palceholder: "Password",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Container(
+                            child: myTextField(
+                              controller:
+                                  forgotController.confirmNewPasswordController,
+                              validator: (value) {
+                                forgotController.validatePassword();
+                                return forgotController
+                                    .confirmPasswordError.value;
+                              },
+                              keyboardType: TextInputType.visiblePassword,
+                              obscure: true,
+                              palceholder: "Confirm Password",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
                     ContinueButton(
-                      onPress: (){
-                        Get.offAllNamed("login");
+                      onPress: () {
+                        if (_formKey.currentState!.validate()) {
+                          // Proceed with form submission
+                          forgotController.submit();
+                        }
                       },
                       child: Text(
-                        "Return to Login",
+                        "Continue",
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),

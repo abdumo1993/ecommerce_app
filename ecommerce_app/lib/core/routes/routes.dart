@@ -23,15 +23,14 @@ import 'package:get/get.dart';
 
 final routes = [
 // admin
-GetPage(name: "/admin-home", page: ()=> StorePage()),
-// admin 
-
+  GetPage(name: "/admin-home", page: () => StorePage()),
+// admin
 
   GetPage(name: "/home", page: () => EntryPage()),
   GetPage(name: "/login", page: () => LoginPage()),
   GetPage(name: "/register", page: () => RegisterPage()),
-  GetPage(name: "/forgotPassword", page: () => ForgotPassword()),
-  GetPage(name: "/emailSent", page: () => EmailSent()),
+  GetPage(name: "/forgot-password", page: () => ForgotPassword()),
+  GetPage(name: "/email-sent", page: () => EmailSent()),
   GetPage(name: "/cart", page: () => Cart_cart()),
   // to be modified to conditional rendering for empty cart.
   GetPage(name: "/emptyCart", page: () => EmptyCart()),
@@ -42,6 +41,7 @@ GetPage(name: "/admin-home", page: ()=> StorePage()),
   GetPage(name: "/settings", page: () => SettingsPage()),
   GetPage(name: "/address", page: () => AddressPage()),
   GetPage(name: "/confirm", page: () => ConfirmPage()),
+  GetPage(name: "/confirmed-email", page: () => ConfirmedEmail()),
   GetPage(
       name: "/addAddress",
       page: () => EditAddressPage(
@@ -51,6 +51,10 @@ GetPage(name: "/admin-home", page: ()=> StorePage()),
   GetPage(name: "/category", page: () => CategoriesPage()),
   GetPage(name: "/selectedCategory", page: () => SelectedCategoryPage()),
   GetPage(name: "/editProfile", page: () => EditProfilePage()),
-  GetPage(name: "/editAddress", page: () => EditAddressPage(createNewAddress: false,)),
+  GetPage(
+      name: "/editAddress",
+      page: () => EditAddressPage(
+            createNewAddress: false,
+          )),
   // GetPage(name: "/search", page: () => HomePage()),
 ];

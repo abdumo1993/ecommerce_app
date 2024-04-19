@@ -53,10 +53,13 @@ class Core {
   Future<void> setUserData() async {
     // loads user data from shared preferences and sets it to
     var r = await DioClient().getRole();
+    print("r: $r");
     if (r == "Admin") {
       _role = Roles.ADMIN;
     } else if (r == "Customer") {
       _role = Roles.CUSTOMER;
+    } else {
+      _role = null;
     }
     // [user]
   }

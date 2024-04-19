@@ -35,6 +35,24 @@ class AuthRepositoryImpl implements AuthRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<bool> forgotPasswordEmail(String email) async {
+    try {
+      return await authProvider.forgotPasswordEmail(email);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> forgotPasswordNew(Map<String, String> json) async {
+    try {
+      return await authProvider.forgotPasswordNew(json);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
 
 class ReviewRepositoryImp implements ReviewRepository {

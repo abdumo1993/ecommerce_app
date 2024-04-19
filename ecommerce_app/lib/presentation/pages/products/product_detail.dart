@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/core/utils/roles.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import "package:http/http.dart" as http;
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
@@ -24,9 +26,33 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+    print(Get.arguments["id"].runtimeType);
+    return AccessControlWidget(
+        child: body(
+            pDetailController: pDetailController,
+            runtimeType: runtimeType,
+            id: Get.arguments['id'] ?? 3),
+        allowedRole: Roles.CUSTOMER);
+  }
+}
+
+class body extends StatelessWidget {
+  const body({
+    super.key,
+    required this.pDetailController,
+    required this.runtimeType,
+    required this.id,
+  });
+
+  final PDetailController pDetailController;
+  final Type runtimeType;
+  final int id;
+
+  @override
+  Widget build(BuildContext context) {
     return Material(
       child: FutureBuilder(
-        future: pDetailController.retrieveProduct(3),
+        future: pDetailController.retrieveProduct(id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return page(
@@ -391,15 +417,7 @@ class ReviewWrite extends StatelessWidget {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     detailController.submitForm(pid);
-                    try {
-                      var uri =
-                          Uri.https("red-ecommerce.onrender.com", "/test");
-                      var res = await http.get(uri);
-                    
-                      print("here is the res: $res");
-                    } catch (e) {
-                      print("the error is there : \n\n\n: $e\n\n");
-                    }
+
                     // Get.offNamed("/productDetail");
                   }
                 },

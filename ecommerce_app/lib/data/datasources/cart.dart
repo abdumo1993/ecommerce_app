@@ -5,7 +5,6 @@ import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/cart.dart';
 import 'package:get/get.dart';
 
-
 class CartDataSource {
   DioClient dio = DioClient();
   Future<bool> addToCart(Map<String, dynamic> item) async {
@@ -24,14 +23,16 @@ class CartDataSource {
 
   Future<bool> removeFromCart(Map<String, dynamic> item) async {
     try {
+      print(" the id : ${item["cartItemId"]}");
       var res = await dio.dio.delete(
-        "cart/remove/${item["cartItemId"]}",
+        "/cart/remove/${item["cartItemId"]}",
       );
 
       if (res.statusCode == 200) {
         return true;
       }
     } on DioException catch (e) {
+      print(e);
       handledioExceptions(e);
     } catch (e) {
       return false;

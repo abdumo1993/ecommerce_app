@@ -128,6 +128,8 @@ class DioClient {
     try {
       _storage.delete(key: "accessToken");
       _storage.delete(key: "refreshToken");
+      _storage.delete(key: "role");
+
     } catch (e) {
       throw AuthException(message: 'Logout failed. Try later.');
     }

@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/core/utils/exceptions.dart';
+import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/domain/entities/cart.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/controllers/cart.dart';
@@ -7,6 +8,7 @@ import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/pages/cart/emptyCart.dart';
 import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -19,34 +21,38 @@ class Cart_cart extends StatelessWidget {
   Widget build(BuildContext context) {
     CartController controller = Get.put(CartController());
     Get.put(CheckoutController());
-    return FutureBuilder(
-      future: controller.fetchItems(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // return shimmer;
-          return CartView(
-              shimmer: true,
-              cart: CartModel(data: null, success: false, message: "Failed."));
-        } else if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.data == null &&
-            !snapshot.hasError) {
-          // null data but not from error;
-          return EmptyCart();
-        } else if (snapshot.hasError) {
-          if (snapshot.error.runtimeType == BadResponseException) {
+    return AccessControlWidget(
+      allowedRole: Roles.CUSTOMER,
+      child: FutureBuilder(
+        future: controller.fetchItems(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // return shimmer;
+            return CartView(
+                shimmer: true,
+                cart:
+                    CartModel(data: null, success: false, message: "Failed."));
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data == null &&
+              !snapshot.hasError) {
+            // null data but not from error;
             return EmptyCart();
+          } else if (snapshot.hasError) {
+            if (snapshot.error.runtimeType == BadResponseException) {
+              return EmptyCart();
+            } else {
+              return ErrorPage(
+                  message:
+                      "Couldn't fetch cart items. Error Message:\n${snapshot.error.toString()}",
+                  backDest: "/home");
+            }
           } else {
-            return ErrorPage(
-                message:
-                    "Couldn't fetch cart items. Error Message:\n${snapshot.error.toString()}",
-                backDest: "/home");
+            // return real show;
+            return CartView(shimmer: false, cart: snapshot.data!);
           }
-        } else {
-          // return real show;
-          return CartView(shimmer: false, cart: snapshot.data!);
-        }
-        // return SnackBar(content: Text("jflkajf"));
-      },
+          // return SnackBar(content: Text("jflkajf"));
+        },
+      ),
     );
   }
 }
@@ -486,7 +492,11 @@ class CartTile extends StatelessWidget {
                             ],
                           ),
                         ),
-                              Text("in Stock: ${item.product.count}", style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),)
+                        Text(
+                          "in Stock: ${item.product.count}",
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        )
                       ],
                     )
                   ],

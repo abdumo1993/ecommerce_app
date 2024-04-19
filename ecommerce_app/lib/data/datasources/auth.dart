@@ -15,15 +15,14 @@ class AuthDataSource {
       var res = await dio.dio.post("/auth/login", data: user.toJson());
       if (res.statusCode == 200) {
         // save access and refresh token to the storage
-        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"], res.data["role"]);
+        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"],
+            res.data["role"]);
 
         return true;
       }
     } on AuthException catch (e) {
-
       rethrow;
     } on DioException catch (e) {
-
       // handle dio exceptions.
       handledioExceptions(e);
     } catch (e) {
@@ -39,7 +38,8 @@ class AuthDataSource {
         // log in
         // return await login(
         //     LoginModel(email: user.email, password: user.password));
-        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"], res.data["role"]);
+        await dio.saveTokens(res.data["accessToken"], res.data["refreshToken"],
+            res.data["role"]);
         return true;
       }
     } on AuthException catch (e) {
@@ -56,6 +56,38 @@ class AuthDataSource {
 
   Future<bool> refresh() async {
     try {} catch (e) {}
+    return false;
+  }
+
+  Future<bool> forgotPasswordEmail(String email) async {
+    try {
+      var res = await dio.dio.post("/auth/forgot-password/$email", data: email);
+      if (res.statusCode == 200) {
+        return true;
+      }
+    } on DioException catch (e) {
+      handledioExceptions(e);
+    } on AuthException catch (e) {
+      rethrow;
+    } catch (e) {
+      throw AuthException(message: "Request failed. try again.");
+    }
+    return false;
+  }
+
+  Future<bool> forgotPasswordNew(Map<String, String> json) async {
+    try {
+      var res = await dio.dio.post("/auth/reset-password", data: json);
+      if (res.statusCode == 200) {
+        return true;
+      }
+    } on DioException catch (e) {
+      handledioExceptions(e);
+    } on AuthException catch (e) {
+      rethrow;
+    } catch (e) {
+      throw AuthException(message: "Request failed. try again.");
+    }
     return false;
   }
 

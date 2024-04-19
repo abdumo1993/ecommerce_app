@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:app_links/app_links.dart';
+import 'package:ecommerce_app/presentation/controllers/auth.dart';
+import 'package:ecommerce_app/presentation/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,7 +48,7 @@ class MainApp extends StatelessWidget {
         darkTheme: darkTheme,
         getPages: routes,
         themeMode: Get.find<ThemeController>().theme.value,
-        home: EntryPage(),
+        home: EmailSent(),
       ),
     );
   }
@@ -83,24 +85,96 @@ class ThemeController extends GetxController {
 }
 
 StreamSubscription? sub;
-
+// https://red-ecommerce.onrender.com/test/redirect?path=cart
 void initUniLinks() {
-  print("was here");
+  print("Initializing deep links...");
 
-  sub = linkStream.listen((String? link) {
-    print("lins: $link");
-    // Handle the received link
-    handleLink(link);
-  }, onError: (err) {
-    // Handle any errors
-    print("here ? ");
-    print(err);
-  });
-  print("subb: ${sub}");
+  // Ensure the subscription is cancelled when the app is closed to prevent memory leaks
+  sub?.cancel();
+
+  sub = linkStream.listen(
+    (String? link) {
+      print("Received link: ${link.runtimeType}");
+      handleLink(link);
+    },
+    onError: (Object error, StackTrace stackTrace) {
+      print("Error occurred while listening to deep links: $error");
+      print("Stack trace: $stackTrace");
+    },
+    onDone: () {
+      print("Stream of deep links is closed.");
+    },
+    cancelOnError: false, // Prevents the stream from being cancelled on error
+  );
+
+  print("Deep link subscription initialized: ${sub}");
 }
 
 void handleLink(String? link) {
-  // Implement logic to handle the Uni_Link
-  print('Received link: $link');
-  // Here you can navigate to a specific screen or perform an action based on the link
+  if (link == null) {
+    print("Received null link. Ignoring.");
+    return;
+  }
+
+  print("Handling link: $link");
+
+  try {
+    var uri = Uri.parse(link);
+    if (uri.host.isEmpty) {
+      print("Invalid URI: Host is empty.");
+      return;
+    }
+
+    Map<String, String> queryParams = uri.queryParameters;
+    print("Query parameters: $queryParams");
+    // Assuming the host is used as a route name. Adjust as necessary.
+    String routeName = "/${uri.host}";
+
+    // Attempt to navigate to the route. If the route does not exist, GetX will throw an exception.
+    try {
+      if (routeName == "email-sent" && queryParams.isNotEmpty) {
+        ForgotPasswordController forgotPasswordController =
+            Get.put(ForgotPasswordController());
+        forgotPasswordController.email(queryParams['email']);
+        forgotPasswordController.token(queryParams['token']);
+      }
+      Get.toNamed(routeName);
+    } catch (e) {
+      print("Route not found or navigation failed: $routeName. Error: $e");
+      // Optionally, navigate to a default route or show an error message
+    }
+  } catch (e) {
+    print("Failed to handle link: $link. Error: $e");
+    // Optionally, handle the error more gracefully, e.g., by showing an error message to the user
+  }
 }
+// void handleLink(String? link) {
+//   if (link == null) {
+//     print("Received null link. Ignoring.");
+//     return;
+//   }
+
+//   print("Handling link: $link");
+
+//   try {
+//     var uri = Uri.parse(link);
+//     if (uri.host.isEmpty) {
+//       print("Invalid URI: Host is empty.");
+//       return;
+//     }
+
+//     // Assuming the host is used as a route name. Adjust as necessary.
+//     String routeName = "/${uri.host}";
+
+//     // Check if the route exists before navigating
+//     if (Get.routing.) {
+//       Get.toNamed(routeName);
+//     } else {
+//       print("Route not found: $routeName");
+//       // Optionally, navigate to a default route or show an error message
+//     }
+//   } catch (e) {
+//     print("Failed to handle link: $link. Error: $e");
+//     // Optionally, handle the error more gracefully, e.g., by showing an error message to the user
+//   }
+// }
