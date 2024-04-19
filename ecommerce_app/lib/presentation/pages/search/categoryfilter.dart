@@ -15,7 +15,7 @@ class categoryfilter extends StatelessWidget {
     final ExpansionController expController = Get.find<ExpansionController>();
     return Obx(
       () => SizedBox(
-        height: 500,
+        height: 800,
         child: Column(
           children: [
             Padding(

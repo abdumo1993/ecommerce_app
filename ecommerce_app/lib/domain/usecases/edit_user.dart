@@ -14,3 +14,17 @@ class EditUserCase{
     }
   }
 }
+
+class GetUserCase{
+  final GetUserRepository repo;
+
+  GetUserCase({required this.repo});
+  
+  Future<GetUserModel?> getUserDetails() async {
+    try {
+      return await repo.getUserDetails();
+    } catch (e) {
+      rethrow;
+    }
+  }
+}

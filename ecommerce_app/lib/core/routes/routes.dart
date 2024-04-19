@@ -50,6 +50,7 @@ GetPage(name: "/admin-home", page: ()=> StorePage()),
   GetPage(name: "/error", page: () => ErrorPage()),
   GetPage(name: "/category", page: () => CategoriesPage()),
   GetPage(name: "/selectedCategory", page: () => SelectedCategoryPage()),
-  GetPage(name: "/editProfile", page: () => EditProfilePage())
+  GetPage(name: "/editProfile", page: () => EditProfilePage()),
+  GetPage(name: "/editAddress", page: () => EditAddressPage(createNewAddress: false,)),
   // GetPage(name: "/search", page: () => HomePage()),
 ];

@@ -13,6 +13,8 @@ class SearchResult extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => Future.sync(() => productController.refresh()),
       child: PagedGridView<int, Product>(
+        showNewPageErrorIndicatorAsGridChild: false,
+        showNoMoreItemsIndicatorAsGridChild: false,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: (MediaQuery.of(context).size.width * 0.004).floor()>0? (MediaQuery.of(context).size.width * 0.007).floor(): 1,
                     childAspectRatio: 1.0,
@@ -125,7 +127,7 @@ class ProductCard extends StatelessWidget {
                       child: Text(
                         "${product.name}",
                         style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                        overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Padding(

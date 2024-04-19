@@ -110,6 +110,23 @@ class EditProfilePage extends StatelessWidget {
                     },
                   ),
                 ),
+              ), Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                child: Container(
+                        width: MediaQuery.of(context).size.width*0.9,
+                        constraints: BoxConstraints(maxWidth: 500),
+                  child: myTextField(
+                    // index: 2,
+                                labeltext: "PhoneNumber",
+                    controller: editUserController.phoneController,
+                    palceholder: "phone number",
+                    validator: (value) {
+                      editUserController.validatePhone();
+                      return editUserController.phoneError.value;
+                    },
+                    keyboardType: TextInputType.phone,
+                  ),
+                ),
               ),
                   Text("* To edit password please fill both old and new password",style: TextStyle(color: Theme.of(context).colorScheme.tertiary),),
               Padding(
@@ -121,7 +138,7 @@ class EditProfilePage extends StatelessWidget {
                     // index: 3,
                     obscure: true,
                                 labeltext: "old password",
-                    controller: editUserController.passwordController,
+                    controller: editUserController.oldPasswordController,
                     palceholder: "old password",
                     validator: (value) {
                       editUserController.validatePassword();
@@ -140,11 +157,11 @@ class EditProfilePage extends StatelessWidget {
                     // index: 3,
                     obscure: true,
                                 labeltext: "new password",
-                    controller: editUserController.confirmController,
+                    controller: editUserController.newPasswordController,
                     palceholder: "new password",
                     validator: (value) {
                       editUserController.validatePassword();
-                      editUserController.validateConfirm();
+                      editUserController.validatePasswordNotMatch();
                       return editUserController.confirmError.value;
                     },
                     keyboardType: TextInputType.visiblePassword,

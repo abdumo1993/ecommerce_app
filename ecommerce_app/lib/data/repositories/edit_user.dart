@@ -16,3 +16,20 @@ class EditUserRepositoryImpl implements EditUserRepository{
     }
   }
 }
+
+
+ class GetUserRepositoryImpl extends GetUserRepository{
+  final GetUserDataSource getUserProvider;
+
+  GetUserRepositoryImpl({required this.getUserProvider});
+  
+  Future<GetUserModel> getUserDetails() async{
+    try {
+      return await getUserProvider.getUserDetails();
+    } catch (e) {
+      print("repo: $e");
+      print("repo ${e.runtimeType}");
+      rethrow;
+    }
+  }
+}

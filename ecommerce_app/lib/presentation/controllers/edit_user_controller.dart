@@ -1,22 +1,29 @@
 import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/data/data_sources/edit_user.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
-import 'package:ecommerce_app/data/datasources/auth.dart';
-import 'package:ecommerce_app/data/repositories/auth.dart';
 import 'package:ecommerce_app/data/repositories/edit_user.dart';
-import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/domain/entities/edit_user.dart';
-import 'package:ecommerce_app/domain/usecases/auth.dart';
 import 'package:ecommerce_app/domain/usecases/edit_user.dart';
+import 'package:ecommerce_app/presentation/controllers/settings_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EditUserController extends GetxController {
-
+  late GetUserModel? user;
+  EditUserController(){
+  user = Get.arguments['user']; 
+  if (user!=null){
+    firstNameController.text = user!.firstname ?? '';
+    lastNameController.text = user!.lastname ?? '';
+    emailController.text = user!.email ?? '';
+    phoneController.text = user!.phoneNumber ?? '';
+    }
+  }
   DioClient dio = DioClient();
   final firstName = "".obs;
   final lastName = "".obs;
   final email = "".obs;
+  final phone = "".obs;
   final password = "".obs;
   final confirmPass = "".obs;
 
@@ -36,15 +43,17 @@ class EditUserController extends GetxController {
   RxnString firstNameError = RxnString(null);
   RxnString lastNameError = RxnString(null);
   RxnString emailError = RxnString(null);
+  RxnString phoneError = RxnString(null);
   RxnString passwordError = RxnString(null);
   RxnString confirmError = RxnString(null);
 
 
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
-  TextEditingController confirmController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
 
 
   void validateFirstName() {
@@ -75,34 +84,53 @@ class EditUserController extends GetxController {
     }
   }
 
+  void validatePhone() {
+    if (!phoneController.text.isPhoneNumber && phoneController.text.isNotEmpty) {
+      phoneError.value = "Phone number is not valid";
+    } else {
+      phoneError.value = null;
+    }
+  }
+
   void validatePassword() {
-    if (passwordController.text.length < 6  && passwordController.text.isNotEmpty) {
+    if (oldPasswordController.text.length < 6  && oldPasswordController.text.isNotEmpty) {
       passwordError.value = "Password must be at least 6 characters";
     } else {
       passwordError.value = null;
     }
   }
 
-  void validateConfirm() {
-    if (confirmController.text == passwordController.text && confirmController.text.isNotEmpty) {
+  void validatePasswordNotMatch() {
+    if (newPasswordController.text == oldPasswordController.text && newPasswordController.text.isNotEmpty) {
       confirmError.value = "Old Password and New Password are the same";
     } else {
       confirmError.value = null;
     }
   }
+  void validateChange(EditUserModel editedUser) {
+    if (user != null) {
+      if (emailController.text != user!.email)
+        editedUser.email = emailController.text;
+      if (phoneController.text != user!.phoneNumber)
+        editedUser.phone = phoneController.text;
+      if (emailController.text != user!.email)
+        editedUser.firstname = firstNameController.text;
+      if (lastNameController.text != user!.lastname)
+        editedUser.lastname = lastNameController.text;
+    }
+  }
 
   void submitForm() async {
     validateEmail();
+    validatePhone();
     validatePassword();
     validateFirstName();
     validateLastName();
-    validateConfirm();
-    var editedUser = EditUserModel(
-        email: emailController.text,
-        password: passwordController.text,
-        firstname: firstNameController.text,
-        lastname: lastNameController.text,
-        confirmPassword: confirmController.text);
+    validatePasswordNotMatch();
+    var editedUser = EditUserModel();
+    validateChange(editedUser);
+    editedUser.oldPassword = oldPasswordController.text;
+    editedUser.newPassword = newPasswordController.text;
     if (editedUser.toJson().toString() == {}.toString()) {
       //something happens
       Get.snackbar("Nothing to change","Please enter the field you want to edit",
@@ -120,6 +148,7 @@ class EditUserController extends GetxController {
                     "Update details", "User details updated successfully",
                     backgroundColor: ThemeData.dark().colorScheme.secondary,
                     colorText: ThemeData.dark().colorScheme.onPrimary),
+                    Get.find<SettingsController>().loadUser(),
               )
             : Get.snackbar("Update details",
                 "Failed to update user details. Please try again",

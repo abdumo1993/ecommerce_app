@@ -16,6 +16,8 @@ class CategoryResult extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => Future.sync(() => productController.refresh()),
       child: PagedGridView<int, Product>(
+        showNewPageErrorIndicatorAsGridChild: false,
+        showNoMoreItemsIndicatorAsGridChild: false,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: (MediaQuery.of(context).size.width * 0.007).floor(),
                     childAspectRatio: 1.0,
