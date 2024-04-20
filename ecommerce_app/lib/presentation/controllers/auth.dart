@@ -180,8 +180,8 @@ class LoginController extends GetxController {
         } else {
           null;
         }
-        emailController.dispose();
-        passwordController.dispose();
+        emailController.text = '';
+        passwordController.text = '';
         Core core = Core();
         core.setUserData();
       }
@@ -273,11 +273,11 @@ class RegisterConroller extends LoginController {
                     Duration(seconds: 2), () => Get.offAllNamed("/login"))
               )
             : Get.toNamed("/login");
-        emailController.dispose();
-        passwordController.dispose();
-        firstNameController.dispose();
-        lastNameController.dispose();
-        confirmController.dispose();
+        emailController.text = '';
+        passwordController.text = '';
+        firstNameController.text = '';
+        lastNameController.text = '';
+        confirmController.text = '';
       }
     } on AuthException catch (e) {
       // redendant with badresopnseexcepitonoi to be removed after verification.
@@ -343,6 +343,15 @@ class ForgotPasswordController extends GetxController {
   RxnString confirmPasswordError = RxnString(null);
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmNewPasswordController = TextEditingController();
+  String changeEmail(String value) {
+    email.value = value;
+    return email.value;
+  }
+
+  String changeToken(String value) {
+    token.value = value;
+    return token.value;
+  }
 
   var use =
       AuthUserCase(repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
@@ -377,13 +386,13 @@ class ForgotPasswordController extends GetxController {
       if (emailError.value == null) {
         var res = await use.forgotPasswordEmail(emailController.text);
         if (res == true) {
-          emailController.dispose();
-          Get.snackbar("Success",
-              "Your Request has been sent. Please wait a few minutes.");
+          emailController.text = '';
+          Get.toNamed("/confirm", arguments: {"sent": true});
         }
       }
     } on AuthException catch (e) {
       // redendant with badresopnseexcepitonoi to be removed after verification.
+
       Get.offAllNamed("/login", arguments: {"message": e.toString()});
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
@@ -400,9 +409,14 @@ class ForgotPasswordController extends GetxController {
     } catch (e) {
       Get.toNamed("/error", arguments: {"message": "Something went wrong f"});
     }
+
+    emailController.text = '';
   }
 
   void submit() async {
+    print("ere?");
+    print(
+        'email: ${email.value}, token: ${token.value}, pass: ${newPasswordController.text}, con: ${confirmNewPasswordController.text}');
     validateEmail(email.value);
     validatePassword();
     validateConfirm();
@@ -424,8 +438,8 @@ class ForgotPasswordController extends GetxController {
         }
 
         email.value = '';
-        newPasswordController.dispose();
-        confirmNewPasswordController.dispose();
+        newPasswordController.text = '';
+        confirmNewPasswordController.text = "";
         token.value = "";
       }
     } on AuthException catch (e) {
@@ -448,46 +462,3 @@ class ForgotPasswordController extends GetxController {
     }
   }
 }
-
-
-/*
-try {
-      if (emailError.value == null && passwordError.value == null) {
-        var use = AuthUserCase(
-            repo: AuthRepositoryImpl(authProvider: AuthDataSource()));
-        var data = LoginModel(
-            email: emailController.text, password: passwordController.text);
-        var res = await use.login(data);
-        if (res == true) {
-          print(res);
-          print(await dio.getRole());
-          if (await dio.getRole() == 'Admin') {
-            Get.toNamed("/admin-home");
-          } else {
-            Get.toNamed("/home");
-          }
-        } else {
-          null;
-        }
-        emailController.dispose();
-        passwordController.dispose();
-        Core core = Core();
-        core.setUserData();
-      }
-    } on AuthException catch (e) {
-      // redendant with badresopnseexcepitonoi to be removed after verification.
-      Get.offAllNamed("/login", arguments: {"message": e.toString()});
-    } on NetworkException catch (e) {
-      Get.toNamed("/error", arguments: {"message": e.toString()});
-    } on CustomeException catch (e) {
-      Get.toNamed("/error", arguments: {"message": e.toString()});
-    } on BadResponseException catch (e) {
-      if (e.statusCode == 500) {
-        Get.toNamed("/error", arguments: {"message": e.toString()});
-      } else {
-        Get.offAllNamed("/login", arguments: {"message": e.message});
-      }
-    } catch (e) {
-      Get.toNamed("/error", arguments: {"message": "Something went wrong l"});
-    }
- */

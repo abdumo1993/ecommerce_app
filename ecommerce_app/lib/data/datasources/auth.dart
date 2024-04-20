@@ -61,7 +61,8 @@ class AuthDataSource {
 
   Future<bool> forgotPasswordEmail(String email) async {
     try {
-      var res = await dio.dio.post("/auth/forgot-password/$email", data: email);
+      var res =
+          await dio.dio.post("/auth/forgot-password?email=$email", data: email);
       if (res.statusCode == 200) {
         return true;
       }
@@ -77,11 +78,14 @@ class AuthDataSource {
 
   Future<bool> forgotPasswordNew(Map<String, String> json) async {
     try {
+      print("ehre?");
       var res = await dio.dio.post("/auth/reset-password", data: json);
       if (res.statusCode == 200) {
+        print("res: $res");
         return true;
       }
     } on DioException catch (e) {
+      
       handledioExceptions(e);
     } on AuthException catch (e) {
       rethrow;

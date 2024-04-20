@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget {
         darkTheme: darkTheme,
         getPages: routes,
         themeMode: Get.find<ThemeController>().theme.value,
-        home: EmailSent(),
+        home: EntryPage(),
       ),
     );
   }
@@ -135,6 +135,7 @@ void handleLink(String? link) {
       if (routeName == "email-sent" && queryParams.isNotEmpty) {
         ForgotPasswordController forgotPasswordController =
             Get.put(ForgotPasswordController());
+            
         forgotPasswordController.email(queryParams['email']);
         forgotPasswordController.token(queryParams['token']);
       }

@@ -88,10 +88,12 @@ class EmailSent extends StatelessWidget {
   EmailSent({super.key});
   ForgotPasswordController forgotController =
       Get.put(ForgotPasswordController());
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     return Material(
       child: Container(
         color: Theme.of(context).colorScheme.primary,
@@ -160,6 +162,7 @@ class EmailSent extends StatelessWidget {
                       onPress: () {
                         if (_formKey.currentState!.validate()) {
                           // Proceed with form submission
+                          print("herere /");
                           forgotController.submit();
                         }
                       },

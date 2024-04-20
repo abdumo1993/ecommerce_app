@@ -177,7 +177,7 @@ class RegisterPage extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Get.toNamed("/forgotPassword");
+                                Get.toNamed("/forgot-password");
                               },
                               child: Text(
                                 "Reset",
