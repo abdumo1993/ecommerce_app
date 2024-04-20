@@ -132,10 +132,10 @@ void handleLink(String? link) {
 
     // Attempt to navigate to the route. If the route does not exist, GetX will throw an exception.
     try {
-      if (routeName == "email-sent" && queryParams.isNotEmpty) {
+      if (routeName == "/email-sent" && queryParams.isNotEmpty) {
         ForgotPasswordController forgotPasswordController =
             Get.put(ForgotPasswordController());
-            
+
         forgotPasswordController.email(queryParams['email']);
         forgotPasswordController.token(queryParams['token']);
       }
