@@ -100,44 +100,46 @@ class CustomUserTextBtn extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-  final GetUserModel? user = Get.find<SettingsController>().userData;
-    return CustomTextBtn(
-      leading: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            user!=null && user.firstname!=null && user.firstname!=null? "${user.firstname!} ${user.lastname!}" :"username",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
+  final GetUserModel? user = Get.find<SettingsController>().userData.value;
+    return Obx(
+      ()=> CustomTextBtn(
+        leading: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Get.find<SettingsController>().userData.value!=null && Get.find<SettingsController>().userData.value?.firstname!=null && Get.find<SettingsController>().userData.value?.firstname!=null? "${Get.find<SettingsController>().userData.value?.firstname!} ${Get.find<SettingsController>().userData.value?.lastname!}" :"username",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ),
-          ),
-          Text(
-            user!=null && user.email!=null? "${user.email}" :"email@gmail.com",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSecondary,
+            Text(
+              Get.find<SettingsController>().userData.value!=null && Get.find<SettingsController>().userData.value?.email!=null? "${Get.find<SettingsController>().userData.value?.email}" :"email@gmail.com",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
             ),
-          ),
-          Text(
-            user!=null && user.phoneNumber!=null? "${user.phoneNumber}" :"123-567-890",
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSecondary,
+            Text(
+              Get.find<SettingsController>().userData.value!=null && Get.find<SettingsController>().userData.value?.phoneNumber!=null? "${Get.find<SettingsController>().userData.value?.phoneNumber}" :"123-567-890",
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
             ),
-          ),
-        ],
-      ),
-      trailing: Text(
-        "Edit",
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.tertiary,
+          ],
         ),
+        trailing: Text(
+          "Edit",
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
+        ),
+        press: () {
+          // if(user!=null){
+            Get.toNamed("/editProfile",arguments: {'user':user});
+          // } else{
+          //   Get.toNamed("/editProfile");
+          // }
+          },
       ),
-      press: () {
-        // if(user!=null){
-          Get.toNamed("/editProfile",arguments: {'user':user});
-        // } else{
-        //   Get.toNamed("/editProfile");
-        // }
-        },
     );
   }
 }

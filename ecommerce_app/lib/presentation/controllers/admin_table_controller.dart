@@ -17,8 +17,7 @@ class AdminTableController extends GetxController {
   bool valid = false;
   RxnString confirmError = RxnString(null);
 
-  SearchController searchWordController =
-      Get.find<SearchTextController>().searchController;
+  SearchController searchWordController = SearchController();
 
   late ExpansionController expansionController;
 

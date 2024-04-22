@@ -7,13 +7,13 @@ import 'package:ecommerce_app/domain/usecases/edit_user.dart';
 import 'package:get/get.dart';
 
 class SettingsController extends GetxController{
-  late GetUserModel? userData =GetUserModel();
+  late Rx<GetUserModel?> userData =GetUserModel().obs;
   SettingsController(){
     loadUser();
   }
 
   loadUser()async{
-    userData = await getUserDetails();
+    userData.value = await getUserDetails();
   }
 GetUserCase useCase = GetUserCase(repo: GetUserRepositoryImpl(getUserProvider: GetUserDataSource()));
 Future<GetUserModel?> getUserDetails() async {
