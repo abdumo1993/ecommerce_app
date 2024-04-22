@@ -9,7 +9,7 @@ class CheckoutModel {
   Map<String, String?> toJson() => {
         "currency": currency,
         "returnUrl": returnUrl,
-        "phoneNumber": phoneNumber,
+        "phoneNumber": "0943144152",
       };
 }
 
@@ -18,6 +18,6 @@ class CheckoutResModel {
   final String? checkoutUrl;
 
   CheckoutResModel({required this.txref, required this.checkoutUrl});
-  factory CheckoutResModel.fromJson(Map<String, String> json) =>
-      CheckoutResModel(txref: json["txref"], checkoutUrl: json["checkoutUrl"]);
+  factory CheckoutResModel.fromJson(Map<String, dynamic> json) =>
+      CheckoutResModel(txref: json["transactionId"], checkoutUrl: json["url"]);
 }

@@ -26,11 +26,14 @@ class CheckoutDataSource {
       var res =
           await dio.dio.post("/payment/makePayment", data: checkout.toJson());
       if (res.statusCode == 200) {
-        return CheckoutResModel.fromJson(res.data);
+        print("righ:");
+        return CheckoutResModel.fromJson(res.data["data"]);
       }
     } on DioException catch (e) {
+      print("ex: ${e.response}");
       handledioExceptions(e);
     } catch (e) {
+      print(":source: $e");
       rethrow;
     }
     return null;
@@ -54,7 +57,7 @@ class CheckoutDataSource {
     try {
       var res = await dio.dio.get("/address/shipping");
       if (res.statusCode == 200) {
-        return res.data;
+        return res.data["data"].cast<Map<String, dynamic>>();
       }
     } on DioException catch (e) {
       handledioExceptions(e);

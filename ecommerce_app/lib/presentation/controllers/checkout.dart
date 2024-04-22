@@ -12,10 +12,8 @@ class CheckoutController extends GetxController {
   final txref = RxnString(null);
   final checkoutUrl = RxnString(null);
   final shippingAddress = RxnInt(null);
-  final dynamic orderNumber = Rxn(null);
+  final orderNumber = RxnString(null);
   final RxList<Map<String, dynamic>> shippingAddressChoices = RxList();
-
-
 
   var useCase = checkoutUseCase(
       repo: CheckoutRepositoryImp(checkoutDataSource: CheckoutDataSource()));
@@ -31,41 +29,99 @@ class CheckoutController extends GetxController {
 
   void makePayment() async {
     // var body = {"currency": "ETB", "returnUrl": "www.google.com"};
+    print("make Payment");
+
     try {
-      var res = await useCase.makePayment(
-          CheckoutModel(currency: "ETB", returnUrl: "red://add-checkout"));
+      var res = await useCase.makePayment(CheckoutModel(
+          currency: "ETB",
+          returnUrl:
+              "https://red-ecommerce.onrender.com/test/redirect?path=add-checkout"));
 
       txref(res?.txref);
-      checkoutUrl(res?.txref);
+      checkoutUrl(res?.checkoutUrl);
       await fetchAddress();
-      launchUrl(checkoutUrl.value!);
+      print(checkoutUrl.value);
+      launchUrlString(checkoutUrl.value!);
     } on BadResponseException catch (e) {
+      if (e.statusCode == 400) {
+        Get.snackbar("Invalid", "Product out of Stock");
+      } else if (e.statusCode == 500) {
+        print("heres?");
+        Get.toNamed("/error", arguments: {
+          "message": "A Server Error has occured. try again later."
+        });
+      }
     } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
     } on CustomeException catch (e) {
-    } catch (e) {}
-    // make the payment, recieve txref and checkoutUrl
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } catch (e) {
+      print("es: $e");
+      Get.toNamed("/error",
+          arguments: {"message": "something went wrong. try again later"});
+    }
   }
 
   Future<void> fetchAddress() async {
+    print("fetch Address");
     try {
       var res = await useCase.fetchAddresses();
       shippingAddressChoices(res);
+
       shippingAddressChoices.refresh();
     } on BadResponseException catch (e) {
+      if (e.statusCode == 404) {
+        Get.toNamed("/error", arguments: {
+          "message": "Addresses Not Provided.",
+          "backDest": "/cart"
+        });
+      } else if (e.statusCode == 400) {
+        Get.snackbar("Invalid", "invalid request.");
+      } else if (e.statusCode == 500) {
+        Get.toNamed("/error", arguments: {
+          "message": "A Server Error has occured. try again later."
+        });
+      }
     } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
     } on CustomeException catch (e) {
-    } catch (e) {}
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } catch (e) {
+      print("es2: $e");
+
+      Get.toNamed("/error",
+          arguments: {"message": "something went wrong. try again later"});
+    }
   }
 
   void verify() async {
     try {
       var res = await useCase.verify(
           {"txRef": txref.value!, "shippingAddressId": shippingAddress.value!});
-      print("verified");
-      orderNumber(res!["orderNumber"]);
+      if (res != null && res.isNotEmpty) {
+        print("verified");
+        orderNumber(res["data"]["orderNumber"]);
+        print(orderNumber.value);
+        print("kljakljf:${res["data"]["orderNumber"].runtimeType}");
+        Get.toNamed("/checkout");
+      }
     } on BadResponseException catch (e) {
+      if (e.statusCode == 400) {
+        Get.snackbar("Invalid", "invalid request.");
+      } else if (e.statusCode == 500) {
+        Get.toNamed("/error", arguments: {
+          "message": "A Server Error has occured. try again later."
+        });
+      }
     } on NetworkException catch (e) {
+      Get.toNamed("/error", arguments: {"message": e.toString()});
     } on CustomeException catch (e) {
-    } catch (e) {}
+      Get.toNamed("/error", arguments: {"message": e.toString()});
+    } catch (e) {
+      print("es3: $e");
+
+      Get.toNamed("/error",
+          arguments: {"message": "something went wrong. try again later"});
+    }
   }
 }

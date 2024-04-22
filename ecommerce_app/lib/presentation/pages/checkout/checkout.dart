@@ -2,6 +2,7 @@ import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
+import 'package:get/get.dart';
 
 class CheckoutPage extends StatelessWidget {
   const CheckoutPage({super.key});
@@ -92,7 +93,10 @@ class checkoutBody extends StatelessWidget {
                               height: 15,
                             ),
                             ContinueButton(
-                              onPress: () => print("See Other Details"),
+                              onPress: () {
+                                print("See Other Details");
+                                Get.offAllNamed("/home");
+                              },
                               child: Text(
                                 "See Other Details",
                                 style: TextStyle(

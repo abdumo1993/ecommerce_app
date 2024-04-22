@@ -60,6 +60,10 @@ class addCheckoutBody extends StatelessWidget {
                       builder: (controller) {
                         // return Text("kjdfaklj");
                         return DropdownMenu(
+                          textStyle: TextStyle(backgroundColor: Theme.of(context).colorScheme.secondary, color: Theme.of(context).colorScheme.onPrimary),
+                          onSelected: (value) {
+                            controller.shippingAddress(value);
+                          },
                           dropdownMenuEntries: controller.shippingAddressChoices
                               .map((element) {
                                 return DropdownMenuEntry(
@@ -72,6 +76,9 @@ class addCheckoutBody extends StatelessWidget {
                               .cast<DropdownMenuEntry>(),
                         );
                       },
+                    ),
+                    SizedBox(
+                      height: 30,
                     ),
                     ContinueButton(
                         onPress: () {
