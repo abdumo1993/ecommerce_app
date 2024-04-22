@@ -1,4 +1,5 @@
 import 'package:ecommerce_app/presentation/pages/admin/view_product.dart';
+import 'package:ecommerce_app/presentation/pages/admin/view_users.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,7 @@ class StoreBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        constraints: BoxConstraints(maxWidth: 600) ,
+        constraints: BoxConstraints(maxWidth: 600),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -22,7 +23,17 @@ class StoreBody extends StatelessWidget {
                     "lib/assets/images/arrowright2.png",
                   ),
                 ),
-                press: () => Get.to(()=>MyProducts()),
+                press: () => Get.to(() => MyProducts()),
+              ),
+              CustomTextBtn(
+                title: "View Users",
+                trailing: ImageIcon(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  AssetImage(
+                    "lib/assets/images/arrowright2.png",
+                  ),
+                ),
+                press: () => Get.to(() => ViewUsers()),
               ),
             ],
           ),
@@ -31,9 +42,6 @@ class StoreBody extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class CustomTextBtn extends StatelessWidget {
   const CustomTextBtn(
