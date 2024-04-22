@@ -14,7 +14,7 @@ class AddCheckout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const AccessControlWidget(
-        allowedRole: Roles.CUSTOMER, child:addCheckoutBody());
+        allowedRole: Roles.CUSTOMER, child: addCheckoutBody());
   }
 }
 
@@ -55,9 +55,24 @@ class addCheckoutBody extends StatelessWidget {
                     SizedBox(
                       height: 30,
                     ),
-                    // Obx(() =>
-                    //  DropdownButton(),
-                    // ),
+                    GetBuilder(
+                      init: Get.find<CheckoutController>(),
+                      builder: (controller) {
+                        // return Text("kjdfaklj");
+                        return DropdownMenu(
+                          dropdownMenuEntries: controller.shippingAddressChoices
+                              .map((element) {
+                                return DropdownMenuEntry(
+                                    label: element["street"] +
+                                        ", " +
+                                        element["city"],
+                                    value: element["addressId"]);
+                              })
+                              .toList()
+                              .cast<DropdownMenuEntry>(),
+                        );
+                      },
+                    ),
                     ContinueButton(
                         onPress: () {
                           Get.find<CheckoutController>().verify();

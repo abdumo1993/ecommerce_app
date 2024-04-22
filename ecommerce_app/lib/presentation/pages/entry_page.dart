@@ -36,14 +36,15 @@ class EntryPage extends StatelessWidget {
                 child: Get.find<NavigationController>().pages[
                     Get.find<NavigationController>().selectedIndex.value],
               ),
-              SafeNavBar(),
+              // SafeNavBar(),
+              NavBar2(),
             ]),
           );
         } else {
           return Obx(
             () => Row(
               children: [
-                SafeNavRail(),
+                NavRail2(),
                 Expanded(
                   child: Get.find<NavigationController>().pages[
                       Get.find<NavigationController>().selectedIndex.value],

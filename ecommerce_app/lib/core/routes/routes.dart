@@ -34,7 +34,7 @@ final routes = [
   GetPage(name: "/cart", page: () => Cart_cart()),
   // to be modified to conditional rendering for empty cart.
   GetPage(name: "/emptyCart", page: () => EmptyCart()),
-  GetPage(name: "/addCheckout", page: () => AddCheckout()),
+  GetPage(name: "/add-checkout", page: () => AddCheckout()),
   GetPage(name: "/checkout", page: () => CheckoutPage()),
   GetPage(name: "/productDetail", page: () => ProductDetails()),
   GetPage(name: "/search", page: () => SearchPage()),

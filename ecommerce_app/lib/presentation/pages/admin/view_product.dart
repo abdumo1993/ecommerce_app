@@ -1,4 +1,6 @@
+import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/presentation/controllers/admin_table_controller.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -40,108 +42,111 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
           icon:
               Icon(Icons.clear, color: Theme.of(context).colorScheme.onPrimary))
     ];
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 20,),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Ink(
-                    decoration: ShapeDecoration(
-                        color: Theme.of(context).colorScheme.secondary,
-                        shape: CircleBorder()),
-                    child: IconButton(
-                      onPressed: () => {controller.searchWordController.clear(),Navigator.pop(context),},
-                      icon: ImageIcon(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                        AssetImage("lib/assets/images/arrowleft2.png"),
-                      ),
-                    )),
-              ),
-              SearchBar(
-                controller: controller.searchWordController,
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
-                constraints: BoxConstraints(maxHeight: 40,maxWidth: MediaQuery.of(context).size.width*0.7),
-                textStyle: MaterialStatePropertyAll(
-                    TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
-                backgroundColor: MaterialStateColor.resolveWith(
-                    (states) => Theme.of(context).colorScheme.secondary),
-                onSubmitted: (value) => ({
-                  // controller.searchWord.value =value,
-                  // controller.validateSearchWord(),
-                  // if(controller.valid){
-                    controller.refresh()
-                    // },
-                  }),
-                padding: const MaterialStatePropertyAll(
-                  EdgeInsets.only(left: 30, right: 10),
-                ),
-                leading: Icon(
-                  Icons.search_outlined,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                // hintText: "$keyWord",
-                elevation: const MaterialStatePropertyAll(2),
-                trailing: filter,
-              ),
-            ],
-          ),
-          SizedBox(height: 20,),
-          SizedBox(
-            height: 40,
-            child: ListView(
-              itemExtent: 200,
-              scrollDirection: Axis.horizontal,
+    return AccessControlWidget(
+    allowedRole: Roles.ADMIN,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20,),
+            Row(
               children: [
-                Obx(() => FilterChip(
-                    label: Row( mainAxisSize: MainAxisSize.min,
-                      children: [Text("${controller.selectedFilters.length}"),
-                        Icon(Icons.filter_alt),
-                      ],
-                    ),
-                    onSelected: (value) { _showFilterBottomSheet(context);},
-                    selected: controller.selectedFilters.length>0,
-                    // selectedColor:  Theme.of(context).colorScheme.tertiary ,
-                    color: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiary),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Ink(
+                      decoration: ShapeDecoration(
+                          color: Theme.of(context).colorScheme.secondary,
+                          shape: CircleBorder()),
+                      child: IconButton(
+                        onPressed: () => {controller.searchWordController.clear(),Navigator.pop(context),},
+                        icon: ImageIcon(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          AssetImage("lib/assets/images/arrowleft2.png"),
+                        ),
+                      )),
                 ),
-                ChoiceButton(
-                  values: ["Hi-Low", "Low-Hi", "New", "Recommend"],
-                  representations: [
-                    Text("Hi-Low", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    Text("Low-Hi", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    Text("New", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    Text("Recommend", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  ],
-                  choices: [
-                    Text("Price: Lowest - Highest"),
-                    Text("Price: Highest - Lowest"),
-                    Text("Newest"),
-                    Text("Recommended"),
-                  ],
-                  title: "Sort by",
+                SearchBar(
+                  controller: controller.searchWordController,
+                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(100))),
+                  constraints: BoxConstraints(maxHeight: 40,maxWidth: MediaQuery.of(context).size.width*0.7),
+                  textStyle: MaterialStatePropertyAll(
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+                  backgroundColor: MaterialStateColor.resolveWith(
+                      (states) => Theme.of(context).colorScheme.secondary),
+                  onSubmitted: (value) => ({
+                    // controller.searchWord.value =value,
+                    // controller.validateSearchWord(),
+                    // if(controller.valid){
+                      controller.refresh()
+                      // },
+                    }),
+                  padding: const MaterialStatePropertyAll(
+                    EdgeInsets.only(left: 30, right: 10),
+                  ),
+                  leading: Icon(
+                    Icons.search_outlined,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  // hintText: "$keyWord",
+                  elevation: const MaterialStatePropertyAll(2),
+                  trailing: filter,
                 ),
               ],
             ),
-          ),
-          Obx(
-            () => Padding(
-              padding: EdgeInsets.only(left: 20, bottom: 5, top: 10),
-              child: Text(
-                "${controller.total.value} ${controller.total.value==1?'result':'results'} found",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimary),
+            SizedBox(height: 20,),
+            SizedBox(
+              height: 40,
+              child: ListView(
+                itemExtent: 200,
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Obx(() => FilterChip(
+                      label: Row( mainAxisSize: MainAxisSize.min,
+                        children: [Text("${controller.selectedFilters.length}"),
+                          Icon(Icons.filter_alt),
+                        ],
+                      ),
+                      onSelected: (value) { _showFilterBottomSheet(context);},
+                      selected: controller.selectedFilters.length>0,
+                      // selectedColor:  Theme.of(context).colorScheme.tertiary ,
+                      color: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+                    ),
+                  ),
+                  ChoiceButton(
+                    values: ["Hi-Low", "Low-Hi", "New", "Recommend"],
+                    representations: [
+                      Text("Hi-Low", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      Text("Low-Hi", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      Text("New", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      Text("Recommend", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    ],
+                    choices: [
+                      Text("Price: Lowest - Highest"),
+                      Text("Price: Highest - Lowest"),
+                      Text("Newest"),
+                      Text("Recommended"),
+                    ],
+                    title: "Sort by",
+                  ),
+                ],
               ),
             ),
-          ),
-          Expanded(child: Results())
-        ],
+            Obx(
+              () => Padding(
+                padding: EdgeInsets.only(left: 20, bottom: 5, top: 10),
+                child: Text(
+                  "${controller.total.value} ${controller.total.value==1?'result':'results'} found",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimary),
+                ),
+              ),
+            ),
+            Expanded(child: Results())
+          ],
+        ),
       ),
     );
  }

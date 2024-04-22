@@ -87,7 +87,9 @@ class CartView extends StatelessWidget {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             bottomNavigationBar: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Get.find<CheckoutController>().makePayment();
+              },
               child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
@@ -123,7 +125,7 @@ class CartView extends StatelessWidget {
                                 child: Container(
                                   alignment: Alignment.center,
                                   child: Text(
-                                    "Checkout",
+                                    "Cart",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,

@@ -31,10 +31,9 @@ class CheckoutController extends GetxController {
 
   void makePayment() async {
     // var body = {"currency": "ETB", "returnUrl": "www.google.com"};
-
     try {
       var res = await useCase.makePayment(
-          CheckoutModel(currency: "ETB", returnUrl: "www.google.com"));
+          CheckoutModel(currency: "ETB", returnUrl: "red://add-checkout"));
 
       txref(res?.txref);
       checkoutUrl(res?.txref);

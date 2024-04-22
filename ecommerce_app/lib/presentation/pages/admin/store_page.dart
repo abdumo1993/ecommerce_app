@@ -1,4 +1,6 @@
+import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/presentation/pages/admin/body.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
 
 class StorePage extends StatelessWidget {
@@ -6,6 +8,6 @@ class StorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StoreBody();
+    return AccessControlWidget(allowedRole: Roles.ADMIN, child: StoreBody());
   }
 }
