@@ -1,7 +1,10 @@
+import 'package:ecommerce_app/domain/entities/edit_user.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
+import 'package:ecommerce_app/presentation/controllers/settings_controller.dart';
 import 'package:ecommerce_app/presentation/pages/settings/edit_profile_page.dart';
 import 'package:ecommerce_app/presentation/pages/settings/payment_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import 'address_page.dart';
@@ -26,38 +29,7 @@ class SettingsBody extends StatelessWidget {
                 radius: 50,
               ),
               SizedBox(height: 35),
-              CustomTextBtn(
-                leading: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "username",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
-                    ),
-                    Text(
-                      "email@gmail.com",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                      ),
-                    ),
-                    Text(
-                      "123-567-890",
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-                trailing: Text(
-                  "Edit",
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-                ),
-                press: () => Get.toNamed("/editProfile"),
-              ),
+              CustomUserTextBtn(),
               SizedBox(height: 10),
               CustomTextBtn(
                 title: "Address",
@@ -67,20 +39,19 @@ class SettingsBody extends StatelessWidget {
                     "lib/assets/images/arrowright2.png",
                   ),
                 ),
-                press: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddressPage())),
+                press: () => Get.toNamed("/address"),
               ),
-              CustomTextBtn(
-                title: "Payment",
-                trailing: ImageIcon(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  AssetImage(
-                    "lib/assets/images/arrowright2.png",
-                  ),
-                ),
-                press: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PaymentPage())),
-              ),
+              // CustomTextBtn(
+              //   title: "Payment",
+              //   trailing: ImageIcon(
+              //     color: Theme.of(context).colorScheme.onPrimary,
+              //     AssetImage(
+              //       "lib/assets/images/arrowright2.png",
+              //     ),
+              //   ),
+              //   press: () => Navigator.push(context,
+              //       MaterialPageRoute(builder: (context) => PaymentPage())),
+              // ),
               CustomTextBtn(
                 title: "Help",
                 trailing: ImageIcon(
@@ -119,6 +90,54 @@ class SettingsBody extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomUserTextBtn extends StatelessWidget {
+  const CustomUserTextBtn({
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+  final GetUserModel? user = Get.find<SettingsController>().userData;
+    return CustomTextBtn(
+      leading: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            user!=null && user.firstname!=null && user.firstname!=null? "${user.firstname!} ${user.lastname!}" :"username",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
+          ),
+          Text(
+            user!=null && user.email!=null? "${user.email}" :"email@gmail.com",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
+          ),
+          Text(
+            user!=null && user.phoneNumber!=null? "${user.phoneNumber}" :"123-567-890",
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
+          ),
+        ],
+      ),
+      trailing: Text(
+        "Edit",
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.tertiary,
+        ),
+      ),
+      press: () {
+        // if(user!=null){
+          Get.toNamed("/editProfile",arguments: {'user':user});
+        // } else{
+        //   Get.toNamed("/editProfile");
+        // }
+        },
     );
   }
 }

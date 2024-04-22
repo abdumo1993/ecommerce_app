@@ -170,7 +170,13 @@ class LoginController extends GetxController {
             email: emailController.text, password: passwordController.text);
         var res = await use.login(data);
         if (res == true) {
-          Get.toNamed("/home");
+          print(res);
+          print(await dio.getRole());
+          if (await dio.getRole() == 'Admin') {
+            Get.toNamed("/home",arguments: {'role':'Admin'});
+          } else {
+            Get.toNamed("/home",arguments: {'role':'Customer'});
+          }
         } else {
           null;
         }
