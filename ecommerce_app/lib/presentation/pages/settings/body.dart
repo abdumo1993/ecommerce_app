@@ -19,74 +19,77 @@ class SettingsBody extends StatelessWidget {
     return Center(
       child: Container(
         constraints: BoxConstraints(maxWidth: 600) ,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 25),
-              CircleAvatar(
-                backgroundImage: AssetImage("lib/assets/images/Rectangle 9.png"),
-                radius: 50,
-              ),
-              SizedBox(height: 35),
-              CustomUserTextBtn(),
-              SizedBox(height: 10),
-              CustomTextBtn(
-                title: "Address",
-                trailing: ImageIcon(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  AssetImage(
-                    "lib/assets/images/arrowright2.png",
+        child: RefreshIndicator(
+          onRefresh: () => Future.sync(() => Get.find<SettingsController>().loadUser()),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 25),
+                CircleAvatar(
+                  backgroundImage: AssetImage("lib/assets/images/Rectangle 9.png"),
+                  radius: 50,
+                ),
+                SizedBox(height: 35),
+                CustomUserTextBtn(),
+                SizedBox(height: 10),
+                CustomTextBtn(
+                  title: "Address",
+                  trailing: ImageIcon(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    AssetImage(
+                      "lib/assets/images/arrowright2.png",
+                    ),
+                  ),
+                  press: () => Get.toNamed("/address"),
+                ),
+                // CustomTextBtn(
+                //   title: "Payment",
+                //   trailing: ImageIcon(
+                //     color: Theme.of(context).colorScheme.onPrimary,
+                //     AssetImage(
+                //       "lib/assets/images/arrowright2.png",
+                //     ),
+                //   ),
+                //   press: () => Navigator.push(context,
+                //       MaterialPageRoute(builder: (context) => PaymentPage())),
+                // ),
+                CustomTextBtn(
+                  title: "Help",
+                  trailing: ImageIcon(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    AssetImage(
+                      "lib/assets/images/arrowright2.png",
+                    ),
                   ),
                 ),
-                press: () => Get.toNamed("/address"),
-              ),
-              // CustomTextBtn(
-              //   title: "Payment",
-              //   trailing: ImageIcon(
-              //     color: Theme.of(context).colorScheme.onPrimary,
-              //     AssetImage(
-              //       "lib/assets/images/arrowright2.png",
-              //     ),
-              //   ),
-              //   press: () => Navigator.push(context,
-              //       MaterialPageRoute(builder: (context) => PaymentPage())),
-              // ),
-              CustomTextBtn(
-                title: "Help",
-                trailing: ImageIcon(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  AssetImage(
-                    "lib/assets/images/arrowright2.png",
+                CustomTextBtn(
+                  title: "About",
+                  trailing: ImageIcon(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    AssetImage(
+                      "lib/assets/images/arrowright2.png",
+                    ),
+                  ),
+                  press:() => showAboutDialog(context: context,
+                  applicationName: "Ecommerce App",
+                  applicationVersion: "1.0.0",
                   ),
                 ),
-              ),
-              CustomTextBtn(
-                title: "About",
-                trailing: ImageIcon(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  AssetImage(
-                    "lib/assets/images/arrowright2.png",
-                  ),
-                ),
-                press:() => showAboutDialog(context: context,
-                applicationName: "Ecommerce App",
-                applicationVersion: "1.0.0",
-                ),
-              ),
-              TextButton(
-                  onPressed: () {
-                    LogoutController controller = LogoutController();
-                    controller.logout();
-                  },
-                  child: Text(
-                    "Sign Out",
-                    style: TextStyle(color: Color(0xFFFA3636)),
-                  )),
-              const SizedBox(
-                height: 55,
-              )
-            ],
+                TextButton(
+                    onPressed: () {
+                      LogoutController controller = LogoutController();
+                      controller.logout();
+                    },
+                    child: Text(
+                      "Sign Out",
+                      style: TextStyle(color: Color(0xFFFA3636)),
+                    )),
+                const SizedBox(
+                  height: 55,
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -100,26 +103,26 @@ class CustomUserTextBtn extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-  final GetUserModel? user = Get.find<SettingsController>().userData.value;
+  final SettingsController user = Get.find<SettingsController>();
     return Obx(
       ()=> CustomTextBtn(
         leading: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              Get.find<SettingsController>().userData.value!=null && Get.find<SettingsController>().userData.value?.firstname!=null && Get.find<SettingsController>().userData.value?.firstname!=null? "${Get.find<SettingsController>().userData.value?.firstname!} ${Get.find<SettingsController>().userData.value?.lastname!}" :"username",
+              user.userData.value!=null && user.userData.value?.firstname!=null && user.userData.value?.firstname!=null? "${user.userData.value?.firstname!} ${user.userData.value?.lastname!}" :"username",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
             ),
             Text(
-              Get.find<SettingsController>().userData.value!=null && Get.find<SettingsController>().userData.value?.email!=null? "${Get.find<SettingsController>().userData.value?.email}" :"email@gmail.com",
+              user.userData.value!=null && user.userData.value?.email!=null? "${user.userData.value?.email}" :"email",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSecondary,
               ),
             ),
             Text(
-              Get.find<SettingsController>().userData.value!=null && Get.find<SettingsController>().userData.value?.phoneNumber!=null? "${Get.find<SettingsController>().userData.value?.phoneNumber}" :"123-567-890",
+              user.userData.value!=null && user.userData.value?.phoneNumber!=null? "${user.userData.value?.phoneNumber}" :"phone",
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSecondary,
               ),
@@ -134,7 +137,7 @@ class CustomUserTextBtn extends StatelessWidget {
         ),
         press: () {
           // if(user!=null){
-            Get.toNamed("/editProfile",arguments: {'user':user});
+            Get.toNamed("/editProfile",arguments: {'user':user.userData.value});
           // } else{
           //   Get.toNamed("/editProfile");
           // }

@@ -152,6 +152,7 @@ class Shipping extends StatelessWidget {
                       press: () => Get.toNamed("/editAddress", arguments: {'address': e.value}),
                           ),
                 )),
+                SizedBox(height: 50),
         ],
       ): CustomTextBtn(title: "No Addresses Found",),
     );

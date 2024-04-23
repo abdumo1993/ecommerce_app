@@ -45,6 +45,18 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
     return AccessControlWidget(
     allowedRole: Roles.ADMIN,
       child: Scaffold(
+        floatingActionButton: IconButton(
+          onPressed: () {
+            Get.to(()=> EditProduct(),arguments: {'product': null});
+          },
+          icon: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
+          style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll(
+                  Theme.of(context).colorScheme.secondary)),
+        ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,10 +126,10 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
                     ),
                   ),
                   ChoiceButton(
-                    values: ["Hi-Low", "Low-Hi", "New", "Recommend"],
+                    values: ["Low-Hi", "Hi-Low", "New", "Recommend"],
                     representations: [
-                      Text("Hi-Low", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                       Text("Low-Hi", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      Text("Hi-Low", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                       Text("New", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                       Text("Recommend", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                     ],
@@ -361,50 +373,66 @@ class Results extends StatelessWidget {
       onRefresh: () => Future.sync(() => productController.refresh()),
       child: Obx(
         ()=> SingleChildScrollView(
-          child: Table(border: TableBorder.all(color: Theme.of(context).colorScheme.onPrimary,borderRadius: BorderRadius.circular(8)),
-            children: [
-              TableRow(children: [
-                Text("No.",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                Text("name",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                Text("id",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                Text("price",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                Text("image",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-              ]),
-              ...productController.results.asMap().entries.map((e) {
-                return TableRow(children: [
-                  GestureDetector(onTap: () {
-                    print("${e.key}");
-                    Get.to(()=> EditProduct(),arguments: {'product':e.value});
-                  },
-                  child: Text("${e.key+1}",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),)),
-                  Text(e.value.name.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  Text(e.value.id.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  Text(e.value.price.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  e.value.imageUrl.isNotEmpty?Icon(Icons.check,color: Colors.green,):Icon(Icons.cancel_outlined,color: Colors.red,),
-                  // Text(e.value.imageUrl.isNotEmpty.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                ]);
-              }),
-              TableRow(children: [
-                Text("price",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                Text("id",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                TextButton(
-                  onPressed: () {  if(productController.offset.value!=-1){print(productController.results.length);
-                                    productController.loadNextPage(); }
-                                    },
-                  child: Text("next",style: productController.offset.value!=-1? TextStyle(color: Theme.of(context).colorScheme.onPrimary): TextStyle(color: Theme.of(context).colorScheme.tertiary),),
-                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
-                  ),),
-                TextButton(
-                  onPressed: () {  print(productController.results.length);
-                                    productController.refresh(); 
-                                    },
-                  child: Text("refresh",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
-                  ),),
-                Text("price",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-              ]),
-            ],
-          
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Table(
+              // border: TableBorder.all(color: Theme.of(context).colorScheme.onPrimary,borderRadius: BorderRadius.circular(8)),
+              // border: TableBorder(horizontalInside: BorderSide(color: Theme.of(context).colorScheme.onPrimary,)),
+              children: [
+                TableRow(children: [
+                  Text("No.",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                  Text("name",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                  Text("id",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                  Text("price",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                  Text("image",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                ]),
+                ...productController.results.asMap().entries.map((e) {
+                  return TableRow(
+                    decoration: BoxDecoration(
+                      color: e.key.isEven?
+                      Theme.of(context).colorScheme.secondary
+                      :Theme.of(context).colorScheme.primary
+                      ,
+                    ),
+                    children: [
+                    GestureDetector(onTap: () {
+                      print("${e.key}");
+                      Get.to(()=> EditProduct(),arguments: {'product':e.value});
+                    },
+                    child: Text("${e.key+1}",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,)),
+                    Text(e.value.name.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    Text(e.value.id.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    Text(e.value.price.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    e.value.imageUrl.isNotEmpty?Icon(Icons.check,color: Colors.green,):Icon(Icons.cancel_outlined,color: Colors.red,),
+                    // Text(e.value.imageUrl.isNotEmpty.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                  ]);
+                }),
+                TableRow(
+                  decoration: BoxDecoration(
+                  color:Theme.of(context).colorScheme.primary,
+                  ),
+                  children: [
+                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                  TextButton(
+                    onPressed: () {  if(productController.offset.value!=-1){print(productController.results.length);
+                                      productController.loadNextPage(); }
+                                      },
+                    child: Text("next",style: productController.offset.value!=-1? TextStyle(color: Theme.of(context).colorScheme.onPrimary): TextStyle(color: Theme.of(context).colorScheme.tertiary),),
+                    style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
+                    ),),
+                  TextButton(
+                    onPressed: () {  print(productController.results.length);
+                                      productController.refresh(); 
+                                      },
+                    child: Text("refresh",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
+                    ),),
+                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                ]),
+              ],
+            
+            ),
           ),
         ),
       ),

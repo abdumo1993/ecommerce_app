@@ -12,7 +12,7 @@ class SettingsController extends GetxController{
     loadUser();
   }
 
-  loadUser()async{
+  Future<void> loadUser()async{
     userData.value = await getUserDetails();
   }
 GetUserCase useCase = GetUserCase(repo: GetUserRepositoryImpl(getUserProvider: GetUserDataSource()));

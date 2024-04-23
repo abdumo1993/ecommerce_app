@@ -14,14 +14,14 @@ class EditProduct extends StatelessWidget {
   final Product? product = Get.arguments['product'];
   final _formKey = GlobalKey<FormState>();
   void start(EditProductController controller) {
-    controller.NameController.text = product!.name.toString();
+    if (product != null){controller.NameController.text = product!.name.toString();
     controller.BrandController.text = product!.brand.toString();
     controller.DetailController.text = product!.details.toString();
     controller.CountController.text = product!.count.toString();
     controller.PriceController.text = product!.price.toString();
     if (product!.imageUrl.isNotEmpty) {
       controller.ImagesController.text = product!.imageUrl[0].toString();
-    }
+    }}
   }
 
   @override
@@ -60,7 +60,7 @@ class EditProduct extends StatelessWidget {
                         ),
                         Spacer(),
                         Text(
-                          "Edit Product",
+                          product!=null? "Edit Product": "Add Product",
                           style: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
                               fontWeight: FontWeight.bold),
@@ -90,7 +90,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product!.name,
+                                    hintText: product?.name ?? "Product Name",
                                     hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: Theme.of(context)
@@ -134,7 +134,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product!.brand,
+                                    hintText: product?.brand ?? "Product Brand",
                                     hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: Theme.of(context)
@@ -179,7 +179,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product!.details,
+                                    hintText: product?.details ?? "Product Details",
                                     hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: Theme.of(context)
@@ -224,7 +224,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product!.count.toString(),
+                                    hintText: product?.count.toString() ?? "Number of items in stock ",
                                     hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: Theme.of(context)
@@ -269,7 +269,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product!.price.toString(),
+                                    hintText: product?.price.toString() ?? "Price",
                                     hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: Theme.of(context)
@@ -314,7 +314,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product!.imageUrl.isNotEmpty
+                                    hintText: product!=null && product!.imageUrl.isNotEmpty
                                         ? product!.imageUrl[0].toString()
                                         : "",
                                     hintStyle: TextStyle(
@@ -346,7 +346,7 @@ class EditProduct extends StatelessWidget {
                           ),
                           Obx(
                             () => DropdownMenu(
-                              initialSelection: product!.category,
+                              initialSelection: product?.category,
                               enableFilter: true,
                               enableSearch: false,
                               errorText: controller.CategoryError.value,
@@ -386,8 +386,8 @@ class EditProduct extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 30),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          if (product!=null) Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.9,
                               constraints: BoxConstraints(maxWidth: 300),
@@ -410,23 +410,28 @@ class EditProduct extends StatelessWidget {
                               ),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Text("Add product"),
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Theme.of(context).colorScheme.secondary),
-                                foregroundColor: MaterialStatePropertyAll(
-                                    Theme.of(context).colorScheme.onPrimary)),
+                          if (product==null) Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text("Add product"),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Theme.of(context).colorScheme.tertiary),
+                                  foregroundColor: MaterialStatePropertyAll(Colors.white),),
+                            ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: Text("delete product"),
-                            style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(
-                                    Colors.red),
-                                foregroundColor: MaterialStatePropertyAll(
-                                    Theme.of(context).colorScheme.onPrimary)),
+                          if (product!=null) Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: Text("delete product"),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Colors.red),
+                                  foregroundColor: MaterialStatePropertyAll(
+                                      Theme.of(context).colorScheme.onPrimary)),
+                            ),
                           ),
                         ],
                       ))
