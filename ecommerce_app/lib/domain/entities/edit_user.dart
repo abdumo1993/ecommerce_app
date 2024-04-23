@@ -29,6 +29,7 @@ class EditUserModel {
 
 
 class GetUserModel {
+  String? id;
   String? firstname;
   String? lastname;
   String? email;
@@ -36,6 +37,7 @@ class GetUserModel {
   String? billingAddress;
   String? phoneNumber;
   GetUserModel({
+    this.id,
     this.firstname,
     this.lastname,
     this.email,
@@ -46,6 +48,7 @@ class GetUserModel {
 
   GetUserModel fromJson(Map<String,dynamic> json) {
     GetUserModel user  = GetUserModel();
+      if (json['id'] != null && json['id'] != "") user.id = json['id'];
       if (json['firstName'] != null && json['firstName'] != "") user.firstname = json['firstName'];
       if (json['lastName'] != null && json['lastName'] != "") user.lastname = json['lastName'];
       if (json['email'] != null && json['email'] != "") user.email = json['email'];
@@ -56,6 +59,7 @@ class GetUserModel {
   }
   Map<String, dynamic> toJson() {
     return{
+      if (id != null && id != "") "id" : id!,
       if (firstname != null && firstname != "") "firstname" : firstname!,
       if (lastname != null && lastname != "") "lastname" :lastname,
       if (email != null && email != "") "email" : email,
