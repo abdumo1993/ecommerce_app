@@ -23,7 +23,7 @@ import 'package:get/get.dart';
 
 void main() async {
   await dotenv.load();
-  Get.put(ThemeController());
+  Get.put(ThemeController(),permanent: true);
   WidgetsFlutterBinding.ensureInitialized();
   Core core = Core();
   await core.setUserData();

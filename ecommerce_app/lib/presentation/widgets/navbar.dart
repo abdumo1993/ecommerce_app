@@ -1,14 +1,15 @@
 import 'package:ecommerce_app/core/utils/roles.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/nav_controller.dart';
 
 class SafeNavBar extends StatelessWidget {
-  const SafeNavBar({
+  SafeNavBar({
     super.key,
   });
-
+  Core core = Core();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,7 +35,7 @@ class SafeNavBar extends StatelessWidget {
                   color: Theme.of(context).colorScheme.tertiary),
               label: 'Settings',
             ),
-            if (Get.find<NavigationController>().r == Roles.ADMIN) NavigationDestination(
+            if (core.role == Roles.ADMIN) NavigationDestination(
                 icon: Icon(Icons.monetization_on_outlined),
                 selectedIcon: Icon(Icons.monetization_on_outlined,
                     color: Theme.of(context).colorScheme.tertiary),

@@ -15,8 +15,10 @@ class NavigationController extends GetxController {
   ];
   late Roles r;
   String? role = Get.arguments?['role'];
+  Core core = Core();
   NavigationController(){
-    if (role == 'Admin'){
+    // print("nav core.role: ${core.role}");
+    if (core.role == 'Admin'){
       r= Roles.ADMIN;
       selectedIndex.value = 2;
     }else{

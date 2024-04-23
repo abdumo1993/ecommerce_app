@@ -310,6 +310,7 @@ class LogoutController extends GetxController {
       bool a = await use.logout();
       if (a == true) {
         Get.offAllNamed("/login");
+        Get.deleteAll();
         DioClient().getRefreshToken().then(
               (value) => print(" teh role : $value"),
             );
