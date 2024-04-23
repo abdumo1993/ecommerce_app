@@ -4,6 +4,7 @@ import 'package:app_links/app_links.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
 import 'package:ecommerce_app/presentation/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -24,6 +25,7 @@ import 'package:get/get.dart';
 void main() async {
   await dotenv.load();
   Get.put(ThemeController(),permanent: true);
+  Get.put(GetMaterialController(),permanent: true);
   WidgetsFlutterBinding.ensureInitialized();
   Core core = Core();
   await core.setUserData();
