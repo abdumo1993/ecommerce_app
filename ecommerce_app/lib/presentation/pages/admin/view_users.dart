@@ -218,6 +218,15 @@ class DynamicTable extends StatelessWidget {
           ),
           DataColumn(
             label: Text(
+              'Role',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Theme.of(context).colorScheme.onPrimary),
+            ),
+          ),
+          DataColumn(
+            label: Text(
               'Options',
               style: TextStyle(
                   fontSize: 16,
@@ -248,16 +257,12 @@ class DynamicTable extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).colorScheme.onPrimary))),
+                    DataCell(Text(user.role ?? 'N/A',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).colorScheme.onPrimary))),
                     DataCell(Row(
                       children: [
-                        // IconButton(
-                        //   icon: Icon(Icons.delete, ),
-                        //   onPressed: () {
-                        //     print("delete user: ${user.firstname}");
-
-                        //   },
-                        // ),
-
                         IconButton(
                           icon: Icon(
                             Icons.delete,
@@ -280,8 +285,21 @@ class DynamicTable extends StatelessWidget {
                                           .colorScheme
                                           .onSecondary),
                                   title: Text('Confirm Delete'),
-                                  content: Text(
-                                      'Are you sure you want to delete this user?'),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                          'Are you sure you want to delete user:\nEmail: ${user.email}?'),
+                                          SizedBox(height: 10,),
+                                      Row(
+                                        children: [
+                                          Icon(Icons.warning_amber,
+                                              color: Colors.red),
+                                          Text("This action is irreversible"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                   actions: <Widget>[
                                     TextButton(
                                       child: Text('Cancel',
