@@ -18,49 +18,87 @@ class _ViewUsersState extends State<ViewUsers> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
-      appBar: AppBar(leading: backButton(nextPageName: "/home"), backgroundColor: Theme.of(context).colorScheme.primary,),
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: backButton(nextPageName: "/home"),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateColor.resolveWith(
+                      (states) => Theme.of(context).colorScheme.tertiary),
+                  padding: MaterialStateProperty.resolveWith(
+                      (states) => EdgeInsets.all(16)),
+                ),
+                onPressed: () {
+                  Get.toNamed("/add-staff");
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      size: 30,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Add Staff",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    )
+                  ],
+                )),
+          )
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(50.0),
         child: Column(
           children: [
             Container(
-                  width: 400,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    cursorColor: Theme.of(context).colorScheme.onPrimary,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    controller: controller.queryParam,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                            width:
-                                2.0), // Define the color and width of the focused border
-                        borderRadius: BorderRadius.circular(
-                            10), // Optional: Define the border radius
-                      ),
-                      border: InputBorder
-                          .none, // This ensures no border is shown when the TextField is not focused
-                      hintText: "Search users...",
-                      hintStyle: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.onSecondary,
-                      ),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                    ),
-                    onChanged: (value) {
-                      controller.changeList(value);
-                    },
-                  ),
+              width: 400,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: TextField(
+                cursorColor: Theme.of(context).colorScheme.onPrimary,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
+                controller: controller.queryParam,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                        width:
+                            2.0), // Define the color and width of the focused border
+                    borderRadius: BorderRadius.circular(
+                        10), // Optional: Define the border radius
+                  ),
+                  border: InputBorder
+                      .none, // This ensures no border is shown when the TextField is not focused
+                  hintText: "Search users...",
+                  hintStyle: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                ),
+                onChanged: (value) {
+                  controller.changeList(value);
+                },
+              ),
+            ),
             SizedBox(
               height: 30,
             ),
@@ -261,7 +299,9 @@ class DynamicTable extends StatelessWidget {
                                           style: TextStyle(color: Colors.red)),
                                       onPressed: () {
                                         // Your delete action here
-                                        print("delete user: ${user.firstname}");
+                                        Get.find<AdminUsersController>()
+                                            .deleteUser(user.id!, user.email!);
+
                                         Navigator.of(context)
                                             .pop(); // Close the dialog
                                       },

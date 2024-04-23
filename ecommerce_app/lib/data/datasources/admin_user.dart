@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/core/utils/handleExceptions.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
+import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/domain/entities/edit_user.dart';
 
 class AdminUserDataSource {
@@ -27,5 +29,44 @@ class AdminUserDataSource {
       rethrow;
     }
     return [];
+  }
+
+  Future<bool> deleteUser(String id, String email) async {
+    try {
+      var res = await dio.dio
+          .post("/admin/admin-user-delete", data: {"email": email, "id": id});
+      if (res.statusCode == 200) {
+        return true;
+      }
+    } on DioException catch (e) {
+      print("e: $e");
+      handledioExceptions(e);
+    } catch (e) {
+      rethrow;
+    }
+    return false;
+  }
+
+  Future<bool> register(RegisterModel user) async {
+    print("here right?");
+    try {
+      var res = await dio.dio.post("/admin/admin-register", data: user.toJson());
+      if (res.statusCode == 201) {
+        return true;
+      }
+    } on AuthException catch (e) {
+      print("auth: $e");
+      rethrow;
+    } on DioException catch (e) {
+      // handle dio exceptions.
+      print("dio: ${e.response}");
+
+      handledioExceptions(e);
+    } catch (e) {
+      print("else: $e");
+
+      throw AuthException(message: "Registeration failed. try again.");
+    }
+    return false;
   }
 }

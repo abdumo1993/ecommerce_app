@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/domain/entities/edit_user.dart';
 import 'package:ecommerce_app/domain/repositories/admin_user.dart';
 
@@ -13,4 +14,21 @@ class AdminUserUseCase {
       rethrow;
     }
   }
+
+   Future<bool> deleteUser(String id, String email) async {
+    try {
+      return await repo.deleteUser(id, email);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> register(RegisterModel user) async {
+    try {
+      return await repo.register(user);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }
