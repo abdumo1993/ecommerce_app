@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/domain/entities/edit_user.dart';
 import 'package:ecommerce_app/presentation/controllers/admin_user.dart';
+import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,50 +16,51 @@ class _ViewUsersState extends State<ViewUsers> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).colorScheme.primary,
-      child: Padding(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      appBar: AppBar(leading: backButton(nextPageName: "/home"), backgroundColor: Theme.of(context).colorScheme.primary,),
+      body: Padding(
         padding: const EdgeInsets.all(50.0),
         child: Column(
           children: [
             Container(
-              width: 400,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextField(
-                cursorColor: Theme.of(context).colorScheme.onPrimary,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                controller: controller.queryParam,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
+                  width: 400,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextField(
+                    cursorColor: Theme.of(context).colorScheme.onPrimary,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    controller: controller.queryParam,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                            width:
+                                2.0), // Define the color and width of the focused border
+                        borderRadius: BorderRadius.circular(
+                            10), // Optional: Define the border radius
+                      ),
+                      border: InputBorder
+                          .none, // This ensures no border is shown when the TextField is not focused
+                      hintText: "Search users...",
+                      hintStyle: TextStyle(
+                        fontSize: 16,
                         color: Theme.of(context).colorScheme.onSecondary,
-                        width:
-                            2.0), // Define the color and width of the focused border
-                    borderRadius: BorderRadius.circular(
-                        10), // Optional: Define the border radius
+                      ),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                    ),
+                    onChanged: (value) {
+                      controller.changeList(value);
+                    },
                   ),
-                  border: InputBorder
-                      .none, // This ensures no border is shown when the TextField is not focused
-                  hintText: "Search users...",
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 ),
-                onChanged: (value) {
-                  controller.changeList(value);
-                },
-              ),
-            ),
             SizedBox(
               height: 30,
             ),
@@ -176,12 +178,18 @@ class DynamicTable extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onPrimary),
             ),
           ),
+          DataColumn(
+            label: Text(
+              'Options',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Theme.of(context).colorScheme.onPrimary),
+            ),
+          ),
         ],
         rows: users
             .map((user) => DataRow(
-                  onLongPress: () {
-                    print("herllow");
-                  },
                   cells: <DataCell>[
                     DataCell(Text(
                         user.firstname != null && user.lastname != null
@@ -202,6 +210,76 @@ class DynamicTable extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).colorScheme.onPrimary))),
+                    DataCell(Row(
+                      children: [
+                        // IconButton(
+                        //   icon: Icon(Icons.delete, ),
+                        //   onPressed: () {
+                        //     print("delete user: ${user.firstname}");
+
+                        //   },
+                        // ),
+
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete,
+                            color: Color.fromARGB(255, 175, 2, 2),
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.secondary,
+                                  titleTextStyle: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                      fontSize: 16),
+                                  contentTextStyle: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary),
+                                  title: Text('Confirm Delete'),
+                                  content: Text(
+                                      'Are you sure you want to delete this user?'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text('Cancel',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary)),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text('Delete',
+                                          style: TextStyle(color: Colors.red)),
+                                      onPressed: () {
+                                        // Your delete action here
+                                        print("delete user: ${user.firstname}");
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.person),
+                          onPressed: () {
+                            print("show user: ${user.firstname}");
+                          },
+                        ),
+                      ],
+                    )),
                   ],
                   // color: MaterialStateProperty.all(Theme.of(context).colorScheme.onSecondary),
                 ))

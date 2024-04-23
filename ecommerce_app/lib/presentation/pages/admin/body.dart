@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/presentation/pages/admin/dashboard.dart';
 import 'package:ecommerce_app/presentation/pages/admin/view_product.dart';
 import 'package:ecommerce_app/presentation/pages/admin/view_users.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,17 @@ class StoreBody extends StatelessWidget {
                   ),
                 ),
                 press: () => Get.to(() => ViewUsers()),
+              ),
+
+              CustomTextBtn(
+                title: "DashBoard",
+                trailing: ImageIcon(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  AssetImage(
+                    "lib/assets/images/arrowright2.png",
+                  ),
+                ),
+                press: () => Get.to(() => AdminDashBoard()),
               ),
             ],
           ),

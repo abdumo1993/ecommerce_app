@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget {
         darkTheme: darkTheme,
         getPages: routes,
         themeMode: Get.find<ThemeController>().theme.value,
-        home: LoginPage(),
+        home: EntryPage(),
       ),
     );
   }

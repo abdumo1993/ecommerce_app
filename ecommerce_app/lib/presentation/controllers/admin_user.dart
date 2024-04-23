@@ -17,7 +17,7 @@ class AdminUsersController extends GetxController {
   final Users = Rx<List<GetUserModel>>([]);
   final filterUsers = Rx<List<GetUserModel>>([]);
   final currentPage = 0.obs;
-  final rowsPerPage = 2.obs;
+  final rowsPerPage = 10.obs;
   final currentPageUsers = Rx<List<GetUserModel>>([]);
   AdminUserUseCase useCase =
       AdminUserUseCase(repo: AdminUserImp(dataSource: AdminUserDataSource()));
