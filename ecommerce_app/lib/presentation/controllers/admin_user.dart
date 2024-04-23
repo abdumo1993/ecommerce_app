@@ -7,26 +7,42 @@ import 'package:get/get.dart';
 
 class AdminUsersController extends GetxController {
   @override
-  void onInit() {
+  void onInit() async {
     // TODO: implement onInit
     super.onInit();
-    fetchUsers();
+    await fetchUsers();
   }
 
   final queryParam = TextEditingController();
   final Users = Rx<List<GetUserModel>>([]);
+  final filterUsers = Rx<List<GetUserModel>>([]);
+  final currentPage = 0.obs;
+  final rowsPerPage = 2.obs;
+  final currentPageUsers = Rx<List<GetUserModel>>([]);
   AdminUserUseCase useCase =
       AdminUserUseCase(repo: AdminUserImp(dataSource: AdminUserDataSource()));
   Future<List<GetUserModel>> fetchUsers() async {
     try {
       var res = await useCase.fetchUsers();
       Users(res);
+      filterUsers(res);
+      filterUsers.refresh();
+      changePage(0);
       Users.refresh();
-      return res;
+      return Users.value;
     } catch (e) {
       print(e);
       return [];
     }
+  }
+
+  void changePage(int pageNumber) {
+    currentPage(pageNumber);
+    filterUsers(Users.value
+        .skip(currentPage.value * rowsPerPage.value)
+        .take(rowsPerPage.value)
+        .toList());
+    filterUsers.refresh();
   }
 
   void changeList(String value) {
@@ -40,7 +56,7 @@ class AdminUsersController extends GetxController {
       }
       return false;
     });
-    Users(users.toList());
-    Users.refresh();
+    filterUsers(users.toList());
+    filterUsers.refresh();
   }
 }
