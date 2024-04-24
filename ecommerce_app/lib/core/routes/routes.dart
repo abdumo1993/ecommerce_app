@@ -13,6 +13,7 @@ import 'package:ecommerce_app/presentation/pages/entry_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/components/categories_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/components/selected_category_page.dart';
 import 'package:ecommerce_app/presentation/pages/home/home.dart';
+import 'package:ecommerce_app/presentation/pages/order/history.dart';
 // import 'package:ecommerce_app/presentation/pages/products/productDetail.dart';
 import 'package:ecommerce_app/presentation/pages/products/product_detail.dart';
 import 'package:ecommerce_app/presentation/pages/search/search_page.dart';
@@ -59,4 +60,8 @@ final routes = [
             createNewAddress: false,
           )),
   // GetPage(name: "/search", page: () => HomePage()),
+
+  GetPage(name: "/orders", page: () => OrderHistory()),
+  GetPage(name: "/order-detail", page: () => OrderDetailScreen()),
+  
 ];

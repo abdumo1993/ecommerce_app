@@ -51,6 +51,16 @@ class Body extends StatelessWidget {
                 icon: Icon(Icons.shopping_bag_outlined),
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
+              IconButton(
+                onPressed: () {
+                  print("here?");
+                  Get.toNamed("/orders");
+
+
+                },
+                icon: Icon(Icons.history),
+                color: Theme.of(context).colorScheme.onPrimary,
+              ),
             ],
           ),
         ),

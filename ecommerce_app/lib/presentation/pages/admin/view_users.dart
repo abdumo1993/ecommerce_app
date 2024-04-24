@@ -1,6 +1,8 @@
+import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/domain/entities/edit_user.dart';
 import 'package:ecommerce_app/presentation/controllers/admin_user.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,155 +18,157 @@ class _ViewUsersState extends State<ViewUsers> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: backButton(nextPageName: "/home"),
-        ),
+    return AccessControlWidget(allowedRole: Roles.ADMIN,
+      child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        actions: [
-          Padding(
+        appBar: AppBar(
+          leading: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateColor.resolveWith(
-                      (states) => Theme.of(context).colorScheme.tertiary),
-                  padding: MaterialStateProperty.resolveWith(
-                      (states) => EdgeInsets.all(16)),
+            child: backButton(nextPageName: "/home"),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Theme.of(context).colorScheme.tertiary),
+                    padding: MaterialStateProperty.resolveWith(
+                        (states) => EdgeInsets.all(16)),
+                  ),
+                  onPressed: () {
+                    Get.toNamed("/add-staff");
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.add,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        "Add Staff",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      )
+                    ],
+                  )),
+            )
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(50.0),
+          child: Column(
+            children: [
+              Container(
+                width: 400,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                onPressed: () {
-                  Get.toNamed("/add-staff");
-                },
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.add,
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      size: 30,
+                child: TextField(
+                  cursorColor: Theme.of(context).colorScheme.onPrimary,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  controller: controller.queryParam,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          width:
+                              2.0), // Define the color and width of the focused border
+                      borderRadius: BorderRadius.circular(
+                          10), // Optional: Define the border radius
                     ),
-                    SizedBox(
-                      width: 10,
+                    border: InputBorder
+                        .none, // This ensures no border is shown when the TextField is not focused
+                    hintText: "Search users...",
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                    ),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  ),
+                  onChanged: (value) {
+                    controller.changeList(value);
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              // list
+              Expanded(
+                child: Obx(
+                  () {
+                    if (controller.Users.value.isEmpty) {
+                      return Center(
+                          child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ));
+                    } else if (controller.filterUsers.value.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No User was Found with search parameter: ${controller.queryParam.text}",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
+                      );
+                    } else {
+                      return DynamicTable(users: controller.filterUsers.value);
+                    }
+                  },
+                ),
+              ),
+              Obx(() {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Theme.of(context).colorScheme.onSecondary,
+                      ),
+                      // onPressed: _currentPage > 0 ? () => setState(() => _currentPage--) : null,
+                      onPressed: controller.currentPage.value > 0
+                          ? () => controller
+                              .changePage(controller.currentPage.value - 1)
+                          : null,
                     ),
                     Text(
-                      "Add Staff",
+                      'Page ${controller.currentPage.value + 1} of ${(controller.Users.value.length / controller.rowsPerPage.value).floor() + 1}',
                       style: TextStyle(
+                          fontSize: 16,
                           color: Theme.of(context).colorScheme.onPrimary),
-                    )
-                  ],
-                )),
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Column(
-          children: [
-            Container(
-              width: 400,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: TextField(
-                cursorColor: Theme.of(context).colorScheme.onPrimary,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                ),
-                controller: controller.queryParam,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward,
                         color: Theme.of(context).colorScheme.onSecondary,
-                        width:
-                            2.0), // Define the color and width of the focused border
-                    borderRadius: BorderRadius.circular(
-                        10), // Optional: Define the border radius
-                  ),
-                  border: InputBorder
-                      .none, // This ensures no border is shown when the TextField is not focused
-                  hintText: "Search users...",
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                ),
-                onChanged: (value) {
-                  controller.changeList(value);
-                },
-              ),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            // list
-            Expanded(
-              child: Obx(
-                () {
-                  if (controller.Users.value.isEmpty) {
-                    return Center(
-                        child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ));
-                  } else if (controller.filterUsers.value.isEmpty) {
-                    return Center(
-                      child: Text(
-                        "No User was Found with search parameter: ${controller.queryParam.text}",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).colorScheme.onSecondary),
                       ),
-                    );
-                  } else {
-                    return DynamicTable(users: controller.filterUsers.value);
-                  }
-                },
-              ),
-            ),
-            Obx(() {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Theme.of(context).colorScheme.onSecondary,
+                      // onPressed: _currentPage < (widget.users.length / _rowsPerPage).floor() - 1 ? () => setState(() => _currentPage++) : null,
+                      onPressed: controller.currentPage.value <
+                              (controller.Users.value.length /
+                                      controller.rowsPerPage.value)
+                                  .floor()
+                          ? () => controller
+                              .changePage(controller.currentPage.value + 1)
+                          : null,
                     ),
-                    // onPressed: _currentPage > 0 ? () => setState(() => _currentPage--) : null,
-                    onPressed: controller.currentPage.value > 0
-                        ? () => controller
-                            .changePage(controller.currentPage.value - 1)
-                        : null,
-                  ),
-                  Text(
-                    'Page ${controller.currentPage.value + 1} of ${(controller.Users.value.length / controller.rowsPerPage.value).floor() + 1}',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Theme.of(context).colorScheme.onPrimary),
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.arrow_forward,
-                      color: Theme.of(context).colorScheme.onSecondary,
-                    ),
-                    // onPressed: _currentPage < (widget.users.length / _rowsPerPage).floor() - 1 ? () => setState(() => _currentPage++) : null,
-                    onPressed: controller.currentPage.value <
-                            (controller.Users.value.length /
-                                    controller.rowsPerPage.value)
-                                .floor()
-                        ? () => controller
-                            .changePage(controller.currentPage.value + 1)
-                        : null,
-                  ),
-                ],
-              );
-            }),
-          ],
+                  ],
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

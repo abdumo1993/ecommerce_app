@@ -1,4 +1,6 @@
+import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
 
 class AdminDashBoard extends StatelessWidget {
@@ -6,14 +8,16 @@ class AdminDashBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        appBar: AppBar(
-            leading: backButton(
-              nextPageName: "/home",
-            ),
-            backgroundColor: Theme.of(context).colorScheme.primary),
-        body: DashBoard());
+    return AccessControlWidget(allowedRole: Roles.ADMIN,
+      child: Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          appBar: AppBar(
+              leading: backButton(
+                nextPageName: "/home",
+              ),
+              backgroundColor: Theme.of(context).colorScheme.primary),
+          body: DashBoard()),
+    );
   }
 }
 
