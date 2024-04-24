@@ -21,6 +21,7 @@ class SearchProductsDataSourceImpl implements SearchProductsDataSource {
             if(searchModel.high!=null)"high":searchModel.high,
             "start": searchModel.start,
             "maxSize": searchModel.maxSize,
+            "sortType": searchModel.sortType,
             if(searchModel.category!=null)"categories":searchModel.toQueryParameter()
           });
       if (res.statusCode == 200) {

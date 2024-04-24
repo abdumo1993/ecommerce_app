@@ -4,6 +4,7 @@ import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/presentation/controllers/edit_product_controller.dart';
 import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
@@ -11,23 +12,13 @@ class EditProduct extends StatelessWidget {
   EditProduct({
     super.key,
   });
-  final Product? product = Get.arguments['product'];
   final _formKey = GlobalKey<FormState>();
-  void start(EditProductController controller) {
-    if (product != null){controller.NameController.text = product!.name.toString();
-    controller.BrandController.text = product!.brand.toString();
-    controller.DetailController.text = product!.details.toString();
-    controller.CountController.text = product!.count.toString();
-    controller.PriceController.text = product!.price.toString();
-    if (product!.imageUrl.isNotEmpty) {
-      controller.ImagesController.text = product!.imageUrl[0].toString();
-    }}
-  }
+
 
   @override
   Widget build(BuildContext context) {
     final EditProductController controller = Get.put(EditProductController());
-    start(controller);
+    final AdminProduct? product = controller.ap.value;
     return AccessControlWidget(
       allowedRole: Roles.ADMIN,
       child: Scaffold(
@@ -224,7 +215,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product?.count.toString() ?? "Number of items in stock ",
+                                    hintText: "${product?.count ?? "Number of items in stock "}",
                                     hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: Theme.of(context)
@@ -269,7 +260,7 @@ class EditProduct extends StatelessWidget {
                                     color:
                                         Theme.of(context).colorScheme.onPrimary),
                                 decoration: InputDecoration(
-                                    hintText: product?.price.toString() ?? "Price",
+                                    hintText: "${product?.price ?? "Price"}",
                                     hintStyle: TextStyle(
                                         fontSize: 16,
                                         color: Theme.of(context)
@@ -297,53 +288,7 @@ class EditProduct extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 5),
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              constraints: BoxConstraints(maxWidth: 500),
-                              child: TextFormField(
-                                maxLines: 5,
-                                controller: controller.ImagesController,
-                                validator: (value) {
-                                  controller.validateImages();
-                                  return controller.ImagesError.value;
-                                },
-                                style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary),
-                                decoration: InputDecoration(
-                                    hintText: product!=null && product!.imageUrl.isNotEmpty
-                                        ? product!.imageUrl[0].toString()
-                                        : "",
-                                    hintStyle: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSecondary),
-                                    labelText: "Images",
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                    floatingLabelStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                    labelStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary),
-                                    border: OutlineInputBorder(
-                                        // borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10))),
-                                    fillColor:
-                                        Theme.of(context).colorScheme.secondary,
-                                    filled: true),
-                                
-                              ),
-                            ),
-                          ),
+                          
                           Obx(
                             () => DropdownMenu(
                               initialSelection: product?.category,
@@ -385,8 +330,115 @@ class EditProduct extends StatelessWidget {
                                   color: Theme.of(context).colorScheme.onPrimary),
                             ),
                           ),
+                          
+                              SizedBox(height: 20,),
+                              Center(child: Text("Images",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary,),)),
+                              SizedBox(height: 10,),
+                          Obx(
+                            () => IconButton(
+                                                onPressed: () {
+                                              if(controller.selectedImages.isNotEmpty) {Get.bottomSheet(DialogButton(controller: controller,isProduct: false,));}
+                                                },
+                                                icon: Icon(
+                                                  Icons.delete,
+                                                  color: controller.selectedImages.isNotEmpty? Colors.red: Theme.of(context).colorScheme.secondary,
+                                                )),
+                          ),
+                          //  Container(
+                          //     decoration: BoxDecoration(
+                          //       color: Theme.of(context).colorScheme.secondary,
+                          //     ),
+                          //     // constraints:  BoxConstraints(maxHeight: 130),
+                          //     height: MediaQuery.of(context).size.width * 0.25,
+                          //     width: MediaQuery.of(context).size.width * 0.5,
+                          //     child: GridView.builder(
+                          //       padding: EdgeInsets.all(5),
+                          //           itemCount: product?.imageUrl?.length ?? 0 ,
+                          //           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          //             maxCrossAxisExtent: MediaQuery.of(context).size.width * 0.25,
+                          //             crossAxisSpacing: 10,
+                          //             mainAxisSpacing: 10,
+                          //             // mainAxisExtent: 100,
+                          //           ),
+                          //           itemBuilder: (context, index) {
+                          //             return SelectableImage(controller: controller,imageUrl: product?.imageUrl?[index],);
+                          //             // return Image.network(product?.imageUrl[index]);
+                          //           },
+                          //         ),
+                          //   ),
+SizedBox(height:  20),
+                            Obx(()=> controller.imgList.isNotEmpty ?
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              // constraints:  BoxConstraints(maxHeight: 130),
+                              height: MediaQuery.of(context).size.width * 0.25,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              child:  GridView.builder(
+                                  padding: EdgeInsets.all(5),
+                                      itemCount: controller.imgList.length,
+                                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: MediaQuery.of(context).size.width * 0.25,
+                                        crossAxisSpacing: 10,
+                                        mainAxisSpacing: 10,
+                                        // mainAxisExtent: 100,
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        print("${controller.imgList.length},${controller.imgList[index]}");
+                                        return SelectableImage(controller: controller,imageUrl: controller.imgList[index],);
+                                        // return Image.network(product?.imageUrl[index]);
+                                      },
+                                    ),
+                              )
+                            
+                            
+                            : Center(
+                                        child: Text("Product has no Images", style: TextStyle(
+                                                                        color:
+                                                                            Theme.of(context).colorScheme.onPrimary),),
+                                      ),
+                         ),
+                              SizedBox(height: 20,),
+Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              constraints: BoxConstraints(maxWidth: 500),
+                              child: Obx(
+                                  () => controller.imageIsSet.isTrue
+                                      ? Stack(children: [
+                                          Image.file(controller.image!),
+                                          IconButton(
+                                              onPressed: () {
+                                                controller.unPickImage();
+                                              },
+                                              icon: Icon(
+                                                Icons.cancel_outlined,
+                                                color: Colors.red,
+                                              ))
+                                        ])
+                                      : Center(
+                                        child: Text("No Image Selected", style: TextStyle(
+                                                                        color:
+                                                                            Theme.of(context).colorScheme.onPrimary),),
+                                      ),
+                              )
+                            ),
+                          ),
+
+
+                ElevatedButton(
+                            onPressed: controller.pickImage,
+                            child: Text(
+                              'Pick Image',
+                              style: TextStyle(
+                                  color:Theme.of(context).colorScheme.tertiary),),
+                  ),
+
                           SizedBox(height: 30),
-                          if (product!=null) Padding(
+                          if (Get.arguments?['product'] != null) Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.9,
@@ -410,10 +462,14 @@ class EditProduct extends StatelessWidget {
                               ),
                             ),
                           ),
-                          if (product==null) Padding(
+                          if (Get.arguments?['product'] == null) Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {if (_formKey.currentState!.validate()) {
+                                    controller.addProduct();
+                                    // Proceed with form submission
+                                    // Get.toNamed("/home");
+                                  }},
                               child: Text("Add product"),
                               style: ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
@@ -421,10 +477,12 @@ class EditProduct extends StatelessWidget {
                                   foregroundColor: MaterialStatePropertyAll(Colors.white),),
                             ),
                           ),
-                          if (product!=null) Padding(
+                          if (Get.arguments?['product'] != null) Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 10),
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.bottomSheet(DialogButton(controller: controller,isProduct: true,));
+                              },
                               child: Text("delete product"),
                               style: ButtonStyle(
                                   backgroundColor: MaterialStatePropertyAll(
@@ -506,4 +564,116 @@ List<DropdownMenuEntry> categoryToList() {
     return categoryList;
   else
     return [];
+}
+
+
+
+class SelectableImage extends StatelessWidget {
+ final String imageUrl;
+    final EditProductController controller;
+
+
+SelectableImage({super.key, required this.imageUrl,required this.controller});
+
+ @override
+ Widget build(BuildContext context) {
+    return Obx(
+      ()=> InkWell(
+        onTap: () {
+          if(controller.selectedImages.contains(imageUrl) == false){
+            controller.selectedImages.add(imageUrl);
+            print(controller.selectedImages);
+          }else{
+            controller.selectedImages.removeWhere((item)=> item == imageUrl);
+            print(controller.selectedImages);
+          }
+        },
+        child: Container(
+          height: 100,
+          constraints: BoxConstraints.tight(Size(100,100)),
+                decoration: BoxDecoration(
+            border: Border.all(
+                color: controller.selectedImages.contains(imageUrl)
+                    ? Theme.of(context).colorScheme.tertiary
+                    : Theme.of(context).colorScheme.primary,
+                width: 5.0),
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          child: Image.network(
+            imageUrl,
+            height: 50,
+            fit: BoxFit.fill,
+          ),
+        ),
+      ),
+    );
+ }
+}
+
+
+
+class DialogButton extends StatelessWidget {
+  final EditProductController controller;
+  final bool isProduct;
+  const DialogButton({
+    super.key, required this.controller, required this.isProduct,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.3,
+        maxWidth: MediaQuery.of(context).size.width * 0.2
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      child: Column(
+        children: [
+          Text(isProduct? "Are you sure you want to delete this product?": "Are you sure you want to delete this Image?",
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          textAlign: TextAlign.center,),
+          SizedBox(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      if (isProduct) {
+                      controller.deleteProduct();
+                      Get.back();
+                    } else {
+                      controller.deleteImage();
+                      Get.back();
+                    }
+                    },
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Theme.of(context).colorScheme.tertiary),
+                        foregroundColor: MaterialStatePropertyAll(
+                            Theme.of(context).colorScheme.onPrimary),
+                        // minimumSize: MaterialStatePropertyAll(25 as Size?),
+                        ),
+                child: Text("Yes"),
+                        ),
+                        TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Theme.of(context).colorScheme.secondary),
+                        foregroundColor: MaterialStatePropertyAll(
+                            Theme.of(context).colorScheme.onPrimary),
+                        // minimumSize: MaterialStatePropertyAll(25 as Size?),
+                        ),
+                child: Text("No"),
+                        ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

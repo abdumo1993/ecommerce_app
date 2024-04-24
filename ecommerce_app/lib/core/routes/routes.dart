@@ -1,6 +1,8 @@
 import 'package:ecommerce_app/presentation/pages/ErrorPage.dart';
 import 'package:ecommerce_app/presentation/pages/admin/create_staff.dart';
+import 'package:ecommerce_app/presentation/pages/admin/edit_product.dart';
 import 'package:ecommerce_app/presentation/pages/admin/store_page.dart';
+import 'package:ecommerce_app/presentation/pages/admin/view_product.dart';
 import 'package:ecommerce_app/presentation/pages/auth/forgotPassword.dart';
 import 'package:ecommerce_app/presentation/pages/auth/login.dart';
 import 'package:ecommerce_app/presentation/pages/auth/register.dart';
@@ -60,6 +62,8 @@ final routes = [
             createNewAddress: false,
           )),
   // GetPage(name: "/search", page: () => HomePage()),
+  GetPage(name: "/adminProducts", page: () => MyProducts()),
+  GetPage(name: "/adminEditProducts", page: () => EditProduct()),
 
   GetPage(name: "/orders", page: () => OrderHistory()),
   GetPage(name: "/order-detail", page: () => OrderDetailScreen()),

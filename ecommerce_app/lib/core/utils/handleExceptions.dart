@@ -37,11 +37,15 @@ void handledioExceptions(DioException e) {
     var message;
     if (e.response?.data.runtimeType == String) {
       message = e.response?.data;
-    } else {
+    } else if(e.response?.data["message"]!=null){
       message = e.response?.data["message"];
+    } else if(e.response?.data["errors"]!=null){
+      message = e.response?.data["errors"].toString();
+    }else {
+      message = e.response?.data.toString();
     }
     throw BadResponseException(
-        message: message,
+        message: message ?? "Unknown error that is returned from the server",
         statusCode: e.response?.statusCode,
         path: e.requestOptions.path);
   } else {
