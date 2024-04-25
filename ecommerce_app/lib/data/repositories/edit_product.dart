@@ -20,4 +20,47 @@ class EditProductRepositoryImpl implements EditProductRepository{
       rethrow;
     }
   }
+  @override
+  Future<AdminProduct?> addProduct(AdminProduct product) async {
+    try {
+      return await editProductProvider.addProduct(product);
+    } catch (e) {
+      print("repo: $e");
+      print("repo ${e.runtimeType}");
+      rethrow;
+    }
+  }
+  
+  @override
+  Future<bool> deleteProduct(int id) async {
+    try {
+      return await editProductProvider.deleteProduct(id);
+    } catch (e) {
+      print("repo: $e");
+      print("repo ${e.runtimeType}");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> deleteImage(int id, List imageList) async {
+    try {
+      return await editProductProvider.deleteImage(id, imageList);
+    } catch (e) {
+      print("repo: $e");
+      print("repo ${e.runtimeType}");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<AdminProduct?> getProduct(int id) async {
+    try {
+      return await editProductProvider.getProduct(id,);
+    } catch (e) {
+      print("repo: $e");
+      print("repo ${e.runtimeType}");
+      rethrow;
+    }
+  }
 }

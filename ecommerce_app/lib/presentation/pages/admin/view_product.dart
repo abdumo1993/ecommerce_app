@@ -1,6 +1,7 @@
 import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/presentation/controllers/admin_table_controller.dart';
 import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -47,7 +48,7 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
       child: Scaffold(
         floatingActionButton: IconButton(
           onPressed: () {
-            Get.to(()=> EditProduct(),arguments: {'product': null});
+            Get.toNamed('/adminEditProducts', arguments: {'product': null});
           },
           icon: Icon(
             Icons.add,
@@ -126,18 +127,16 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
                     ),
                   ),
                   ChoiceButton(
-                    values: ["Low-Hi", "Hi-Low", "New", "Recommend"],
+                    values: ["None","Low-Hi", "Hi-Low",],
                     representations: [
-                      Text("Low-Hi", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      Text("None", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      Text("Low-Him", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                       Text("Hi-Low", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                      Text("New", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                      Text("Recommend", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                     ],
                     choices: [
-                      Text("Price: Lowest - Highest"),
-                      Text("Price: Highest - Lowest"),
-                      Text("Newest"),
-                      Text("Recommended"),
+                      GestureDetector(onTap: () => controller.setSortType("NONE"), child: Text("None")),
+                      GestureDetector(onTap: () => controller.setSortType("PRICE_ASCENDING"), child: Text("Price: Lowest - Highest")),
+                      GestureDetector(onTap: () => controller.setSortType("PRICE_DESCENDING"), child: Text("Price: Highest - Lowest"),),
                     ],
                     title: "Sort by",
                   ),
@@ -385,6 +384,7 @@ class Results extends StatelessWidget {
                   Text("id",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
                   Text("price",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
                   Text("image",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
                 ]),
                 ...productController.results.asMap().entries.map((e) {
                   return TableRow(
@@ -395,16 +395,18 @@ class Results extends StatelessWidget {
                       ,
                     ),
                     children: [
-                    GestureDetector(onTap: () {
-                      print("${e.key}");
-                      Get.to(()=> EditProduct(),arguments: {'product':e.value});
-                    },
-                    child: Text("${e.key+1}",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,)),
+                    Text("${e.key+1}",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
                     Text(e.value.name.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
                     Text(e.value.id.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
                     Text(e.value.price.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
                     e.value.imageUrl.isNotEmpty?Icon(Icons.check,color: Colors.green,):Icon(Icons.cancel_outlined,color: Colors.red,),
                     // Text(e.value.imageUrl.isNotEmpty.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    IconButton(
+                      onPressed: () {
+                      print("${e.key}");
+                      Get.toNamed('/adminEditProducts', arguments: {'product':e.value});
+                    },
+                    icon: Icon(Icons.edit,color: Theme.of(context).colorScheme.onPrimary)),
                   ]);
                 }),
                 TableRow(
@@ -428,6 +430,7 @@ class Results extends StatelessWidget {
                     child: Text("refresh",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                     style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
                     ),),
+                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                   Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
                 ]),
               ],

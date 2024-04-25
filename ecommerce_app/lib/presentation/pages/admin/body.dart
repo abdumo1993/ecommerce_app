@@ -1,5 +1,4 @@
 import 'package:ecommerce_app/presentation/pages/admin/dashboard.dart';
-import 'package:ecommerce_app/presentation/pages/admin/view_product.dart';
 import 'package:ecommerce_app/presentation/pages/admin/view_users.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -24,7 +23,7 @@ class StoreBody extends StatelessWidget {
                     "lib/assets/images/arrowright2.png",
                   ),
                 ),
-                press: () => Get.to(() => MyProducts()),
+                press: () => Get.toNamed('/adminProducts'),
               ),
               CustomTextBtn(
                 title: "View Users",

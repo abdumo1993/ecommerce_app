@@ -16,6 +16,7 @@ class SearchPageController extends GetxController {
   // var searchWord = ''.obs;
   bool valid = false;
   RxnString confirmError = RxnString(null);
+  var sortType = "NONE".obs;
 
   SearchController searchWordController =
       Get.find<SearchTextController>().searchController;
@@ -47,6 +48,11 @@ class SearchPageController extends GetxController {
     selectedFilters.remove(filter);
   }
 
+
+void setSortType(String sorttype){
+  sortType.value = sorttype;
+  refresh();
+}
 
 
 
@@ -81,6 +87,7 @@ class SearchPageController extends GetxController {
       _searchModel.high= high;
       _searchModel.start = pageKey;
       _searchModel.maxSize = maxSize;
+      _searchModel.sortType = sortType.value;
       if(category.isNotEmpty){
       _searchModel.category = category;
       }

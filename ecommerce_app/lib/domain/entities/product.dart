@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class PDetailModel {
   final String name;
   final double price;
@@ -69,11 +74,14 @@ class Product {
   final String category;
   final int count;
   factory Product.fromJson(Map<String, dynamic> json) {
+    List images = json['images'];
+    var imageList =[];
+     images.forEach((element) => imageList.add("${dotenv.env["BASE_URL"]}/Images/$element"),);
     return Product(
       id: json['id'].toInt(),
       name: json['name'],
       price: json['price'].toDouble(),
-      imageUrl: json['images'],
+      imageUrl: imageList,
       brand: json["brand"],
       details: json["details"],
       count: json["count"].toInt(),
@@ -92,6 +100,19 @@ Map<String, dynamic> toJson() {
       "category": category,
     };
   }
+Map<String, dynamic> toAdminJson() {
+    return {
+      "id": id,
+      "name": name,
+      "price": price,
+      "brand": brand,
+      "details": details,
+      "count": count,
+      "category": category,
+    };
+  }
+
+
   Product({required this.name, required this.price, required this.imageUrl, required this.id, required this.brand, required this.details, required this.count, required this.category});
 }
 
@@ -103,6 +124,7 @@ class SearchModel {
   List<String?>? category;
   int? start;
   int? maxSize;
+  String? sortType;
 
   SearchModel({
     this.high,
@@ -112,6 +134,7 @@ class SearchModel {
     this.low,
     this.start,
     this.maxSize,
+    this.sortType,
   });
 
   Map<String, dynamic> toJson() {
@@ -120,6 +143,7 @@ class SearchModel {
       if (category != null) "categories": category,
       if (low != null) "low": low.toString(),
       if (high != null) "high": high.toString(),
+      "sortType": sortType.toString(),
       // if(start!=null)"start": start.toString(),
       // if(maxSize!=null)"maxSize": maxSize.toString(),
     };
@@ -164,12 +188,16 @@ class AdminProduct {
   String? details;
   String? category;
   int? count;
+  File? imgFiles;
   factory AdminProduct.fromJson(Map<String, dynamic> json) {
+    List images = json['images'];
+    var imageList =[];
+     images.forEach((element) => imageList.add("${dotenv.env["BASE_URL"]}/Images/$element"),);
     return AdminProduct(
       id: json['id'].toInt(),
       name: json['name'],
       price: json['price'].toDouble(),
-      imageUrl: json['images'],
+      imageUrl: imageList,
       brand: json["brand"],
       details: json["details"],
       count: json["count"].toInt(),
@@ -179,8 +207,21 @@ class AdminProduct {
 
   AdminProduct({this.name, this.price, this.imageUrl, this.id, this.brand, this.details, this.count, this.category});
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toAdminJson() {
     return {
+      if (id != null) "id": id!,
+      if (name != null && name != "") "name": name!,
+      if (price != null) "price": price!,
+      if (brand != null && brand != "") "brand": brand!,
+      if (details != null && details != "") "details": details!,
+      if (count != null) "count": count!,
+      if (category != null && category != "") "category": category!,
+      if (imageUrl != null && imageUrl!.isNotEmpty) "imageUrl": imageUrl!,
+    };
+  }
+
+  toForm() async{
+    return FormData.fromMap({
       if (id != null) "id": id!,
       if (name != null && name != "") "name": name!,
       if (price != null) "price": price!,
@@ -189,6 +230,8 @@ class AdminProduct {
       if (details != null && details != "") "details": details!,
       if (count != null) "count": count!,
       if (category != null && category != "") "category": category!,
-    };
+      if (imgFiles != null ) "imgFiles": await MultipartFile.fromFile(imgFiles!.path),
+  
+    });
   }
 }

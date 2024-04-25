@@ -25,6 +25,7 @@ class AdminTableController extends GetxController {
   final List<Product> newItems = [];
   final RxList results = [].obs;
   final SearchProductsUseCase searchProductsUseCase;
+  var sortType = "NONE".obs;
 
   AdminTableController(this.searchProductsUseCase) {
       loadPage(nextPageKey?.value);
@@ -41,7 +42,10 @@ class AdminTableController extends GetxController {
     selectedFilters.remove(filter);
   }
 
-
+void setSortType(String sorttype){
+  sortType.value = sorttype;
+  refresh();
+}
 
 
 
@@ -76,6 +80,7 @@ void loadNextPage(){
       _searchModel.high= high;
       _searchModel.start = pageKey;
       _searchModel.maxSize = maxSize;
+      _searchModel.sortType = sortType.value;
       if(category.isNotEmpty){
       _searchModel.category = category;
       }
