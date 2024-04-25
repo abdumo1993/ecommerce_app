@@ -106,7 +106,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed("/productDetail",arguments: {"id":index}),
+      onTap: () => Get.toNamed("/productDetail",arguments: {"id":product.id}),
       child: Stack(
         children: [
           Card(
@@ -120,8 +120,19 @@ class ProductCard extends StatelessWidget {
                           product.imageUrl.isNotEmpty? product.imageUrl[0]:'https://via.placeholder.com/250',
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(
+                              "https://red-ecommerce.onrender.com/images/DefaultImage.jpg",
+                              height: 50,
+                              fit: BoxFit.fill,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                    "lib/assets/images/DefaultImage.jpg");
+                              },
+                            );
+                          },
                         ): Image.asset(
-                          "lib/assets/images/bag_1.png",
+                          "lib/assets/images/DefaultImage.jpg",
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
                         ),

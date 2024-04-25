@@ -569,32 +569,32 @@ List<DropdownMenuEntry> categoryToList() {
 
 
 class SelectableImage extends StatelessWidget {
- final String imageUrl;
-    final EditProductController controller;
+  final String imageUrl;
+  final EditProductController controller;
 
+  SelectableImage(
+      {super.key, required this.imageUrl, required this.controller});
 
-SelectableImage({super.key, required this.imageUrl,required this.controller});
-
- @override
- Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Obx(
-      ()=> InkWell(
+      () => InkWell(
         onTap: () {
-          if(controller.selectedImages.contains(imageUrl) == false){
+          if (controller.selectedImages.contains(imageUrl) == false) {
             controller.selectedImages.add(imageUrl);
             print(controller.selectedImages);
-          }else{
-            controller.selectedImages.removeWhere((item)=> item == imageUrl);
+          } else {
+            controller.selectedImages.removeWhere((item) => item == imageUrl);
             print(controller.selectedImages);
           }
         },
         child: Container(
           height: 100,
-          constraints: BoxConstraints.tight(Size(100,100)),
-                decoration: BoxDecoration(
+          constraints: BoxConstraints.tight(Size(100, 100)),
+          decoration: BoxDecoration(
             border: Border.all(
                 color: controller.selectedImages.contains(imageUrl)
-                    ? Theme.of(context).colorScheme.tertiary
+                    ? Colors.red
                     : Theme.of(context).colorScheme.primary,
                 width: 5.0),
             borderRadius: BorderRadius.circular(5.0),
@@ -603,11 +603,32 @@ SelectableImage({super.key, required this.imageUrl,required this.controller});
             imageUrl,
             height: 50,
             fit: BoxFit.fill,
+            errorBuilder: (context, error, stackTrace) {
+              if (error.runtimeType == NetworkImageLoadException) {
+                var e = error as NetworkImageLoadException;
+                if (e.statusCode == 404) {
+                  return Center(
+                      child: Text(
+                    "This Image Does Not Exist in the Server. Please delete it immediately and upload another one",
+                    style: TextStyle(color: Colors.red),
+                  ));
+                }
+              }
+              // print(error.runtimeType);
+              return Image.network(
+                "https://red-ecommerce.onrender.com/images/DefaultImage.jpg",
+                height: 50,
+                fit: BoxFit.fill,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset("lib/assets/images/DefaultImage.jpg");
+                },
+              );
+            },
           ),
         ),
       ),
     );
- }
+  }
 }
 
 

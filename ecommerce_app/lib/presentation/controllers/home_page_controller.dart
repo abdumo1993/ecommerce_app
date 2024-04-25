@@ -88,6 +88,7 @@ class HomePageController extends GetxController {
     total.value = 0;
     newItems.clear();
     _pagingController.refresh();
+    _pagingController.itemList = null;
     super.refresh();
   }
 

@@ -24,12 +24,15 @@ class PDetailModel {
 
   static PDetailModel fromJson(Map<String, dynamic> json) {
     try {
+      List images = json['images'];
+      var imageList =[];
+     images.forEach((element) => imageList.add("${dotenv.env["BASE_URL"]}/Images/$element"),);
       var b = PDetailModel(
         id: json["id"],
         name: json["name"],
         details: json["details"],
         count: json["count"],
-        images: json["images"],
+        images: imageList,
         price: json["price"].toDouble(),
       );
       return b;

@@ -35,7 +35,7 @@ class SearchResult extends StatelessWidget {
               Text("NO More Items",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
               SizedBox(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {Get.offNamed('/category');},
                   child: Text("Explore"),
                   style: ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(
@@ -103,7 +103,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.toNamed("/productDetail",arguments: {"id":index}),
+      onTap: () => Get.toNamed("/productDetail",arguments: {"id":product.id}),
       child: Card(
                 color: Theme.of(context).colorScheme.secondary,
                 elevation: 3,
@@ -115,8 +115,19 @@ class ProductCard extends StatelessWidget {
                           product.imageUrl.isNotEmpty? product.imageUrl[0]:'https://via.placeholder.com/250',
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(
+                              "https://red-ecommerce.onrender.com/images/DefaultImage.jpg",
+                              height: 50,
+                              fit: BoxFit.fill,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.asset(
+                                    "lib/assets/images/DefaultImage.jpg");
+                              },
+                            );
+                          },
                         ): Image.asset(
-                          "lib/assets/images/bag_1.png",
+                          "lib/assets/images/DefaultImage.jpg",
                           width: double.maxFinite,
                           fit: BoxFit.contain, // Cover the available space
                         ),
@@ -127,7 +138,7 @@ class ProductCard extends StatelessWidget {
                       child: Text(
                         "${product.name}",
                         style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                        // overflow: TextOverflow.ellipsis,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Padding(

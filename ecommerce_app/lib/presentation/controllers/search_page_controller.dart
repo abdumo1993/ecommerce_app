@@ -74,7 +74,7 @@ void setSortType(String sorttype){
   PagingController<int, Product> get pagingController => _pagingController;
 
   void loadPage(int pageKey) async {
-      await Future.delayed(Duration(milliseconds: 500));
+      // await Future.delayed(Duration(milliseconds: 500));
     validateSearchWord();
     if (valid && _pagingController.nextPageKey!=null) {
     try {
@@ -135,6 +135,7 @@ void setSortType(String sorttype){
     total.value = 0;
     newItems.clear();
     _pagingController.refresh();
+    _pagingController.itemList = null;
     super.refresh();
   }
 

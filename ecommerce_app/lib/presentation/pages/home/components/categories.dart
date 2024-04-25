@@ -8,8 +8,21 @@ import '../../../../core/utils/category_enum.dart';
 import 'selected_category_page.dart';
 
 class Categories extends StatelessWidget {
-  const Categories({super.key});
+  Categories({super.key});
+    final List categoryIcons=[Icon(Icons.car_rental_outlined),
+  
+  Icon(Icons.face_unlock_outlined),
+  Icon(Icons.cookie_sharp),
+  Icon(Icons.soap_outlined),
+  Icon(Icons.book),
+  Icon(Icons.theater_comedy_outlined),
+  Icon(Icons.bookmark_add_outlined),
+  Icon(Icons.electric_bolt),
+  Icon(Icons.phone_android),
+  Icon(Icons.computer),
 
+  
+  ];
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -49,11 +62,7 @@ class Categories extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () => Get.toNamed("/selectedCategory",parameters: {"category": Category.values[index].name}),
-                        icon: Image.asset(
-                          "lib/assets/images/bag_1.png",
-                          fit: BoxFit.contain,
-                          scale: 5,
-                        ),
+                        icon: categoryIcons[index],
                       ),
                       GestureDetector(
                           onTap: () => Get.toNamed("/selectedCategory",parameters: {"category": Category.values[index].name}),

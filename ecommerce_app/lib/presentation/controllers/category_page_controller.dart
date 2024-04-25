@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../domain/entities/product.dart';
@@ -111,6 +110,7 @@ class CategoryPageController extends GetxController {
     total.value = 0;
     newItems.clear();
     _pagingController.refresh();
+    _pagingController.itemList = null;
     super.refresh();
   }
 

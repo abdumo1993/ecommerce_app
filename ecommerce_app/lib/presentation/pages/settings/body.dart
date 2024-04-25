@@ -54,15 +54,15 @@ class SettingsBody extends StatelessWidget {
                 //   press: () => Navigator.push(context,
                 //       MaterialPageRoute(builder: (context) => PaymentPage())),
                 // ),
-                CustomTextBtn(
-                  title: "Help",
-                  trailing: ImageIcon(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    AssetImage(
-                      "lib/assets/images/arrowright2.png",
-                    ),
-                  ),
-                ),
+                // CustomTextBtn(
+                //   title: "Help",
+                //   trailing: ImageIcon(
+                //     color: Theme.of(context).colorScheme.onPrimary,
+                //     AssetImage(
+                //       "lib/assets/images/arrowright2.png",
+                //     ),
+                //   ),
+                // ),
                 CustomTextBtn(
                   title: "About",
                   trailing: ImageIcon(
