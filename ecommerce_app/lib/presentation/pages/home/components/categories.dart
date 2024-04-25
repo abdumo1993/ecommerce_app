@@ -20,11 +20,15 @@ class Categories extends StatelessWidget {
   Icon(Icons.electric_bolt),
   Icon(Icons.phone_android),
   Icon(Icons.computer),
-
-  
   ];
+
   @override
   Widget build(BuildContext context) {
+
+  CategoryToList categoriesList = CategoryToList();
+  var categories = [];
+  categories =  categoriesList.toCategoryList();
+  
     return Column(
       children: [
         Padding(
@@ -57,6 +61,8 @@ class Categories extends StatelessWidget {
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
                 itemCount: 10,
+                itemExtent: 100,
+                padding: EdgeInsets.symmetric(horizontal: 5),
                 itemBuilder: (_, index) {
                   return Column(
                     children: [
@@ -67,7 +73,9 @@ class Categories extends StatelessWidget {
                       GestureDetector(
                           onTap: () => Get.toNamed("/selectedCategory",parameters: {"category": Category.values[index].name}),
                           child: Text(
-                            Category.values[index].name,
+                            // softWrap: true,
+                            "${categories[index]}",
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary),
                           ))
