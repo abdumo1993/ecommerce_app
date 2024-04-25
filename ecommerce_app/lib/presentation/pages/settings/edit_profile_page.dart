@@ -141,7 +141,7 @@ class EditProfilePage extends StatelessWidget {
                     controller: editUserController.oldPasswordController,
                     palceholder: "old password",
                     validator: (value) {
-                      editUserController.validatePassword();
+                      editUserController.validatePasswordNotMatch();
                       return editUserController.passwordError.value;
                     },
                     keyboardType: TextInputType.visiblePassword,
@@ -193,6 +193,7 @@ class EditProfilePage extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 30),
             ],
           ),
         ),

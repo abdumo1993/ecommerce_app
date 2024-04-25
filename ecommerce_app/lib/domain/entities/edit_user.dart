@@ -18,10 +18,10 @@ class EditUserModel {
     return {
       if (email != null && email != "") "email": email!,
       if (phone != null && phone != "") "phoneNumber": phone!,
-      if (oldPassword != null && oldPassword != "") "newPassword": oldPassword!,
+      if (oldPassword != null && oldPassword != "") "oldPassword": oldPassword!,
       if (firstname != null && firstname != "") "firstName": firstname!,
       if (lastname != null && lastname != "") "lastName": lastname!,
-      if (newPassword != null && newPassword != "") "oldPassword": newPassword!,
+      if (newPassword != null && newPassword != "") "newPassword": newPassword!,
     };
   }
 }
