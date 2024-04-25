@@ -23,6 +23,7 @@ class Order {
     required this.items,
   });
 
+  set status(String st) => status = st;
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
         orderNumber: json["orderNumber"],

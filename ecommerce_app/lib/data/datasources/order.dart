@@ -25,4 +25,17 @@ class OrderDataSource {
     return [];
   }
 
+  Future<bool> delivered(int id) async {
+    try {
+      var res = await dio.dio.patch("/order/status/$id");
+      if (res.statusCode == 200) {
+        return true;
+      }
+    } on DioException catch (e) {
+      handledioExceptions(e);
+    } catch (e) {
+      rethrow;
+    }
+    return false;
+  }
 }

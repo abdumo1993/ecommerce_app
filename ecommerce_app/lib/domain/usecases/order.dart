@@ -15,5 +15,14 @@ class OrderUseCase {
   }
 
 
+  Future<bool> delivered(int id) async {
+    try {
+      return await repo.delivered(id);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+
 
 }

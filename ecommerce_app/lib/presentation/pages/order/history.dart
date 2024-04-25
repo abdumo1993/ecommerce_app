@@ -5,6 +5,7 @@ import 'package:ecommerce_app/presentation/controllers/order.dart';
 import 'package:ecommerce_app/presentation/widgets/button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class OrderHistory extends StatelessWidget {
@@ -98,10 +99,29 @@ class OrderListItem extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onPrimary),
               ),
               SizedBox(height: 8),
-              Text(
-                'Status: ${order.status}',
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+              Wrap(
+                children: [
+                  Text(
+                    'Status: ${order.status}',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                 if (order.status.toLowerCase() == 'Pending'.toLowerCase()) TextButton(
+                      style: ButtonStyle(
+                        // padding: MaterialStateProperty.all<EdgeInsets>(
+                        //     EdgeInsets.all(10)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.amber.shade500),
+                      ),
+                      onPressed: () {
+                        print("done");
+                        Get.find<OrderController>().delivered(order.orderId);
+                      },
+                      child: Text("Delivered"))
+                ],
               ),
               SizedBox(height: 8),
               Text(
@@ -182,7 +202,7 @@ class OrderDetailScreen extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-            
+
                   // shipping
                   Text(
                       style: TextStyle(
@@ -202,30 +222,30 @@ class OrderDetailScreen extends StatelessWidget {
                         Text(
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary),
-                            "Street ${order!.shippingAddress["street"] ?? "N/A"}"),
+                            "Street: ${order!.shippingAddress["street"] ?? "N/A"}"),
                         Text(
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary),
-                            "city ${order!.shippingAddress["city"] ?? "N/A"}"),
+                            "city: ${order!.shippingAddress["city"] ?? "N/A"}"),
                         Text(
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary),
-                            "state ${order!.shippingAddress["state"] ?? "N/A"}"),
+                            "state: ${order!.shippingAddress["state"] ?? "N/A"}"),
                         Text(
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary),
-                            "Country ${order!.shippingAddress["Country"] ?? "N/A"}"),
+                            "Country: ${order!.shippingAddress["Country"] ?? "N/A"}"),
                         Text(
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.onPrimary),
-                            "Postal Code ${order!.shippingAddress["postalCode"] ?? "N/A"}"),
+                            "Postal Code: ${order!.shippingAddress["postalCode"] ?? "N/A"}"),
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
-            
+
                   // payment
                   Text(
                       style: TextStyle(
@@ -234,7 +254,7 @@ class OrderDetailScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-            
+
                   Container(
                     padding: EdgeInsets.all(16),
                     decoration: BoxDecoration(
@@ -276,7 +296,7 @@ class OrderDetailScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-            
+
                   ...order!.items
                       .map((e) {
                         return Container(

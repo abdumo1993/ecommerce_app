@@ -6,12 +6,20 @@ class OrderRepositoryImp implements IOrderRepository {
   final OrderDataSource dataSource;
 
   OrderRepositoryImp({required this.dataSource});
-  
 
   @override
   Future<List<Order>> fetchOrders() async {
     try {
       return await dataSource.fetchOrders();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool> delivered(int id) async {
+    try {
+      return await dataSource.delivered(id);
     } catch (e) {
       rethrow;
     }
