@@ -22,6 +22,7 @@ class SettingsBody extends StatelessWidget {
         child: RefreshIndicator(
           onRefresh: () => Future.sync(() => Get.find<SettingsController>().loadUser()),
           child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
