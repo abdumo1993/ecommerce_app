@@ -16,7 +16,7 @@ class AdminTableController extends GetxController {
   // var searchWord = ''.obs;
   bool valid = false;
   RxnString confirmError = RxnString(null);
-
+  int currentPage = 0;
   SearchController searchWordController = SearchController();
 
   late ExpansionController expansionController;
@@ -89,18 +89,12 @@ void loadNextPage(){
         final newItem = await SearchProduct(
           searchModel:_searchModel);
               // SearchModel(searchWord: searchWordController.value.text,low: low,high: high,maxSize: maxSize,start: pageKey, category: "Elec"));
-      if (newItem.data != null) {
+      if (newItem.data != null  &&  currentPage != newItem.data!.nextIndex) {
         newItems.clear();
         newItems.addAll(newItem.data!.productDtos);
         offset.value = newItem.data!.nextIndex;
-        if (total.value == 0)total.value = newItem.data!.total;
-      } else {
-        //log error
-        // print(newItem.error);
-      }
-      }
-
-      // Check if we have more items to load
+        currentPage = newItem.data!.nextIndex;
+        if (total.value == 0)total.value = newItem.data!.total;// Check if we have more items to load
       final isLastPage = offset.value==-1;
       if (isLastPage) {
         nextPageKey = null;
@@ -109,6 +103,13 @@ void loadNextPage(){
         nextPageKey = offset;
         results.addAll(newItems);
       }
+      } else {
+        //log error
+        // print(newItem.error);
+      }
+      }
+
+      
     } catch (error) {
       //log error
       // print(error);
@@ -118,6 +119,10 @@ void loadNextPage(){
 
   @override
   void onClose() {
+    offset.value=0;
+    total.value = 0;
+    currentPage = 0;
+    newItems.clear();
     // _pagingController.dispose();
     super.onClose();
   }
@@ -126,9 +131,10 @@ void loadNextPage(){
   void refresh(){
     offset.value=0;
     total.value = 0;
+    currentPage = 0;
     newItems.clear();
     nextPageKey = RxInt(0);
-    print(nextPageKey);
+    // print(nextPageKey);
     results.clear();
     loadNextPage();
     // _pagingController.refresh();

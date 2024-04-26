@@ -13,11 +13,11 @@ class HomePageController extends GetxController {
   var selectedFilters = [].obs;
   // var searchWord = ''.obs;
   RxnString confirmError = RxnString(null);
-
+  int currentPage = 0;
   late ExpansionController expansionController;
 
   final PagingController<int, Product> _pagingController =
-      PagingController<int, Product>(firstPageKey: 0);
+      PagingController<int, Product>(firstPageKey: 0, invisibleItemsThreshold: 5);
 //  final RestClient restClient = RestClient();
 
   final List<Product> newItems = [];
@@ -44,17 +44,12 @@ class HomePageController extends GetxController {
       if (offset.value != -1){
         final newItem = await SearchProduct(
           searchModel:_searchModel);
-      if (newItem.data != null) {
+      if (newItem.data != null &&  currentPage != newItem.data!.nextIndex) {
         newItems.clear();
         newItems.addAll(newItem.data!.productDtos);
         offset.value = newItem.data!.nextIndex;
+        currentPage = newItem.data!.nextIndex;
         if (total.value == 0)total.value = newItem.data!.total;
-      } else {
-        //log error
-        // print(newItem.error);
-      }
-      }
-
       // Check if we have more items to load
       final isLastPage = offset.value==-1;
       if (isLastPage) {
@@ -63,6 +58,12 @@ class HomePageController extends GetxController {
         final nextPageKey = offset.value;
         _pagingController.appendPage(newItems, nextPageKey);
       }
+      } else {
+        //log error
+        // print(newItem.error);
+      }
+      }
+
     } catch (error) {
       _pagingController.error = error;
       
@@ -77,6 +78,7 @@ class HomePageController extends GetxController {
   void onClose() {
     offset.value=0;
     total.value = 0;
+    currentPage = 0;
     newItems.clear();
     _pagingController.dispose();
     super.onClose();
@@ -86,6 +88,7 @@ class HomePageController extends GetxController {
   void refresh(){
     offset.value=0;
     total.value = 0;
+    currentPage = 0;
     newItems.clear();
     _pagingController.refresh();
     _pagingController.itemList = null;
