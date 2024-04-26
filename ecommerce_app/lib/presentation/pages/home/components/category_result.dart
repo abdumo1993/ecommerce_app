@@ -110,14 +110,16 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Get.toNamed("/productDetail",arguments: {"id":product.id}),
-      child: Stack(
-        children: [
+      child: 
+      // Stack(
+      //   children: [
           Card(
                   color: Theme.of(context).colorScheme.secondary,
                   elevation: 3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 5,),
                       Expanded(
                         child: product.imageUrl.isNotEmpty?  Image.network(
                           product.imageUrl.isNotEmpty? product.imageUrl[0]:'https://via.placeholder.com/250',
@@ -160,10 +162,10 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(top: -10,right: -10,
-                  child: HeartButton()),
-                ],
-      ),
+      //           Positioned(top: -10,right: -10,
+      //             child: HeartButton()),
+      //           ],
+      // ),
     );
   }
 }

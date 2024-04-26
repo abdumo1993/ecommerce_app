@@ -29,7 +29,7 @@ class EntryPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth < 450) {
+        if (constraints.maxWidth < 550) {
           return Obx(
             () => Column(children: [
               Expanded(
