@@ -34,7 +34,7 @@ class HomePageController extends GetxController {
 
   void loadPage(int pageKey) async {
       // await Future.delayed(Duration(seconds: 2));
-    if ( _pagingController.nextPageKey!=null) {
+    try{if ( _pagingController.nextPageKey!=null) {
     try {
       int maxSize = 10;
       SearchModel _searchModel = SearchModel();
@@ -70,7 +70,7 @@ class HomePageController extends GetxController {
       //log error
       // print(error);
     }
-  }
+  }}catch(e){}
   }
 
   @override

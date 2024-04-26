@@ -338,14 +338,15 @@ class DialogButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.3,
-        maxWidth: MediaQuery.of(context).size.width * 0.2
+        maxHeight: 300,
+        maxWidth: 500
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.secondary,
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("Are you sure you want to delete this address?",
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),

@@ -76,7 +76,7 @@ void setSortType(String sorttype){
   void loadPage(int pageKey) async {
       // await Future.delayed(Duration(milliseconds: 500));
     validateSearchWord();
-    if (valid && _pagingController.nextPageKey!=null) {
+    try{if (valid && _pagingController.nextPageKey!=null) {
     try {
       List<String> category = selectedFilters.map((element) => element ?? "").toList().cast<String>();
       int low = expansionController.range.value.start.toInt();
@@ -120,7 +120,7 @@ void setSortType(String sorttype){
       //log error
       // print(error);
     }
-  }
+  }}catch(e){}
   }
 
   @override
