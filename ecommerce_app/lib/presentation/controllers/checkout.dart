@@ -99,10 +99,9 @@ class CheckoutController extends GetxController {
       var res = await useCase.verify(
           {"txRef": txref.value!, "shippingAddressId": shippingAddress.value!});
       if (res != null && res.isNotEmpty) {
-        print("verified");
+       
         orderNumber(res["data"]["orderNumber"]);
-        print(orderNumber.value);
-        print("kljakljf:${res["data"]["orderNumber"].runtimeType}");
+        
         Get.toNamed("/checkout");
       }
     } on BadResponseException catch (e) {

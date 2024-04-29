@@ -33,16 +33,12 @@ class OrderController extends GetxController {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
         });
-      }
-      else if (e.statusCode == 403) {
-        Get.toNamed("/error", arguments: {
-          "message": "Something went wrong. ${e.toString()}"
-        });
-      }
-      else {
-         Get.toNamed("/error", arguments: {
-          "message": "Something went wrong. ${e.toString()}"
-        });
+      } else if (e.statusCode == 403) {
+        Get.toNamed("/error",
+            arguments: {"message": "Something went wrong. ${e.toString()}"});
+      } else {
+        Get.toNamed("/error",
+            arguments: {"message": "Something went wrong. ${e.toString()}"});
       }
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
@@ -65,7 +61,7 @@ class OrderController extends GetxController {
       orders.refresh();
     } on BadResponseException catch (e) {
       if (e.statusCode == 404) {
-        Get.toNamed("/emptyCart");
+        Get.snackbar("No Order", "There are no orders to show");
       } else if (e.statusCode == 400) {
         Get.snackbar("Invalid", "invalid request.");
       } else if (e.statusCode == 500) {

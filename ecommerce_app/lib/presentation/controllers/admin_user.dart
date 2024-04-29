@@ -154,7 +154,7 @@ class AdminUsersController extends RegisterConroller {
       }
     } on AuthException catch (e) {
       // redendant with badresopnseexcepitonoi to be removed after verification.
-      Get.offAllNamed("/register", arguments: {"message": e.toString()});
+      Get.back();
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on CustomeException catch (e) {

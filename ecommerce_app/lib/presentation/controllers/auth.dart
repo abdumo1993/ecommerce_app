@@ -13,7 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
-// to be moved to product controller file.
+// to be moved to product controller file.offAllNamed("/register", arguments: {"message": e.toString()});
+/*
 class PDetailController extends GetxController {
   final rating = RxnInt(null);
   TextEditingController reviewController = TextEditingController();
@@ -133,7 +134,7 @@ class PDetailController extends GetxController {
     }
   }
 }
-
+*/
 class LoginController extends GetxController {
   DioClient dio = DioClient();
   final email = "".obs;
