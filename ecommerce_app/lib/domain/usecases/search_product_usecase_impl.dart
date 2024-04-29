@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 
 import '../repositories/search_product_repository.dart';
@@ -11,9 +12,9 @@ SearchProductsUseCaseImpl({required this.searchRepo});
 
 
   @override
-  Future<Result<ProductResponseModel>> call({required SearchModel searchModel}) async {
+  Future<Result<ProductResponseModel>> call(CancelToken cancelToken,{required SearchModel searchModel}) async {
     try {
-      return await searchRepo.searchProducts(searchModel);
+      return await searchRepo.searchProducts(cancelToken,searchModel);
     } catch (e) {
       rethrow;
     }

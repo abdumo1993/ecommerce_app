@@ -239,17 +239,23 @@ var selectedImages = <String>[].obs;
     if (editedProduct.toAdminJson().toString() == Get.arguments['product']?.toAdminJson()?.toString()) {
       //something happens
       Get.snackbar("Nothing to change","Please enter the field you want to edit",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
     }  else if (editedProduct.toAdminJson().toString() == Get.arguments['product']?.toAdminJson().toString()) {
       //something happens
       Get.snackbar("Nothing to change","Please enter the field you want to edit",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
     } 
     else if (editedProduct.toAdminJson().toString() == {}.toString()) {
       //something happens
       Get.snackbar("Nothing to change","All fields are empty. Please enter the field you want to edit",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
     } 
@@ -266,34 +272,46 @@ var selectedImages = <String>[].obs;
                  refresh();
                   Get.snackbar(
                       "Update Product", "Product updated successfully",
-                      backgroundColor: ThemeData.dark().colorScheme.secondary,
+                      isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                       colorText: ThemeData.dark().colorScheme.onPrimary);
                       Future.sync(() => Get.find<AdminTableController>().refresh());
                 } 
                 else {Get.snackbar("Update details",
                   "Failed to update Product details. Please try again",
-                  backgroundColor: ThemeData.dark().colorScheme.secondary,
+                  isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                   colorText: ThemeData.dark().colorScheme.onPrimary);}
       } on AuthException catch (e) {
         // redendant with badresopnseexcepitonoi to be removed after verification.
         Get.snackbar("invalid tokens", "please login to your account",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary);
       } on NetworkException catch (e) {
         Get.snackbar(
             "Network Error", "Please check your connection and try again",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary);
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else {
           Get.snackbar("Unknown Error Occurred",
               e.message,
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         }
       }
@@ -328,6 +346,8 @@ var selectedImages = <String>[].obs;
         if (editedProduct.toAdminJson().toString() == {}.toString()) {
       //something happens
       Get.snackbar("Nothing to change","All fields are empty. Please enter the field you want to edit",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
     } else if (valid){
@@ -341,9 +361,10 @@ var selectedImages = <String>[].obs;
                  {
                   Get.snackbar(
                       "New Product", "Product created successfully",
-                      backgroundColor: ThemeData.dark().colorScheme.secondary,
-                      colorText: ThemeData.dark().colorScheme.onPrimary,
                       isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
+                      colorText: ThemeData.dark().colorScheme.onPrimary,
                   onTap: (snack) {
                     Get.offUntil(GetPageRoute(page: ()=>EditProduct(),
                     settings: RouteSettings(arguments: {'product':res})), ((route) {
@@ -357,39 +378,44 @@ var selectedImages = <String>[].obs;
                 
               } else {Get.snackbar("Product Not Created",
                   "Failed to create new product. Please try again",
-                  backgroundColor: ThemeData.dark().colorScheme.secondary,
-                  colorText: ThemeData.dark().colorScheme.onPrimary,
                   isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
+                  colorText: ThemeData.dark().colorScheme.onPrimary,
                   );
               }
       } on AuthException catch (e) {
         // redendant with badresopnseexcepitonoi to be removed after verification.
         Get.snackbar("invalid tokens", "please login to your account",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
       } on NetworkException catch (e) {
         Get.snackbar(
             "Network Error", "Please check your connection and try again",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
         } else {
           Get.snackbar("Unknown Error Occurred",
               e.message,
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
         }
       }
@@ -412,9 +438,10 @@ void deleteProduct() async{
                {
                   Get.snackbar(
                       "Product Deleted", "Product deleted successfully",
-                      backgroundColor: ThemeData.dark().colorScheme.secondary,
-                      colorText: ThemeData.dark().colorScheme.onPrimary,
                       isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
+                      colorText: ThemeData.dark().colorScheme.onPrimary,
                     );
                       Get.find<AdminTableController>().refresh();
                       Get.until((route) => Get.currentRoute == "/adminProducts" );
@@ -422,40 +449,45 @@ void deleteProduct() async{
                 }
                else{Get.snackbar("Product Not Deleted",
                   "Failed to delete product. Please try again",
-                  backgroundColor: ThemeData.dark().colorScheme.secondary,
+                  isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                   colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
                 }
               }
       } on AuthException catch (e) {
         // redendant with badresopnseexcepitonoi to be removed after verification.
         Get.snackbar("invalid tokens", "please login to your account",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
       } on NetworkException catch (e) {
         Get.snackbar(
             "Network Error", "Please check your connection and try again",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
         } else {
           Get.snackbar("Unknown Error Occurred",
               e.message,
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
         }
       }
@@ -485,49 +517,55 @@ void deleteImage() async{
                     Future.sync(() => Get.find<EditProductController>().refresh());
                   Get.snackbar(
                       "Image Deleted", "Product Image deleted successfully",
-                      backgroundColor: ThemeData.dark().colorScheme.secondary,
-                      colorText: ThemeData.dark().colorScheme.onPrimary,
                       isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
+                      colorText: ThemeData.dark().colorScheme.onPrimary,
                     );
                       Future.sync(() => Get.find<AdminTableController>().refresh());
                       // Future.sync(() => Get.off(()=> EditProduct(),arguments: {'product': res})),
           } else {
                Get.snackbar("Image Not Deleted",
                   "Failed to delete product image. Please try again",
-                  backgroundColor: ThemeData.dark().colorScheme.secondary,
+                  isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                   colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
           }
               }
       } on AuthException catch (e) {
         // redendant with badresopnseexcepitonoi to be removed after verification.
         Get.snackbar("invalid tokens", "please login to your account",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
       } on NetworkException catch (e) {
         Get.snackbar(
             "Network Error", "Please check your connection and try again",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
         } else {
           Get.snackbar("Unknown Error Occurred",
               e.message,
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary,
-                      isDismissible: true,
                     );
         }
       }

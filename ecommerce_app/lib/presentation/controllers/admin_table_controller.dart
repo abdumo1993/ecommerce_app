@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +17,7 @@ class AdminTableController extends GetxController {
   // var searchWord = ''.obs;
   bool valid = false;
   RxnString confirmError = RxnString(null);
-
+  int currentPage = 0;
   SearchController searchWordController = SearchController();
 
   late ExpansionController expansionController;
@@ -28,10 +29,10 @@ class AdminTableController extends GetxController {
   var sortType = "NONE".obs;
 
   AdminTableController(this.searchProductsUseCase) {
-      loadPage(nextPageKey?.value);
-    // Load the first page
     expansionController = Get.put(ExpansionController());
     // loadPage(offset.value);
+      loadPage(nextPageKey?.value);
+    // Load the first page
   }
 
   void addFilter(String filter) {
@@ -65,9 +66,12 @@ void setSortType(String sorttype){
 void loadNextPage(){
   loadPage(nextPageKey?.value);
 }
+  CancelToken? _cancelToken; // Token to cancel the Dio request
+  List<CancelToken> cancelTokens = [];
 
-  void loadPage(int? pageKey) async {
-      await Future.delayed(Duration(milliseconds: 500));
+  void loadPage(int? pageKey) {
+    _cancelToken = CancelToken(); // Create a new cancel token for each request
+      // await Future.delayed(Duration(milliseconds: 500));
     // validateSearchWord();
     if ( nextPageKey!=null) {
     try {
@@ -85,22 +89,20 @@ void loadNextPage(){
       _searchModel.category = category;
       }
       
-      if (offset.value != -1){
-        final newItem = await SearchProduct(
-          searchModel:_searchModel);
+      if (offset.value != -1 && _cancelToken!=null){
+        cancelTokens.add(_cancelToken!);
+        Result<ProductResponseModel> newItem;
+        SearchProduct(_cancelToken!,
+          searchModel:_searchModel).then((value){
               // SearchModel(searchWord: searchWordController.value.text,low: low,high: high,maxSize: maxSize,start: pageKey, category: "Elec"));
-      if (newItem.data != null) {
+        newItem = value;
+        cancelTokens.remove(_cancelToken);
+      if (newItem.data != null  &&  currentPage != newItem.data!.nextIndex) {
         newItems.clear();
         newItems.addAll(newItem.data!.productDtos);
         offset.value = newItem.data!.nextIndex;
-        if (total.value == 0)total.value = newItem.data!.total;
-      } else {
-        //log error
-        // print(newItem.error);
-      }
-      }
-
-      // Check if we have more items to load
+        currentPage = newItem.data!.nextIndex;
+        if (total.value == 0)total.value = newItem.data!.total;// Check if we have more items to load
       final isLastPage = offset.value==-1;
       if (isLastPage) {
         nextPageKey = null;
@@ -109,15 +111,30 @@ void loadNextPage(){
         nextPageKey = offset;
         results.addAll(newItems);
       }
+      } else {
+        //log error
+        // print(newItem.error);
+      }});
+      }
+
+      
     } catch (error) {
       //log error
       // print(error);
+    }finally {
+       _cancelToken = null; // Reset the cancel token
     }
   }
   }
 
   @override
   void onClose() {
+    offset.value=0;
+    total.value = 0;
+    currentPage = 0;
+    newItems.clear();
+    cancelTokens.clear();
+    _cancelToken = null; //
     // _pagingController.dispose();
     super.onClose();
   }
@@ -126,18 +143,21 @@ void loadNextPage(){
   void refresh(){
     offset.value=0;
     total.value = 0;
+    currentPage = 0;
     newItems.clear();
     nextPageKey = RxInt(0);
-    print(nextPageKey);
+    // print(nextPageKey);
     results.clear();
+    for(var element in cancelTokens){ try{element.cancel();}catch(e){}};
+    _cancelToken = null; //
     loadNextPage();
     // _pagingController.refresh();
     super.refresh();
   }
 
-  Future<Result<ProductResponseModel>> SearchProduct(
+  Future<Result<ProductResponseModel>> SearchProduct(CancelToken cancelToken,
       {required SearchModel searchModel}) async {
-    var result = await searchProductsUseCase.call(searchModel: searchModel);
+    var result = await searchProductsUseCase.call(cancelToken, searchModel: searchModel);
     return result;
   }
 }

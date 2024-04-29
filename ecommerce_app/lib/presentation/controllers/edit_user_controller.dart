@@ -118,14 +118,18 @@ class EditUserController extends GetxController {
   }
   void validateChange(EditUserModel editedUser) {
     if (user != null) {
-      if (firstNameController.text != user!.firstname)
+      if (firstNameController.text != user!.firstname) {
         editedUser.firstname = firstNameController.text;
-      if (lastNameController.text != user!.lastname)
+      }
+      if (lastNameController.text != user!.lastname) {
         editedUser.lastname = lastNameController.text;
-      if (emailController.text != user!.email)
+      }
+      if (emailController.text != user!.email) {
         editedUser.email = emailController.text;
-      if (phoneController.text != user!.phoneNumber)
+      }
+      if (phoneController.text != user!.phoneNumber) {
         editedUser.phone = phoneController.text;
+      }
       if(newPasswordController.text.isNotEmpty){
         editedUser.oldPassword = oldPasswordController.text;
         editedUser.newPassword = newPasswordController.text;
@@ -145,7 +149,9 @@ class EditUserController extends GetxController {
       //something happens
       Get.snackbar("Nothing to change","Please enter the field you want to edit",
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
-                duration: Duration(seconds: 10), colorText: ThemeData.dark().colorScheme.onPrimary);
+                duration: Duration(seconds: 10), 
+                isDismissible: true,
+                colorText: ThemeData.dark().colorScheme.onPrimary);
     } else {
       try {
         var use = EditUserCase(
@@ -156,39 +162,53 @@ class EditUserController extends GetxController {
             ? (
                 Get.snackbar(
                     "Update details", "User details updated successfully",
-                    duration: Duration(seconds: 10), backgroundColor: ThemeData.dark().colorScheme.secondary,
+                    duration: Duration(seconds: 10), 
+                    isDismissible: true,
+                    backgroundColor: ThemeData.dark().colorScheme.secondary,
                     colorText: ThemeData.dark().colorScheme.onPrimary),
                     Get.find<SettingsController>().loadUser(),
               )
             : Get.snackbar("Update details",
                 "Failed to update user details. Please try again",
-                duration: Duration(seconds: 10), backgroundColor: ThemeData.dark().colorScheme.secondary,
+                duration: Duration(seconds: 10), 
+                isDismissible: true,
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
       } on AuthException catch (e) {
         // redendant with badresopnseexcepitonoi to be removed after verification.
         Get.snackbar("invalid tokens", "please login to your account",
             backgroundColor: ThemeData.dark().colorScheme.secondary,
-            duration: Duration(seconds: 10), colorText: ThemeData.dark().colorScheme.onPrimary);
+            duration: Duration(seconds: 10), 
+            isDismissible: true,
+            colorText: ThemeData.dark().colorScheme.onPrimary);
       } on NetworkException catch (e) {
         Get.snackbar(
             "Network Error", "Please check your connection and try again",
-            duration: Duration(seconds: 10), backgroundColor: ThemeData.dark().colorScheme.secondary,
+            duration: Duration(seconds: 10), 
+            isDismissible: true,
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary);
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              duration: Duration(seconds: 10), backgroundColor: ThemeData.dark().colorScheme.secondary,
+              duration: Duration(seconds: 10), 
+              isDismissible: true,
+              backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else if (e.statusCode == 400) {
           Get.snackbar("Wrong Password",
               "Old Password is Incorrect. Please try again later",
-              duration: Duration(seconds: 10), backgroundColor: ThemeData.dark().colorScheme.secondary,
+              duration: Duration(seconds: 10), 
+              isDismissible: true,
+              backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         }else {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              duration: Duration(seconds: 10), backgroundColor: ThemeData.dark().colorScheme.secondary,
+              duration: Duration(seconds: 10), 
+              isDismissible: true,
+              backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         }
       }

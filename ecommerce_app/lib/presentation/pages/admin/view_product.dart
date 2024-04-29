@@ -219,10 +219,10 @@ class categoryfilter extends StatelessWidget {
                   SegmentedButton(
                     segments: [
                       ButtonSegment(
-                          value: "2",
+                          value: "5",
                           // icon: Icon(Icons.timer_10),
                           label: Text(
-                            "2",
+                            "5",
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
@@ -364,80 +364,99 @@ class categoryfilter extends StatelessWidget {
 class Results extends StatelessWidget {
   Results({super.key});
  final AdminTableController productController = Get.find<AdminTableController>();
-
+ final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
             print(productController.results.length);
     return RefreshIndicator(
       onRefresh: () => Future.sync(() => productController.refresh()),
       child: Obx(
-        ()=> SingleChildScrollView(
+        ()=> Stack(
+              children: [SingleChildScrollView(
+          controller: _scrollController,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Table(
-              // border: TableBorder.all(color: Theme.of(context).colorScheme.onPrimary,borderRadius: BorderRadius.circular(8)),
-              // border: TableBorder(horizontalInside: BorderSide(color: Theme.of(context).colorScheme.onPrimary,)),
-              children: [
-                TableRow(children: [
-                  Text("No.",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                  Text("name",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                  Text("id",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                  Text("price",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                  Text("image",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                ]),
-                ...productController.results.asMap().entries.map((e) {
-                  return TableRow(
+                // border: TableBorder.all(color: Theme.of(context).colorScheme.onPrimary,borderRadius: BorderRadius.circular(8)),
+                // border: TableBorder(horizontalInside: BorderSide(color: Theme.of(context).colorScheme.onPrimary,)),
+                children: [
+                  TableRow(children: [
+                    Text("No.",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    Text("name",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    Text("id",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    Text("price",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    Text("image",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                    Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                  ]),
+                  ...productController.results.asMap().entries.map((e) {
+                    return TableRow(
+                      decoration: BoxDecoration(
+                        color: e.key.isEven?
+                        Theme.of(context).colorScheme.secondary
+                        :Theme.of(context).colorScheme.primary
+                        ,
+                      ),
+                      children: [
+                      Text("${e.key+1}",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                      Text(e.value.name.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                      Text(e.value.id.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                      Text(e.value.price.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
+                      e.value.imageUrl.isNotEmpty?Icon(Icons.check,color: Colors.green,):Icon(Icons.cancel_outlined,color: Colors.red,),
+                      // Text(e.value.imageUrl.isNotEmpty.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      IconButton(
+                        onPressed: () {
+                        print("${e.key}");
+                        Get.toNamed('/adminEditProducts', arguments: {'product':e.value});
+                      },
+                      icon: Icon(Icons.edit,color: Theme.of(context).colorScheme.onPrimary)),
+                    ]);
+                  }),
+                  TableRow(
                     decoration: BoxDecoration(
-                      color: e.key.isEven?
-                      Theme.of(context).colorScheme.secondary
-                      :Theme.of(context).colorScheme.primary
-                      ,
+                    color:Theme.of(context).colorScheme.primary,
                     ),
                     children: [
-                    Text("${e.key+1}",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                    Text(e.value.name.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                    Text(e.value.id.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                    Text(e.value.price.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),textAlign: TextAlign.center,),
-                    e.value.imageUrl.isNotEmpty?Icon(Icons.check,color: Colors.green,):Icon(Icons.cancel_outlined,color: Colors.red,),
-                    // Text(e.value.imageUrl.isNotEmpty.toString(),style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    IconButton(
-                      onPressed: () {
-                      print("${e.key}");
-                      Get.toNamed('/adminEditProducts', arguments: {'product':e.value});
-                    },
-                    icon: Icon(Icons.edit,color: Theme.of(context).colorScheme.onPrimary)),
-                  ]);
-                }),
-                TableRow(
-                  decoration: BoxDecoration(
-                  color:Theme.of(context).colorScheme.primary,
-                  ),
-                  children: [
-                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  TextButton(
-                    onPressed: () {  if(productController.offset.value!=-1){print(productController.results.length);
-                                      productController.loadNextPage(); }
-                                      },
-                    child: Text("next",style: productController.offset.value!=-1? TextStyle(color: Theme.of(context).colorScheme.onPrimary): TextStyle(color: Theme.of(context).colorScheme.tertiary),),
-                    style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
-                    ),),
-                  TextButton(
-                    onPressed: () {  print(productController.results.length);
-                                      productController.refresh(); 
-                                      },
-                    child: Text("refresh",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
-                    ),),
-                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                  Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                ]),
-              ],
-            
-            ),
+                    Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    TextButton(
+                      onPressed: () {  if(productController.offset.value!=-1){print(productController.results.length);
+                                        productController.loadNextPage(); }
+                                        },
+                      child: Text("next",style: productController.offset.value!=-1? TextStyle(color: Theme.of(context).colorScheme.onPrimary): TextStyle(color: Theme.of(context).colorScheme.tertiary),),
+                      style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
+                      ),),
+                    TextButton(
+                      onPressed: () {  print(productController.results.length);
+                                        productController.refresh(); 
+                                        },
+                      child: Text("refresh",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                      style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondary),
+                      ),),
+                    Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                    Text("",style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
+                  ]),
+                ],
+              
+              ),
           ),
         ),
+               Positioned(
+                left: 10,
+                bottom: 0,
+                child: IconButton(
+                  style: ButtonStyle(backgroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.secondaryContainer)),
+                onPressed: () {
+                  _scrollController.animateTo(
+                    0.0,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeOut,
+                  );
+                },
+                icon: Icon(Icons.keyboard_arrow_up),
+                        ),
+              ),
+              ],
+            ),
       ),
     );
   }

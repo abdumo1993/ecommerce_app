@@ -179,6 +179,8 @@ class EditAddressController extends GetxController {
         || editedAddress.toJson().toString() == {}.toString()) {
       //something happens
       Get.snackbar("Nothing to change","Please enter the field you want to edit",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
     } 
@@ -194,12 +196,16 @@ class EditAddressController extends GetxController {
             ? {
                 Get.snackbar(
                     "New Address", "Address created successfully",
-                    backgroundColor: ThemeData.dark().colorScheme.secondary,
+                    isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                     colorText: ThemeData.dark().colorScheme.onPrimary),
                     Get.find<AddressController>().loadAddress(),
             }
             : Get.snackbar("Failed",
                 "Failed to create new Address. Please try again",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
         } else {
@@ -213,50 +219,68 @@ class EditAddressController extends GetxController {
             ? {
                 Get.snackbar(
                     "Edit Address", "Address edited successfully",
-                    backgroundColor: ThemeData.dark().colorScheme.secondary,
+                    isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                     colorText: ThemeData.dark().colorScheme.onPrimary),
                     Get.find<AddressController>().loadAddress(),
             }
             : Get.snackbar("Failed",
                 "Failed to edit address details. Please try again",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
         }
       } on AuthException catch (e) {
         // redendant with badresopnseexcepitonoi to be removed after verification.
         Get.snackbar("invalid tokens", "please login to your account",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary);
       } on NetworkException catch (e) {
         Get.snackbar(
             "Network Error", "Please check your connection and try again",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary);
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else if (e.statusCode == 400) {
           Get.snackbar("Bad Request",
               "One or more field are incorrect. Please try again",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else if (e.statusCode == 401) {
           Get.snackbar("Invalid Token",
               "please login to your account and try again",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else if (e.statusCode == 404) {
           Get.snackbar("No address found",
               "The address you are trying to access is removed or has been moved",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         }
       }
@@ -281,50 +305,68 @@ void deleteAddress() async {
             ? {
                 Get.snackbar(
                     "Address Deleted", "Address deleted successfully",
-                    backgroundColor: ThemeData.dark().colorScheme.secondary,
+                    isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
                     colorText: ThemeData.dark().colorScheme.onPrimary),
                     Get.find<AddressController>().loadAddress(),
             }
             : Get.snackbar("Failed",
                 "Failed to delete address. Please try again",
+                isDismissible: true,
+                duration: Duration(seconds: 10),
                 backgroundColor: ThemeData.dark().colorScheme.secondary,
                 colorText: ThemeData.dark().colorScheme.onPrimary);
         }
   } on AuthException catch (e) {
         // redendant with badresopnseexcepitonoi to be removed after verification.
         Get.snackbar("invalid tokens", "please login to your account",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary);
       } on NetworkException catch (e) {
         Get.snackbar(
             "Network Error", "Please check your connection and try again",
-            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary);
       } on BadResponseException catch (e) {
         if (e.statusCode == 500) {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else if (e.statusCode == 400) {
           Get.snackbar("Bad Request",
               "One or more field are incorrect. Please try again",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else if (e.statusCode == 401) {
           Get.snackbar("Invalid Token",
               "please login to your account and try again",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else if (e.statusCode == 404) {
           Get.snackbar("No address found",
               "The address you are trying to access is removed or has been moved",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         } else {
           Get.snackbar("Server is busy",
               "Having trouble seving your requests, due to too many requests. Please try again later",
-              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
               colorText: ThemeData.dark().colorScheme.onPrimary);
         }
       }

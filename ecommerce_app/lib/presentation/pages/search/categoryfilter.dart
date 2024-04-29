@@ -46,10 +46,10 @@ class categoryfilter extends StatelessWidget {
                   SegmentedButton(
                     segments: [
                       ButtonSegment(
-                          value: "2",
+                          value: "5",
                           // icon: Icon(Icons.timer_10),
                           label: Text(
-                            "2",
+                            "5",
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),

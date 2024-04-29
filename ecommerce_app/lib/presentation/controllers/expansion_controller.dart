@@ -7,7 +7,7 @@ class ExpansionController extends GetxController{
   var range = RangeValues(0, 1000).obs;
   List<bool> isOpen = <bool>[false,false].obs;
 
-  var pageSize = {"2"}.obs;
+  var pageSize = {"5"}.obs;
   void changeRange(RangeValues value){
     if(value.start!=value.end){
         range.value = value;
