@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/presentation/controllers/admin_user.dart';
 import 'package:ecommerce_app/presentation/pages/admin/dashboard.dart';
 import 'package:ecommerce_app/presentation/pages/admin/view_users.dart';
 import 'package:flutter/material.dart';
@@ -6,50 +7,44 @@ import 'package:get/get.dart';
 
 class StoreBody extends StatelessWidget {
   StoreBody({super.key});
+  var adminUserController = Get.put(AdminUsersController());
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 600),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomTextBtn(
-                title: "View products",
-                trailing: ImageIcon(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  AssetImage(
-                    "lib/assets/images/arrowright2.png",
+    return Wrap(
+      alignment: WrapAlignment.start,
+      children: [
+        Container(
+          constraints: BoxConstraints(maxWidth: 600),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomTextBtn(
+                  title: "View products",
+                  trailing: ImageIcon(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    AssetImage(
+                      "lib/assets/images/arrowright2.png",
+                    ),
                   ),
+                  press: () => Get.toNamed('/adminProducts'),
                 ),
-                press: () => Get.toNamed('/adminProducts'),
-              ),
-              CustomTextBtn(
-                title: "View Users",
-                trailing: ImageIcon(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  AssetImage(
-                    "lib/assets/images/arrowright2.png",
+                CustomTextBtn(
+                  title: "View Users",
+                  trailing: ImageIcon(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    AssetImage(
+                      "lib/assets/images/arrowright2.png",
+                    ),
                   ),
+                  press: () => Get.to(() => ViewUsers()),
                 ),
-                press: () => Get.to(() => ViewUsers()),
-              ),
-
-              CustomTextBtn(
-                title: "DashBoard",
-                trailing: ImageIcon(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  AssetImage(
-                    "lib/assets/images/arrowright2.png",
-                  ),
-                ),
-                press: () => Get.to(() => AdminDashBoard()),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+        AdminDashBoard(),
+      ],
     );
   }
 }

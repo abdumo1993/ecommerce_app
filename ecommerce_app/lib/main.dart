@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:app_links/app_links.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
@@ -24,8 +25,8 @@ import 'package:get/get.dart';
 
 void main() async {
   await dotenv.load();
-  Get.put(ThemeController(),permanent: true);
-  Get.put(GetMaterialController(),permanent: true);
+  Get.put(ThemeController(), permanent: true);
+  Get.put(GetMaterialController(), permanent: true);
   WidgetsFlutterBinding.ensureInitialized();
   Core core = Core();
   await core.setUserData();
@@ -139,7 +140,10 @@ void handleLink(String? link) {
             Get.put(ForgotPasswordController());
 
         forgotPasswordController.email(queryParams['email']);
-        forgotPasswordController.token(queryParams['token']);
+        var token = link.split("token=")[1];
+        token = Uri.encodeQueryComponent(token,
+            encoding: Encoding.getByName('utf-8')!);
+        forgotPasswordController.token(token);
       }
       Get.toNamed(routeName);
     } catch (e) {

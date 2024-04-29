@@ -16,14 +16,15 @@ class RegisterAdminPage extends StatelessWidget {
   // TextEditingController _firstnameController = TextEditingController();
   // TextEditingController _lastnameController = TextEditingController();
   // TextEditingController _passwordController = TextEditingController();
-  final registerController = Get.put(AdminUsersController());
+  final registerController = Get.find<AdminUsersController>();
   final _formKey = GlobalKey<FormState>();
 
   RegisterAdminPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AccessControlWidget(allowedRole: Roles.ADMIN,
+    return AccessControlWidget(
+      allowedRole: Roles.ADMIN,
       child: Material(
         child: Container(
           color: Theme.of(context).colorScheme.primary,
@@ -71,7 +72,8 @@ class RegisterAdminPage extends StatelessWidget {
                         children: [
                           Container(
                             child: myTextField(
-                              controller: registerController.firstNameController,
+                              controller:
+                                  registerController.firstNameController,
                               validator: (value) {
                                 registerController.validateFirstName();
                                 return registerController.firstNameError.value;
@@ -149,7 +151,8 @@ class RegisterAdminPage extends StatelessWidget {
                             },
                             child: const Text(
                               "Continue",
-                              style: TextStyle(color: Colors.white, fontSize: 16),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
                           ),
                           const SizedBox(

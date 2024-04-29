@@ -33,7 +33,7 @@ class AuthDataSource {
 
   Future<bool> register(RegisterModel user) async {
     try {
-      var res = await dio.dio.post("/auth/register", data: user.toJson());
+      var res = await dio.dio.post("/auth/register", data: {"callbackUrl": "red://confirmed-email",...user.toJson()});
       if (res.statusCode == 201) {
         // log in
         // return await login(
@@ -62,7 +62,7 @@ class AuthDataSource {
   Future<bool> forgotPasswordEmail(String email) async {
     try {
       var res =
-          await dio.dio.post("/auth/forgot-password?email=$email", data: email);
+          await dio.dio.post("/auth/forgot-password?email=$email&callbackUrl=red://email-sent", data: email);
       if (res.statusCode == 200) {
         return true;
       }

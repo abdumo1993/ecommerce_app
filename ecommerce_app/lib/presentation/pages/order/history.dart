@@ -109,18 +109,19 @@ class OrderListItem extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                 if (order.status.toLowerCase() == 'Pending'.toLowerCase()) TextButton(
-                      style: ButtonStyle(
-                        // padding: MaterialStateProperty.all<EdgeInsets>(
-                        //     EdgeInsets.all(10)),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.amber.shade500),
-                      ),
-                      onPressed: () {
-                        print("done");
-                        Get.find<OrderController>().delivered(order.orderId);
-                      },
-                      child: Text("Delivered"))
+                  if (order.status.toLowerCase() == 'Pending'.toLowerCase())
+                    TextButton(
+                        style: ButtonStyle(
+                          // padding: MaterialStateProperty.all<EdgeInsets>(
+                          //     EdgeInsets.all(10)),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.amber.shade500),
+                        ),
+                        onPressed: () {
+                          print("done");
+                          Get.find<OrderController>().delivered(order.orderId);
+                        },
+                        child: Text("Delivered"))
                 ],
               ),
               SizedBox(height: 8),
@@ -169,6 +170,7 @@ class OrderDetailScreen extends StatelessWidget {
         child: Text("Order Not Found"),
       );
     } else {
+      
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         appBar: AppBar(
@@ -211,37 +213,49 @@ class OrderDetailScreen extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                        // border: Border.all(color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.3)),
-                        color: Theme.of(context).colorScheme.secondary),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            "Street: ${order!.shippingAddress["street"] ?? "N/A"}"),
-                        Text(
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            "city: ${order!.shippingAddress["city"] ?? "N/A"}"),
-                        Text(
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            "state: ${order!.shippingAddress["state"] ?? "N/A"}"),
-                        Text(
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            "Country: ${order!.shippingAddress["Country"] ?? "N/A"}"),
-                        Text(
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary),
-                            "Postal Code: ${order!.shippingAddress["postalCode"] ?? "N/A"}"),
-                      ],
-                    ),
-                  ),
+                  order!.shippingAddress != null
+                      ? Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                              // border: Border.all(color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.3)),
+                              color: Theme.of(context).colorScheme.secondary),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  "Street: ${order!.shippingAddress!["street"] ?? "N/A"}"),
+                              Text(
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  "city: ${order!.shippingAddress!["city"] ?? "N/A"}"),
+                              Text(
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  "state: ${order!.shippingAddress!["state"] ?? "N/A"}"),
+                              Text(
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  "Country: ${order!.shippingAddress!["Country"] ?? "N/A"}"),
+                              Text(
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
+                                  "Postal Code: ${order!.shippingAddress!["postalCode"] ?? "N/A"}"),
+                            ],
+                          ),
+                        )
+                      : Text("No Shipping"),
                   SizedBox(
                     height: 20,
                   ),
@@ -324,7 +338,7 @@ class OrderDetailScreen extends StatelessWidget {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .onPrimary),
-                                  "Product: ${e.product["name"]}")
+                                  "Product: ${e.product?["name"] ?? "Unknown"}")
                             ],
                           ),
                         );

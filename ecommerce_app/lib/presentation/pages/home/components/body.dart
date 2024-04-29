@@ -1,5 +1,7 @@
+import 'package:ecommerce_app/core/utils/roles.dart';
 import 'package:ecommerce_app/main.dart';
 import 'package:ecommerce_app/presentation/pages/home/components/home_result.dart';
+import 'package:ecommerce_app/presentation/widgets/roleBasedAccessControlWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -39,27 +41,35 @@ class Body extends StatelessWidget {
                 icon: Icon(Icons.dark_mode_outlined),
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
-              IconButton(
-                onPressed: () {
-                  Get.toNamed("/cart");
-                },
-                // => Get.toNamed("/checkout"),
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => ProductListScreen())),
-                icon: Icon(Icons.shopping_bag_outlined),
-                color: Theme.of(context).colorScheme.onPrimary,
+              AccessControlWidget(
+                allowedRole: Roles.CUSTOMER,
+                showError: false,
+                child: IconButton(
+                  onPressed: () {
+                    Get.toNamed("/cart");
+                  },
+                  // => Get.toNamed("/checkout"),
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => ProductListScreen())),
+                  icon: Icon(Icons.shopping_bag_outlined),
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
-              IconButton(
-                onPressed: () {
-                  print("here?");
-                  Get.toNamed("/orders");
-
-
-                },
-                icon: Icon(Icons.history),
-                color: Theme.of(context).colorScheme.onPrimary,
+              AccessControlWidget(
+                allowedRole: Roles.CUSTOMER,
+                showError: false,
+                child: IconButton(
+                  onPressed: () {
+                    print("here?");
+                    Get.toNamed("/orders");
+                
+                
+                  },
+                  icon: Icon(Icons.history),
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
               ),
             ],
           ),

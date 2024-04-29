@@ -4,6 +4,8 @@ import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/domain/entities/edit_user.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
 import 'package:ecommerce_app/core/utils/exceptions.dart';
+import 'package:ecommerce_app/domain/entities/order.dart';
+import 'package:ecommerce_app/domain/entities/product.dart';
 
 import 'package:ecommerce_app/domain/usecases/admin_users.dart';
 import 'package:ecommerce_app/presentation/controllers/auth.dart';
@@ -15,11 +17,17 @@ class AdminUsersController extends RegisterConroller {
   void onInit() async {
     // TODO: implement onInit
     super.onInit();
-    await fetchUsers();
   }
 
   final queryParam = TextEditingController();
   final Users = Rx<List<GetUserModel>>([]);
+  final recentReviews = Rx<List<ReviewModel>>([]);
+  final monthlyOrder = 0.obs;
+  RxMap recentOrdersError = RxMap({});
+  RxMap recentReviewsError = RxMap({});
+
+  final recentOrders = Rx<List<Order>>([]);
+
   final filterUsers = Rx<List<GetUserModel>>([]);
   final currentPage = 0.obs;
   final rowsPerPage = 10.obs;
@@ -37,7 +45,7 @@ class AdminUsersController extends RegisterConroller {
       return Users.value;
     } on BadResponseException catch (e) {
       if (e.statusCode == 404) {
-        Get.toNamed("/emptyCart");
+        return Users.value;
       } else if (e.statusCode == 400) {
         Get.snackbar("Invalid", "invalid request.");
       } else if (e.statusCode == 500) {
@@ -89,7 +97,7 @@ class AdminUsersController extends RegisterConroller {
       }
     } on BadResponseException catch (e) {
       if (e.statusCode == 404) {
-        Get.toNamed("/emptyCart");
+        Get.snackbar("Failed", "User Doesn't exist");
       } else if (e.statusCode == 400) {
         Get.snackbar("Invalid", "invalid request.");
       } else if (e.statusCode == 500) {
@@ -137,7 +145,6 @@ class AdminUsersController extends RegisterConroller {
           );
           await fetchUsers();
         }
-        ;
 
         emailController.text = '';
         passwordController.text = '';
@@ -156,10 +163,50 @@ class AdminUsersController extends RegisterConroller {
       if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {"message": e.toString()});
       } else {
-        Get.offAllNamed("/register", arguments: {"message": e.message});
+        Get.back();
       }
     } catch (e) {
       Get.toNamed("/error", arguments: {"message": "Something went wrong r"});
     }
+  }
+
+  Future<List<ReviewModel>> fetchRecentReviews() async {
+    recentReviewsError(null);
+
+    try {
+      var res = await useCase.fetchRecentReviews();
+      recentReviews(res);
+    } on BadResponseException catch (e) {
+      recentReviewsError({"status": e.statusCode, "message": e.message});
+    } on NetworkException catch (e) {
+      recentReviewsError({"status": "Network", "message": e.toString()});
+    } catch (e) {
+      print("errorR: $e");
+
+      recentReviewsError({"status": null, "message": "Unavailable"});
+    }
+    return [];
+  }
+
+  Future<RecentOrders?> fetchRecentOrders() async {
+    recentOrdersError(null);
+    try {
+      var res = await useCase.fetchRecentOrders();
+      if (res == null) {
+        recentOrders([]);
+        recentOrders.refresh();
+        monthlyOrder(0);
+      }
+      recentOrders(res!.orders);
+      monthlyOrder(res.count);
+    } on BadResponseException catch (e) {
+      recentOrdersError({"status": e.statusCode, "message": e.message});
+    } on NetworkException catch (e) {
+      recentOrdersError({"status": "Network", "message": e.toString()});
+    } catch (e) {
+      print("errorO: $e");
+      recentOrdersError({"status": null, "message": "Unavailable"});
+    }
+    return null;
   }
 }

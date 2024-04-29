@@ -4,6 +4,8 @@ import 'package:ecommerce_app/core/utils/handleExceptions.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/auth.dart';
 import 'package:ecommerce_app/domain/entities/edit_user.dart';
+import 'package:ecommerce_app/domain/entities/order.dart';
+import 'package:ecommerce_app/domain/entities/product.dart';
 
 class AdminUserDataSource {
   DioClient dio = DioClient();
@@ -50,7 +52,8 @@ class AdminUserDataSource {
   Future<bool> register(RegisterModel user) async {
     print("here right?");
     try {
-      var res = await dio.dio.post("/admin/admin-register", data: user.toJson());
+      var res =
+          await dio.dio.post("/admin/admin-register", data: user.toJson());
       if (res.statusCode == 201) {
         return true;
       }
@@ -68,5 +71,62 @@ class AdminUserDataSource {
       throw AuthException(message: "Registeration failed. try again.");
     }
     return false;
+  }
+
+  Future<List<ReviewModel>> fetchRecentReviews() async {
+    try {
+      var res = await dio.dio.get("/admin/recent_reviews");
+      if (res.statusCode == 200) {
+        List? data = res.data["data"]["ratings"];
+        if (data != null) {
+          return data
+              .map((e) {
+                return ReviewModel.fromJson(e);
+              })
+              .toList()
+              .cast<ReviewModel>();
+        } else
+          return [];
+      } else
+        return [];
+    } on DioException catch (e) {
+      handledioExceptions(e);
+    } catch (e) {
+      print("here");
+
+      rethrow;
+    }
+    return [];
+  }
+
+  Future<RecentOrders?> fetchRecentOrders() async {
+    try {
+      var res = await dio.dio.get("/admin/recent_orders");
+      if (res.statusCode == 200) {
+        var data = res.data["data"];
+        if (data != null) {
+          var orders = data["orders"]
+              .map((e) {
+                return Order.fromJson(e);
+              })
+              .toList()
+              .cast<Order>();
+
+          var count = data["count"];
+          return RecentOrders(orders: orders, count: count);
+        } else {
+          return null;
+        }
+      } else
+        return null;
+    } on DioException catch (e) {
+      print("here?");
+      handledioExceptions(e);
+    } catch (e) {
+      print("here? $e");
+
+      rethrow;
+    }
+    return null;
   }
 }

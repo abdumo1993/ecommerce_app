@@ -1,10 +1,12 @@
+import 'package:ecommerce_app/domain/entities/edit_user.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 
 class Order {
+  final GetUserModel? user;
   final String orderNumber;
   final int orderId;
   final String status;
-  final Map<String, dynamic> shippingAddress;
+  final Map<String, dynamic>? shippingAddress;
   final Map<String, dynamic>? billingAddress;
   final PaymentInfo paymentInfo;
   final String orderDate;
@@ -12,11 +14,12 @@ class Order {
   final List<OrderItem> items;
 
   const Order({
+    this.user,
     required this.orderNumber,
     required this.orderId,
     required this.status,
-    required this.shippingAddress,
-    this.billingAddress,
+    this.shippingAddress = null,
+    this.billingAddress = null,
     required this.paymentInfo,
     required this.orderDate,
     required this.updatedAt,
@@ -26,15 +29,18 @@ class Order {
   set status(String st) => status = st;
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-        orderNumber: json["orderNumber"],
-        orderId: json['orderId'],
-        status: json['status'],
+        user: GetUserModel().fromJson(json["user"]),
+        orderNumber: json["orderNumber"] ?? "N/A",
+        orderId: json['orderId'] ?? "N/A",
+        status: json['status'] ?? "N/A",
         shippingAddress: json['shippingAddress'],
-        paymentInfo: PaymentInfo.formJson(json['paymentInfo']),
-        orderDate: json["orderDate"],
-        updatedAt: json["updatedAt"],
+        paymentInfo: PaymentInfo.fromJson(json['paymentInfo']),
+        orderDate: json["orderDate"] ?? "N/A",
+        updatedAt: json["updatedAt"] ?? "N/A",
         items: json["items"]
-            ?.map((elem) => OrderItem.formJson(elem))
+            ?.map((elem) {
+              return OrderItem.fromJson(elem);
+            })
             .toList()
             .cast<OrderItem>());
   }
@@ -69,7 +75,7 @@ class OrderItem {
   final int orderItemId;
   final int quantity;
   final num price;
-  final Map<String, dynamic> product;
+  final Map<String, dynamic>? product;
   final String createdAt;
   final String updatedAt;
 
@@ -77,17 +83,17 @@ class OrderItem {
       {required this.orderItemId,
       required this.quantity,
       required this.price,
-      required this.product,
+      this.product,
       required this.createdAt,
       required this.updatedAt});
-  factory OrderItem.formJson(Map<String, dynamic> json) {
+  factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-        createdAt: json["createdAt"],
-        updatedAt: json["updatedAt"],
+        createdAt: json["createdAt"] ?? "N/A",
+        updatedAt: json["updatedAt"] ?? "N/A",
         product: json['product'],
-        price: json["price"],
-        quantity: json['quantity'],
-        orderItemId: json['orderItemId']);
+        price: json["price"] ?? "N/A",
+        quantity: json['quantity'] ?? "N/A",
+        orderItemId: json['orderItemId'] ?? "N/A");
   }
 }
 
@@ -118,13 +124,20 @@ class PaymentInfo {
       required this.createdAt,
       required this.updatedAt});
 
-  factory PaymentInfo.formJson(Map<String, dynamic> json) {
+  factory PaymentInfo.fromJson(Map<String, dynamic> json) {
     return PaymentInfo(
-        createdAt: json["createdAt"],
-        updatedAt: json["updatedAt"],
-        currency: json['currency'],
-        txRef: json["txRef"],
-        amount: json['amount'],
-        paymentInfoId: json['paymentInfoId']);
+        createdAt: json["createdAt"] ?? "N/A",
+        updatedAt: json["updatedAt"] ?? "N/A",
+        currency: json['currency'] ?? "N/A",
+        txRef: json["txRef"] ?? "N/A",
+        amount: json['amount'] ?? "N/A",
+        paymentInfoId: json['paymentInfoId'] ?? "N/A");
   }
+}
+
+class RecentOrders {
+  final List<Order> orders;
+  final int count;
+
+  RecentOrders({required this.orders, required this.count});
 }

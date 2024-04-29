@@ -33,12 +33,17 @@ class _AccessControlWidgetState extends State<AccessControlWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     if (isAllowed) {
       return widget.child;
     } else if (!isAllowed && !widget.showError) {
-      return Visibility(visible: widget.showError, child: widget.child);
+      // return Visibility(visible: widget.showError, child: widget.child);
+      return const SizedBox(
+        width: 0,
+        height: 0,
+      );
     }
+    print(
+        "${isAllowed}, ${widget.showError}, ${core.role}, ${widget.allowedRole}, ${widget.child}");
 
     return ErrorPage(
         message:

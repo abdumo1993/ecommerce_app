@@ -14,11 +14,13 @@ class ViewUsers extends StatefulWidget {
 }
 
 class _ViewUsersState extends State<ViewUsers> {
-  final AdminUsersController controller = Get.put(AdminUsersController());
+  final AdminUsersController controller = Get.find<AdminUsersController>();
 
   @override
   Widget build(BuildContext context) {
-    return AccessControlWidget(allowedRole: Roles.ADMIN,
+    controller.fetchUsers();
+    return AccessControlWidget(
+      allowedRole: Roles.ADMIN,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         appBar: AppBar(
@@ -294,7 +296,9 @@ class DynamicTable extends StatelessWidget {
                                     children: [
                                       Text(
                                           'Are you sure you want to delete user:\nEmail: ${user.email}?'),
-                                          SizedBox(height: 10,),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
                                       Row(
                                         children: [
                                           Icon(Icons.warning_amber,

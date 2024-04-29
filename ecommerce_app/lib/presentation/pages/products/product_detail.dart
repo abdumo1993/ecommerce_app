@@ -27,12 +27,10 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     print(Get.arguments["id"].runtimeType);
-    return AccessControlWidget(
-        child: body(
-            pDetailController: pDetailController,
-            runtimeType: runtimeType,
-            id: Get.arguments['id'] ?? 3),
-        allowedRole: Roles.CUSTOMER);
+    return body(
+        pDetailController: pDetailController,
+        runtimeType: runtimeType,
+        id: Get.arguments['id'] ?? 3);
   }
 }
 
@@ -90,6 +88,7 @@ class body extends StatelessWidget {
 }
 
 class page extends StatelessWidget {
+  Core core = Core();
   final PDetailModel? product;
   final bool shimmer;
   PDetailController detailController = Get.put(PDetailController());
@@ -169,7 +168,7 @@ class page extends StatelessWidget {
                           // ReviewWrite(
                           //     formKey: _formKey,
                           //     detailController: detailController),
-                          shimmer
+                      if  (core.role == Roles.CUSTOMER)  shimmer
                               ? ReviewWriteShimmer()
                               : ReviewWrite(
                                   pid: product!.id,
@@ -198,7 +197,7 @@ class page extends StatelessWidget {
                   ),
                 ),
               ),
-              bottomNavigationBar: GestureDetector(
+              bottomNavigationBar: (core.role == Roles.CUSTOMER) ? GestureDetector(
                 onTap: () async {
                   Get.find<CartController>()
                       .addToCart({"productId": product!.id, "quantity": 1});
@@ -224,7 +223,7 @@ class page extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
+              ) : null,
             ),
           ),
           // reviews
@@ -814,22 +813,23 @@ class myReviews extends StatelessWidget {
                               const SizedBox(
                                 width: 10,
                               ),
-                              Container(
-                                width: 120,
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(),
-                                child: Text(
-                                  reviews[index].name!,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimary),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          Row(
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    
+                                    width: 200,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(),
+                                    child: Text(
+                                      reviews[index].name!,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary),
+                                    ),
+                                  ),
+                                   Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [1, 2, 3, 4, 5].map(
                                 (e) {
@@ -843,6 +843,12 @@ class myReviews extends StatelessWidget {
                                   return Icon(icon, color: color);
                                 },
                               ).toList()),
+                                ],
+                              ),
+                            ],
+                          ),
+
+                         
                           // IconButton(
                           //   onPressed: () {},
                           //   icon: Icon(
