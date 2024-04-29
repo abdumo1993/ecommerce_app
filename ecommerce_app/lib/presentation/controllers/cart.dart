@@ -4,6 +4,7 @@ import 'package:ecommerce_app/data/repositories/cart.dart';
 import 'package:ecommerce_app/domain/entities/cart.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 import 'package:ecommerce_app/domain/usecases/cart.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 
@@ -16,16 +17,28 @@ class CartController extends GetxController {
 
   void changeCart(CartModel value) {
     cart(value);
-   
   }
-void addToCart(Map<String, dynamic> product) async {
+
+  void addToCart(Map<String, dynamic> product) async {
     try {
       await useCase.addToCart(product);
-      Get.snackbar("Success", "Product Added to cart successfully.");
+      Get.snackbar(
+          isDismissible: true,
+          duration: Duration(seconds: 10),
+          backgroundColor: ThemeData.dark().colorScheme.secondary,
+          colorText: ThemeData.dark().colorScheme.onPrimary,
+          "Success",
+          "Product Added to cart successfully.");
     } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } on BadResponseException catch (e) {
-      Get.snackbar("Failed", "Failed to add to Cart. please try again later.");
+      Get.snackbar(
+          isDismissible: true,
+          duration: Duration(seconds: 10),
+          backgroundColor: ThemeData.dark().colorScheme.secondary,
+          colorText: ThemeData.dark().colorScheme.onPrimary,
+          "Failed",
+          "Failed to add to Cart. please try again later.");
       // somethings/
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
@@ -35,6 +48,7 @@ void addToCart(Map<String, dynamic> product) async {
       });
     }
   }
+
   Future<CartModel?> fetchItems() async {
     try {
       var cartv2 = await useCase.fetchItems();
@@ -63,7 +77,13 @@ void addToCart(Map<String, dynamic> product) async {
       if (e.statusCode == 404) {
         Get.toNamed("/emptyCart");
       } else if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "invalid request.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
@@ -80,7 +100,7 @@ void addToCart(Map<String, dynamic> product) async {
   }
 
   Future<void> deleteItem(Map<String, int> json) async {
-try {
+    try {
       var valid = await useCase.removeFromCart(json);
       if (valid == true) {
         var item = await useCase.fetchItems();
@@ -91,7 +111,13 @@ try {
       if (e.statusCode == 404) {
         Get.toNamed("/emptyCart");
       } else if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "invalid cart item Iid.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid cart item Iid.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
@@ -106,5 +132,4 @@ try {
           arguments: {"message": "something went wrong. try again later"});
     }
   }
-
 }

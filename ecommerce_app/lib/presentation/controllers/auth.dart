@@ -104,7 +104,10 @@ class PDetailController extends GetxController {
         });
       } else if (e.statusCode == 404 && e.path == "/products/$id") {
         Get.offNamed("/home");
-        Get.snackbar("NotFound", "Product is not found.");
+        Get.snackbar(isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
+                colorText: ThemeData.dark().colorScheme.onPrimary,"NotFound", "Product is not found.");
       } else if (e.path != "/product/$id") {
         return a;
       }
@@ -128,7 +131,10 @@ class PDetailController extends GetxController {
           "message": "This review doesn't exist. please refresh your page."
         });
       } else if (e.statusCode == 401 && e.path != '/auth/refresh') {
-        Get.snackbar("Unauthorised", e.toString());
+        Get.snackbar(isDismissible: true,
+                duration: Duration(seconds: 10),
+                backgroundColor: ThemeData.dark().colorScheme.secondary,
+                colorText: ThemeData.dark().colorScheme.onPrimary,"Unauthorised", e.toString());
       }
       return false;
     }
@@ -174,9 +180,9 @@ class LoginController extends GetxController {
           print(res);
           print(await dio.getRole());
           if (await dio.getRole() == 'Admin') {
-            Get.toNamed("/home",arguments: {'role':'Admin'});
+            Get.toNamed("/home", arguments: {'role': 'Admin'});
           } else {
-            Get.toNamed("/home",arguments: {'role':'Customer'});
+            Get.toNamed("/home", arguments: {'role': 'Customer'});
           }
         } else {
           null;
@@ -321,7 +327,13 @@ class LogoutController extends GetxController {
         print(core.role);
       }
     } catch (e) {
-      Get.snackbar("Logout Failed.", "log out failed. try again.");
+      Get.snackbar(
+          isDismissible: true,
+          duration: Duration(seconds: 10),
+          backgroundColor: ThemeData.dark().colorScheme.secondary,
+          colorText: ThemeData.dark().colorScheme.onPrimary,
+          "Logout Failed.",
+          "log out failed. try again.");
     }
   }
 }
@@ -435,7 +447,12 @@ class ForgotPasswordController extends GetxController {
 
         var res = await use.forgotPasswordNew(data);
         if (res == true) {
-          Get.snackbar("Success",
+          Get.snackbar(
+              isDismissible: true,
+              duration: Duration(seconds: 10),
+              backgroundColor: ThemeData.dark().colorScheme.secondary,
+              colorText: ThemeData.dark().colorScheme.onPrimary,
+              "Success",
               "Your Request has been sent. Please wait a few minutes.");
         }
 

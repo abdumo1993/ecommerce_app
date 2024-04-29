@@ -47,7 +47,13 @@ class AdminUsersController extends RegisterConroller {
       if (e.statusCode == 404) {
         return Users.value;
       } else if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "invalid request.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
@@ -97,9 +103,21 @@ class AdminUsersController extends RegisterConroller {
       }
     } on BadResponseException catch (e) {
       if (e.statusCode == 404) {
-        Get.snackbar("Failed", "User Doesn't exist");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Failed",
+            "User Doesn't exist");
       } else if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "invalid request.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."

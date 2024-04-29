@@ -3,6 +3,7 @@ import 'package:ecommerce_app/data/datasources/order.dart';
 import 'package:ecommerce_app/data/repositories/order.dart';
 import 'package:ecommerce_app/domain/entities/order.dart';
 import 'package:ecommerce_app/domain/usecases/order.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class OrderController extends GetxController {
@@ -26,10 +27,22 @@ class OrderController extends GetxController {
       }
     } on BadResponseException catch (e) {
       if (e.statusCode == 404) {
-        Get.snackbar("Not Exist", "The Order doesn't exist");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Not Exist",
+            "The Order doesn't exist");
       } else if (e.statusCode == 400) {
         print(e.message);
-        Get.snackbar("Invalid", "invalid request.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
@@ -64,7 +77,13 @@ class OrderController extends GetxController {
       if (e.statusCode == 404) {
         orders([]);
       } else if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "invalid request.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."

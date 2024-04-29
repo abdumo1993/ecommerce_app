@@ -4,6 +4,7 @@ import 'package:ecommerce_app/data/repositories/checkout.dart';
 import 'package:ecommerce_app/domain/entities/cart.dart';
 import 'package:ecommerce_app/domain/entities/checkout.dart';
 import 'package:ecommerce_app/domain/usecases/checkout.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -44,15 +45,26 @@ class CheckoutController extends GetxController {
       launchUrlString(checkoutUrl.value!);
     } on BadResponseException catch (e) {
       if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "Product out of Stock");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "Product out of Stock");
       } else if (e.statusCode == 500) {
-        print("heres?");
+        print("heres? ${e.toString()} ${e.path}");
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
         });
       } else if (e.statusCode == 404 && e.path == "/address/shipping") {
         Get.snackbar(
-            "Address Not Provided", "Provide an address for shipping first.");
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Address Not Provided",
+            "Provide an address for shipping first.");
         Get.offAllNamed("/home");
       }
     } on NetworkException catch (e) {
@@ -81,7 +93,13 @@ class CheckoutController extends GetxController {
         });
         rethrow;
       } else if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "invalid request.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
@@ -110,7 +128,13 @@ class CheckoutController extends GetxController {
       }
     } on BadResponseException catch (e) {
       if (e.statusCode == 400) {
-        Get.snackbar("Invalid", "invalid request.");
+        Get.snackbar(
+            isDismissible: true,
+            duration: Duration(seconds: 10),
+            backgroundColor: ThemeData.dark().colorScheme.secondary,
+            colorText: ThemeData.dark().colorScheme.onPrimary,
+            "Invalid",
+            "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."

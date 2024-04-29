@@ -433,7 +433,16 @@ class CartTile extends StatelessWidget {
                               IconButton(
                                 onPressed: () {
                                   if (item.quantity >= item.product.count) {
-                                    Get.snackbar("Excess",
+                                    Get.snackbar(
+                                        isDismissible: true,
+                                        duration: Duration(seconds: 10),
+                                        backgroundColor: ThemeData.dark()
+                                            .colorScheme
+                                            .secondary,
+                                        colorText: ThemeData.dark()
+                                            .colorScheme
+                                            .onPrimary,
+                                        "Excess",
                                         "Quantity has exceeded our stock.");
                                   } else {
                                     var value =
@@ -474,11 +483,12 @@ class CartTile extends StatelessWidget {
                                   if (item.quantity <= 1) {
                                     Get.find<CartController>()
                                         .deleteItem(item.updateToJson(0)!);
+                                  } else {
+                                    var value =
+                                        item.updateToJson(item.quantity - 1);
+                                    Get.find<CartController>()
+                                        .updateItem(value!);
                                   }
-                                  else{
-                                  var value =
-                                      item.updateToJson(item.quantity - 1);
-                                  Get.find<CartController>().updateItem(value!);}
                                 },
                                 icon: Icon(Icons.remove),
                                 style: ButtonStyle(
