@@ -28,6 +28,7 @@ class OrderController extends GetxController {
       if (e.statusCode == 404) {
         Get.snackbar("Not Exist", "The Order doesn't exist");
       } else if (e.statusCode == 400) {
+        print(e.message);
         Get.snackbar("Invalid", "invalid request.");
       } else if (e.statusCode == 500) {
         Get.toNamed("/error", arguments: {
@@ -61,7 +62,7 @@ class OrderController extends GetxController {
       orders.refresh();
     } on BadResponseException catch (e) {
       if (e.statusCode == 404) {
-        Get.snackbar("No Order", "There are no orders to show");
+        orders([]);
       } else if (e.statusCode == 400) {
         Get.snackbar("Invalid", "invalid request.");
       } else if (e.statusCode == 500) {

@@ -23,178 +23,174 @@ class RegisterPage extends StatelessWidget {
     return Material(
       child: Container(
         color: Theme.of(context).colorScheme.primary,
-        child: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              width: 800,
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const backButton(
-                    nextPageName: "/login",
-                  ),
-                  (Get.arguments != null)
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                              Container(
-                                  color: Colors.red.withOpacity(0.3),
-                                  alignment: Alignment.center,
-                                  child: Text("${Get.arguments["message"]}",
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      )))
-                            ])
-                      : const SizedBox(
-                          width: 0,
-                          height: 0,
-                        ),
-                  Text("Create Account",
-                      style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onPrimary)),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          child: myTextField(
-                            controller: registerConroller.firstNameController,
-                            validator: (value) {
-                              registerConroller.validateFirstName();
-                              return registerConroller.firstNameError.value;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            palceholder: "First Name",
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          child: myTextField(
-                            controller: registerConroller.lastNameController,
-                            validator: (value) {
-                              registerConroller.validateLastName();
-                              return registerConroller.lastNameError.value;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            palceholder: "Last Name",
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          child: myTextField(
-                            controller: registerConroller.emailController,
-                            validator: (value) {
-                              registerConroller.validateEmail();
-                              return registerConroller.emailError.value;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            palceholder: "Email Address",
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                            child: myTextField(
-                          controller: registerConroller.passwordController,
+        child: SingleChildScrollView(
+          child: Container(
+            width: 800,
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const backButton(
+                  nextPageName: "/login",
+                ),
+                (Get.arguments != null)
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                            Container(
+                                color: Colors.red.withOpacity(0.3),
+                                alignment: Alignment.center,
+                                child: Text("${Get.arguments["message"]}",
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    )))
+                          ])
+                    : const SizedBox(
+                        width: 0,
+                        height: 0,
+                      ),
+                Text("Create Account",
+                    style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onPrimary)),
+                const SizedBox(
+                  height: 20,
+                ),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        child: myTextField(
+                          controller: registerConroller.firstNameController,
                           validator: (value) {
-                            registerConroller.validatePassword();
-                            return registerConroller.passwordError.value;
+                            registerConroller.validateFirstName();
+                            return registerConroller.firstNameError.value;
                           },
-                          keyboardType: TextInputType.visiblePassword,
-                          obscure: true,
-                          palceholder: "Password",
-                        )),
-                        const SizedBox(
-                          height: 15,
+                          keyboardType: TextInputType.emailAddress,
+                          palceholder: "First Name",
                         ),
-                        Container(
-                            child: myTextField(
-                          controller: registerConroller.confirmController,
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        child: myTextField(
+                          controller: registerConroller.lastNameController,
                           validator: (value) {
-                            registerConroller.validateConfirm();
-                            return registerConroller.confirmError.value;
+                            registerConroller.validateLastName();
+                            return registerConroller.lastNameError.value;
                           },
-                          keyboardType: TextInputType.visiblePassword,
-                          obscure: true,
-                          palceholder: "Confirm Password",
-                        )),
+                          keyboardType: TextInputType.emailAddress,
+                          palceholder: "Last Name",
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        child: myTextField(
+                          controller: registerConroller.emailController,
+                          validator: (value) {
+                            registerConroller.validateEmail();
+                            return registerConroller.emailError.value;
+                          },
+                          keyboardType: TextInputType.emailAddress,
+                          palceholder: "Email Address",
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                          child: myTextField(
+                        controller: registerConroller.passwordController,
+                        validator: (value) {
+                          registerConroller.validatePassword();
+                          return registerConroller.passwordError.value;
+                        },
+                        keyboardType: TextInputType.visiblePassword,
+                        obscure: true,
+                        palceholder: "Password",
+                      )),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                          child: myTextField(
+                        controller: registerConroller.confirmController,
+                        validator: (value) {
+                          registerConroller.validateConfirm();
+                          return registerConroller.confirmError.value;
+                        },
+                        keyboardType: TextInputType.visiblePassword,
+                        obscure: true,
+                        palceholder: "Confirm Password",
+                      )),
 
-                        const SizedBox(
-                          height: 15,
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      // TextButton(
+                      //   style: ButtonStyle(
+                      //     padding: MaterialStateProperty.all<EdgeInsets>(
+                      //         EdgeInsets.all(20)),
+                      //     backgroundColor:
+                      //         MaterialStateProperty.all<Color>(Color(0xFF8E6CEF)),
+                      //   ),
+                      //   onPressed: () => print("login"),
+                      //   child:
+                      // ),
+                      ContinueButton(
+                        onPress: () {
+                          if (_formKey.currentState!.validate()) {
+                            registerConroller.submitForm();
+                            // Proceed with form submission
+                            // Get.toNamed("/home");
+                          }
+                        },
+                        child: const Text(
+                          "Continue",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
-                        // TextButton(
-                        //   style: ButtonStyle(
-                        //     padding: MaterialStateProperty.all<EdgeInsets>(
-                        //         EdgeInsets.all(20)),
-                        //     backgroundColor:
-                        //         MaterialStateProperty.all<Color>(Color(0xFF8E6CEF)),
-                        //   ),
-                        //   onPressed: () => print("login"),
-                        //   child:
-                        // ),
-                        ContinueButton(
-                          onPress: () {
-                            if (_formKey.currentState!.validate()) {
-                              registerConroller.submitForm();
-                              // Proceed with form submission
-                              // Get.toNamed("/home");
-                            }
-                          },
-                          child: const Text(
-                            "Continue",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            "Forgot Password?",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Forgot Password?",
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed("/forgot-password");
+                            },
+                            child: Text(
+                              "Reset",
                               style: TextStyle(
+                                  fontWeight: FontWeight.bold,
                                   color:
                                       Theme.of(context).colorScheme.onPrimary),
                             ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Get.toNamed("/forgot-password");
-                              },
-                              child: Text(
-                                "Reset",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
         ),

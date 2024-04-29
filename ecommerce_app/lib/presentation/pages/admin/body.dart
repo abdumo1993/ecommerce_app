@@ -14,6 +14,7 @@ class StoreBody extends StatelessWidget {
       alignment: WrapAlignment.start,
       children: [
         Container(
+          padding: EdgeInsets.symmetric(horizontal: 0, vertical: 20),
           constraints: BoxConstraints(maxWidth: 600),
           child: SingleChildScrollView(
             child: Column(

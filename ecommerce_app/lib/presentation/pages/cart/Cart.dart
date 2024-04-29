@@ -470,13 +470,15 @@ class CartTile extends StatelessWidget {
                               ),
                               IconButton(
                                 onPressed: () {
+                                  print("quantity: ${item.quantity}");
                                   if (item.quantity <= 1) {
                                     Get.find<CartController>()
                                         .deleteItem(item.updateToJson(0)!);
                                   }
+                                  else{
                                   var value =
                                       item.updateToJson(item.quantity - 1);
-                                  Get.find<CartController>().updateItem(value!);
+                                  Get.find<CartController>().updateItem(value!);}
                                 },
                                 icon: Icon(Icons.remove),
                                 style: ButtonStyle(

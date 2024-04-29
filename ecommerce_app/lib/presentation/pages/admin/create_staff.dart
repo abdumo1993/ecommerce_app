@@ -28,8 +28,7 @@ class RegisterAdminPage extends StatelessWidget {
       child: Material(
         child: Container(
           color: Theme.of(context).colorScheme.primary,
-          child: Center(
-            child: SingleChildScrollView(
+          child: SingleChildScrollView(
               child: Container(
                 width: 800,
                 padding: const EdgeInsets.all(20.0),
@@ -166,7 +165,7 @@ class RegisterAdminPage extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        
       ),
     );
   }

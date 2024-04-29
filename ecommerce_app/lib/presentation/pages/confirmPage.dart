@@ -12,7 +12,7 @@ class ConfirmPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var truM = Get.arguments["sent"] ?? message;
+    var truM = Get.arguments?["sent"] ?? message;
     if (truM == null) {
       truM = false;
     }

@@ -36,18 +36,21 @@ class _ViewUsersState extends State<ViewUsers> {
                   style: ButtonStyle(
                     backgroundColor: MaterialStateColor.resolveWith(
                         (states) => Theme.of(context).colorScheme.tertiary),
-                    padding: MaterialStateProperty.resolveWith(
-                        (states) => EdgeInsets.all(16)),
+                        padding: MaterialStateProperty.resolveWith((states) => EdgeInsets.symmetric(horizontal: 10, vertical: 4))
+                  
                   ),
                   onPressed: () {
                     Get.toNamed("/add-staff");
                   },
                   child: Row(
+                    // runAlignment: WrapAlignment.center,
+                    // alignment: WrapAlignment.center,
                     children: [
                       Icon(
                         Icons.add,
                         color: Theme.of(context).colorScheme.onPrimary,
                         size: 30,
+                        
                       ),
                       SizedBox(
                         width: 10,

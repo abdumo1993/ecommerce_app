@@ -35,30 +35,41 @@ class History extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
-          child: ListView.separated(
-              itemBuilder: (context, index) {
-                Order order = controller.orders[index];
-                return GestureDetector(
-                    onTap: () {
-                      print("here");
-                      // go to a screen that shows all of the details of that order
-                      Get.toNamed("/order-detail", arguments: {"order": order});
-                    },
-                    child: OrderListItem(order: order));
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  width: double.maxFinite,
-                  height: 3,
-                  child: Container(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                );
-              },
-              itemCount: controller.orders.length),
+    return Obx(() {
+      print("length: ${controller.orders.length}");
+      if (controller.orders.isEmpty) {
+        print("here??");
+        return Center(
+            child: Text(
+          "Empty History.",
+          style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
         ));
+      }
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+        child: ListView.separated(
+            itemBuilder: (context, index) {
+              Order order = controller.orders[index];
+              return GestureDetector(
+                  onTap: () {
+                    print("here");
+                    // go to a screen that shows all of the details of that order
+                    Get.toNamed("/order-detail", arguments: {"order": order});
+                  },
+                  child: OrderListItem(order: order));
+            },
+            separatorBuilder: (context, index) {
+              return SizedBox(
+                width: double.maxFinite,
+                height: 3,
+                child: Container(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
+              );
+            },
+            itemCount: controller.orders.length),
+      );
+    });
   }
 }
 
@@ -109,7 +120,6 @@ class OrderListItem extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                 
                 ],
               ),
               SizedBox(height: 8),

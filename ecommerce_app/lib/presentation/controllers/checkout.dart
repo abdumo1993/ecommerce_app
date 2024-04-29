@@ -50,6 +50,10 @@ class CheckoutController extends GetxController {
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
         });
+      } else if (e.statusCode == 404 && e.path == "/address/shipping") {
+        Get.snackbar(
+            "Address Not Provided", "Provide an address for shipping first.");
+        Get.offAllNamed("/home");
       }
     } on NetworkException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
@@ -75,6 +79,7 @@ class CheckoutController extends GetxController {
           "message": "Addresses Not Provided.",
           "backDest": "/cart"
         });
+        rethrow;
       } else if (e.statusCode == 400) {
         Get.snackbar("Invalid", "invalid request.");
       } else if (e.statusCode == 500) {
@@ -99,9 +104,8 @@ class CheckoutController extends GetxController {
       var res = await useCase.verify(
           {"txRef": txref.value!, "shippingAddressId": shippingAddress.value!});
       if (res != null && res.isNotEmpty) {
-       
         orderNumber(res["data"]["orderNumber"]);
-        
+
         Get.toNamed("/checkout");
       }
     } on BadResponseException catch (e) {
