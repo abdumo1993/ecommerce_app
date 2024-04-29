@@ -18,6 +18,7 @@ class SearchPageController extends GetxController {
   bool valid = false;
   RxnString confirmError = RxnString(null);
   var sortType = "NONE".obs;
+  var currentChoice = "None".obs;
   int currentPage = 0;
   SearchController searchWordController =
       Get.find<SearchTextController>().searchController;
@@ -48,14 +49,13 @@ class SearchPageController extends GetxController {
   void removeFilter(String filter) {
     selectedFilters.remove(filter);
   }
-
-
-void setSortType(String sorttype){
-  sortType.value = sorttype;
+  
+  void setSortType(int sorttypeIndex){
+    if(sorttypeIndex == 0 ){sortType.value = ("NONE");}
+    if(sorttypeIndex == 1 ){sortType.value = ("PRICE_ASCENDING");}
+    if(sorttypeIndex == 2 ){sortType.value = ("PRICE_DESCENDING");}
   refresh();
 }
-
-
 
 
 
