@@ -100,20 +100,7 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
                     color: MaterialStatePropertyAll(Theme.of(context).colorScheme.tertiary),
                   ),
                 ),
-                ChoiceButton(
-                    values: ["None","Low-Hi", "Hi-Low",],
-                    representations: [
-                      Text("None", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                      Text("Low-Him", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                      Text("Hi-Low", style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),),
-                    ],
-                    choices: [
-                      GestureDetector(onTap: () => controller.setSortType("NONE"), child: Text("None")),
-                      GestureDetector(onTap: () => controller.setSortType("PRICE_ASCENDING"), child: Text("Price: Lowest - Highest")),
-                      GestureDetector(onTap: () => controller.setSortType("PRICE_DESCENDING"), child: Text("Price: Highest - Lowest"),),
-                    ],
-                    title: "Sort by",
-                  ),
+                SortButton()
               ],
             ),
           ),
@@ -148,4 +135,104 @@ final SearchProductsUseCase searchProductsUseCase = SearchProductsUseCaseImpl(se
       },
     );
  }
+}
+
+
+class SortButton extends StatelessWidget {
+  final title = "Sort by";
+  final values = ["None","Low-Hi", "Hi-Low",];
+  final choices = [
+    "None",
+    "Price: Lowest - Highest",
+    "Price: Highest - Lowest",
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
+        backgroundColor: MaterialStateProperty.all<Color>(
+            Theme.of(context).colorScheme.secondary),
+      ),
+      onPressed: () {
+        showModalBottomSheet(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          context: context,
+          builder: (BuildContext context) {
+            return Container(
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisSize: MainAxisSize
+                    .min, // Use min to make the bottom sheet only as tall as its content
+                children: <Widget>[
+                  // Add a title at the top of the bottom sheet
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
+                  // Add a divider for better visual separation
+                  Divider(color: Theme.of(context).colorScheme.onSecondary),
+                  // Your existing ListView.builder
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: choices.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: EdgeInsets.all(10),
+                          child: ListTile(
+                            textColor: Theme.of(context).colorScheme.onPrimary,
+                            tileColor: Theme.of(context).colorScheme.secondary,
+                            hoverColor: Theme.of(context).colorScheme.tertiary,
+                            shape: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(100),
+                                borderSide: BorderSide.none),
+                            title:Text(choices[index]),
+                            onTap: () {
+                                 Get.find<SearchPageController>().currentChoice.value = values[index];
+                                Get.find<SearchPageController>().setSortType(index);
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimary,
+                fontWeight: FontWeight.bold),
+          ),
+          Row(
+            children: [
+              Obx(()=> Text(Get.find<SearchPageController>().currentChoice.value, style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),)),
+              SizedBox(
+                width: 10,
+              ),
+              Image.asset(
+                "lib/assets/images/arrow_down.png",
+                color: Theme.of(context).colorScheme.onSecondary,
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
 }

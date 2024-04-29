@@ -27,6 +27,7 @@ class AdminTableController extends GetxController {
   final RxList results = [].obs;
   final SearchProductsUseCase searchProductsUseCase;
   var sortType = "NONE".obs;
+  var currentChoice = "None".obs;
 
   AdminTableController(this.searchProductsUseCase) {
     expansionController = Get.put(ExpansionController());
@@ -43,10 +44,13 @@ class AdminTableController extends GetxController {
     selectedFilters.remove(filter);
   }
 
-void setSortType(String sorttype){
-  sortType.value = sorttype;
+  void setSortType(int sorttypeIndex){
+    if(sorttypeIndex == 0 ){sortType.value = ("NONE");}
+    if(sorttypeIndex == 1 ){sortType.value = ("PRICE_ASCENDING");}
+    if(sorttypeIndex == 2 ){sortType.value = ("PRICE_DESCENDING");}
   refresh();
 }
+
 
 
 
