@@ -121,6 +121,7 @@ class page extends StatelessWidget {
       }
       return diff;
     })();
+    print("accessible: ${core.role == Roles.CUSTOMER} ${core.role}");
     return Container(
       color: Theme.of(context).colorScheme.primary,
       alignment: Alignment.center,
@@ -169,12 +170,13 @@ class page extends StatelessWidget {
                           // ReviewWrite(
                           //     formKey: _formKey,
                           //     detailController: detailController),
-                      if  (core.role == Roles.CUSTOMER)  shimmer
-                              ? ReviewWriteShimmer()
-                              : ReviewWrite(
-                                  pid: product!.id,
-                                  formKey: _formKey,
-                                  detailController: detailController),
+                          if (core.role == Roles.CUSTOMER)
+                            shimmer
+                                ? ReviewWriteShimmer()
+                                : ReviewWrite(
+                                    pid: product!.id,
+                                    formKey: _formKey,
+                                    detailController: detailController),
                           // end of name and choices
                           // description
                           // DescriptionSection(product: product),
@@ -198,33 +200,36 @@ class page extends StatelessWidget {
                   ),
                 ),
               ),
-              bottomNavigationBar: (core.role == Roles.CUSTOMER) ? GestureDetector(
-                onTap: () async {
-                  Get.find<CartController>()
-                      .addToCart({"productId": product!.id, "quantity": 1});
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Theme.of(context).colorScheme.tertiary),
-                  margin: EdgeInsets.all(20.0),
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        product == null ? "" : "\$${product!.price}",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+              bottomNavigationBar: (core.role == Roles.CUSTOMER)
+                  ? GestureDetector(
+                      onTap: () async {
+                        Get.find<CartController>().addToCart(
+                            {"productId": product!.id, "quantity": 1});
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: Theme.of(context).colorScheme.tertiary),
+                        margin: EdgeInsets.all(20.0),
+                        padding: EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              product == null ? "" : "\$${product!.price}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "Add to Bag",
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
+                        ),
                       ),
-                      Text(
-                        "Add to Bag",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                ),
-              ) : null,
+                    )
+                  : null,
             ),
           ),
           // reviews
@@ -818,7 +823,6 @@ class myReviews extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    
                                     width: 200,
                                     clipBehavior: Clip.hardEdge,
                                     decoration: BoxDecoration(),
@@ -830,26 +834,26 @@ class myReviews extends StatelessWidget {
                                               .onPrimary),
                                     ),
                                   ),
-                                   Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [1, 2, 3, 4, 5].map(
-                                (e) {
-                                  var color =
-                                      Theme.of(context).colorScheme.onSecondary;
-                                  var icon = Icons.star_border;
-                                  if (e <= reviews[index].rating) {
-                                    icon = Icons.star;
-                                    color = Colors.yellow;
-                                  }
-                                  return Icon(icon, color: color);
-                                },
-                              ).toList()),
+                                  Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [1, 2, 3, 4, 5].map(
+                                        (e) {
+                                          var color = Theme.of(context)
+                                              .colorScheme
+                                              .onSecondary;
+                                          var icon = Icons.star_border;
+                                          if (e <= reviews[index].rating) {
+                                            icon = Icons.star;
+                                            color = Colors.yellow;
+                                          }
+                                          return Icon(icon, color: color);
+                                        },
+                                      ).toList()),
                                 ],
                               ),
                             ],
                           ),
 
-                         
                           // IconButton(
                           //   onPressed: () {},
                           //   icon: Icon(

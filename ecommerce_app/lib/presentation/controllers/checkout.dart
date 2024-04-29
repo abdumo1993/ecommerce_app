@@ -45,13 +45,14 @@ class CheckoutController extends GetxController {
       launchUrlString(checkoutUrl.value!);
     } on BadResponseException catch (e) {
       if (e.statusCode == 400) {
+        print("the message${e.toString()}");
         Get.snackbar(
             isDismissible: true,
             duration: Duration(seconds: 10),
             backgroundColor: ThemeData.dark().colorScheme.secondary,
             colorText: ThemeData.dark().colorScheme.onPrimary,
             "Invalid",
-            "Product out of Stock");
+            e.message);
       } else if (e.statusCode == 500) {
         print("heres? ${e.toString()} ${e.path}");
         Get.toNamed("/error", arguments: {

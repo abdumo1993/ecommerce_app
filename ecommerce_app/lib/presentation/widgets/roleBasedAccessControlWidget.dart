@@ -33,6 +33,8 @@ class _AccessControlWidgetState extends State<AccessControlWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "${isAllowed}, ${widget.showError}, ${core.role}, ${widget.allowedRole}, ${widget.child}");
     if (isAllowed) {
       return widget.child;
     } else if (!isAllowed && !widget.showError) {
@@ -42,8 +44,6 @@ class _AccessControlWidgetState extends State<AccessControlWidget> {
         height: 0,
       );
     }
-    print(
-        "${isAllowed}, ${widget.showError}, ${core.role}, ${widget.allowedRole}, ${widget.child}");
 
     return ErrorPage(
         message:

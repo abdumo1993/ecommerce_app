@@ -151,7 +151,7 @@ class SortButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
+        // padding: MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(20)),
         backgroundColor: MaterialStateProperty.all<Color>(
             Theme.of(context).colorScheme.secondary),
       ),

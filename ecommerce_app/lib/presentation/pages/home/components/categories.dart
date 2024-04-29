@@ -56,7 +56,7 @@ class Categories extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SizedBox(
-            height: 100,
+            height: 110,
             child: ListView.builder(
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
@@ -72,12 +72,16 @@ class Categories extends StatelessWidget {
                       ),
                       GestureDetector(
                           onTap: () => Get.toNamed("/selectedCategory",parameters: {"category": Category.values[index].name}),
-                          child: Text(
-                            // softWrap: true,
-                            "${categories[index]}",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary),
+                          child: Container(
+                            height: 60,
+                            child: Text(
+                              // softWrap: true,
+                              overflow: TextOverflow.clip,
+                              "${categories[index]}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.onPrimary),
+                            ),
                           ))
                     ],
                   );

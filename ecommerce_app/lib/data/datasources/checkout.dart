@@ -22,6 +22,7 @@ class CheckoutDataSource {
   }
 
   Future<CheckoutResModel?> makePayment(CheckoutModel checkout) async {
+    print(checkout.toJson());
     try {
       var res =
           await dio.dio.post("/payment/makePayment", data: checkout.toJson());

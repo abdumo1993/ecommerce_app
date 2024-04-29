@@ -85,6 +85,7 @@ class OrderController extends GetxController {
             "Invalid",
             "invalid request.");
       } else if (e.statusCode == 500) {
+        print(e.toString());
         Get.toNamed("/error", arguments: {
           "message": "A Server Error has occured. try again later."
         });

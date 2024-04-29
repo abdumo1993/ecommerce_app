@@ -14,8 +14,15 @@ class ForgotPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        leading: const backButton(
+          nextPageName: "/login",
+        ),
+      ),
+      body: Container(
         color: Theme.of(context).colorScheme.primary,
         child: Center(
           child: SingleChildScrollView(
