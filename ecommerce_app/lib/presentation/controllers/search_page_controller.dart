@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -71,9 +72,14 @@ void setSortType(String sorttype){
   }
 
 
+  CancelToken? _cancelToken; // Token to cancel the Dio request
+  List<CancelToken> cancelTokens = [];
+
+
   PagingController<int, Product> get pagingController => _pagingController;
 
-  void loadPage(int pageKey) async {
+  void loadPage(int pageKey) {
+    _cancelToken = CancelToken(); // Create a new cancel token for each request
       // await Future.delayed(Duration(milliseconds: 500));
     validateSearchWord();
     try{if (valid && _pagingController.nextPageKey!=null) {
@@ -92,9 +98,13 @@ void setSortType(String sorttype){
       _searchModel.category = category;
       }
       
-      if (offset.value != -1){
-        final newItem = await SearchProduct(
-          searchModel:_searchModel);
+      if (offset.value != -1 && _cancelToken!=null){
+        cancelTokens.add(_cancelToken!);
+        Result<ProductResponseModel> newItem;
+        SearchProduct(_cancelToken!,
+          searchModel:_searchModel).then((value) {
+            newItem = value;
+        cancelTokens.remove(_cancelToken);
               // SearchModel(searchWord: searchWordController.value.text,low: low,high: high,maxSize: maxSize,start: pageKey, category: "Elec"));
       if (newItem.data != null && currentPage != newItem.data!.nextIndex) {
         newItems.clear();
@@ -113,15 +123,24 @@ void setSortType(String sorttype){
       } else {
         //log error
         // print(newItem.error);
-      }
+      if(newItem.error != "Request canceled by user"){
+       _pagingController.error = newItem.error;}
+      }});
       }
 
     } catch (error) {
       _pagingController.error = error;
       //log error
       // print(error);
+    }finally {
+       _cancelToken = null; // Reset the cancel token
     }
-  }}catch(e){}
+  }
+  }catch(e){
+    _pagingController.error = e;
+  } finally {
+       _cancelToken = null; // Reset the cancel token
+    }
   }
 
   @override
@@ -130,6 +149,8 @@ void setSortType(String sorttype){
     total.value = 0;
     currentPage = 0;
     newItems.clear();
+    cancelTokens.clear();
+    _cancelToken = null; //
     _pagingController.dispose();
     super.onClose();
   }
@@ -140,14 +161,21 @@ void setSortType(String sorttype){
     total.value = 0;
     newItems.clear();
     currentPage = 0;
-    _pagingController.refresh();
-    _pagingController.itemList = null;
+    for(var element in cancelTokens){ try{element.cancel();}catch(e){_pagingController.error = e;}};
+    _cancelToken = null; //
+    cancelTokens.clear();
+    _pagingController.value = PagingState<int, Product>(
+      nextPageKey: _pagingController.firstPageKey,
+      error: null,
+      itemList: null,
+    );
+    loadPage(_pagingController.firstPageKey);
     super.refresh();
   }
 
-  Future<Result<ProductResponseModel>> SearchProduct(
+  Future<Result<ProductResponseModel>> SearchProduct(CancelToken cancelToken,
       {required SearchModel searchModel}) async {
-    var result = await searchProductsUseCase.call(searchModel: searchModel);
+    var result = await searchProductsUseCase.call(cancelToken, searchModel: searchModel);
     return result;
   }
 }

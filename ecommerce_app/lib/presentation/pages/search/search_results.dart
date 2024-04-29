@@ -26,6 +26,7 @@ class SearchResult extends StatelessWidget {
                       ),
             pagingController: productController.pagingController,
             builderDelegate: PagedChildBuilderDelegate<Product>(
+              animateTransitions: true,
               itemBuilder: (context, product, index) => 
               // GridTile(child: child),
               ProductCard(product: product,index: index,),
@@ -161,7 +162,7 @@ class ProductCard extends StatelessWidget {
                       child: Text(
                         "${product.name}",
                         style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                        overflow: TextOverflow.ellipsis,
+                        // overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Padding(

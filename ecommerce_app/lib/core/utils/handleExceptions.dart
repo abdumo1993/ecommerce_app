@@ -33,6 +33,8 @@ void handledioExceptions(DioException e) {
     throw NetworkException(message: "Request TimeOut. Try again later");
   } else if (e.type == DioExceptionType.receiveTimeout) {
     throw NetworkException(message: "Response TimeOut. Try again later");
+  } else if (e.type == DioExceptionType.cancel) {
+    throw CustomeException(message: "Request canceled by user");
   } else if (e.type == DioExceptionType.badResponse) {
     var message;
     if (e.response?.data.runtimeType == String) {

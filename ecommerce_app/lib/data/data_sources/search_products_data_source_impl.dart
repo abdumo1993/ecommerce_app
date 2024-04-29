@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/utils/handleExceptions.dart';
 import 'package:ecommerce_app/data/datasources/api_client.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
-import 'package:get/get.dart';
 
 import 'search_product_data_source.dart';
 
@@ -10,11 +9,12 @@ class SearchProductsDataSourceImpl implements SearchProductsDataSource {
   final DioClient dio = DioClient();
   int count = 0;
   @override
-  Future<ProductResponseModel> searchProducts(SearchModel searchModel) async {
+  Future<ProductResponseModel> searchProducts(CancelToken cancelToken,SearchModel searchModel) async {
     try {
       //request
       // print("${searchModel.searchWord}, ${searchModel.low}, ${searchModel.high}, ${searchModel.start}, ${searchModel.maxSize}, ${searchModel.category}");
      var res = await dio.dio.get('/product',
+     cancelToken: cancelToken,
           queryParameters: {
             if(searchModel.searchWord!=null)"name":searchModel.searchWord,
             if(searchModel.low!=null)"low":searchModel.low,

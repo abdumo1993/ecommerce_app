@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,10 +29,10 @@ class AdminTableController extends GetxController {
   var sortType = "NONE".obs;
 
   AdminTableController(this.searchProductsUseCase) {
-      loadPage(nextPageKey?.value);
-    // Load the first page
     expansionController = Get.put(ExpansionController());
     // loadPage(offset.value);
+      loadPage(nextPageKey?.value);
+    // Load the first page
   }
 
   void addFilter(String filter) {
@@ -65,9 +66,12 @@ void setSortType(String sorttype){
 void loadNextPage(){
   loadPage(nextPageKey?.value);
 }
+  CancelToken? _cancelToken; // Token to cancel the Dio request
+  List<CancelToken> cancelTokens = [];
 
-  void loadPage(int? pageKey) async {
-      await Future.delayed(Duration(milliseconds: 500));
+  void loadPage(int? pageKey) {
+    _cancelToken = CancelToken(); // Create a new cancel token for each request
+      // await Future.delayed(Duration(milliseconds: 500));
     // validateSearchWord();
     if ( nextPageKey!=null) {
     try {
@@ -85,10 +89,14 @@ void loadNextPage(){
       _searchModel.category = category;
       }
       
-      if (offset.value != -1){
-        final newItem = await SearchProduct(
-          searchModel:_searchModel);
+      if (offset.value != -1 && _cancelToken!=null){
+        cancelTokens.add(_cancelToken!);
+        Result<ProductResponseModel> newItem;
+        SearchProduct(_cancelToken!,
+          searchModel:_searchModel).then((value){
               // SearchModel(searchWord: searchWordController.value.text,low: low,high: high,maxSize: maxSize,start: pageKey, category: "Elec"));
+        newItem = value;
+        cancelTokens.remove(_cancelToken);
       if (newItem.data != null  &&  currentPage != newItem.data!.nextIndex) {
         newItems.clear();
         newItems.addAll(newItem.data!.productDtos);
@@ -106,13 +114,15 @@ void loadNextPage(){
       } else {
         //log error
         // print(newItem.error);
-      }
+      }});
       }
 
       
     } catch (error) {
       //log error
       // print(error);
+    }finally {
+       _cancelToken = null; // Reset the cancel token
     }
   }
   }
@@ -123,6 +133,8 @@ void loadNextPage(){
     total.value = 0;
     currentPage = 0;
     newItems.clear();
+    cancelTokens.clear();
+    _cancelToken = null; //
     // _pagingController.dispose();
     super.onClose();
   }
@@ -136,14 +148,16 @@ void loadNextPage(){
     nextPageKey = RxInt(0);
     // print(nextPageKey);
     results.clear();
+    for(var element in cancelTokens){ try{element.cancel();}catch(e){}};
+    _cancelToken = null; //
     loadNextPage();
     // _pagingController.refresh();
     super.refresh();
   }
 
-  Future<Result<ProductResponseModel>> SearchProduct(
+  Future<Result<ProductResponseModel>> SearchProduct(CancelToken cancelToken,
       {required SearchModel searchModel}) async {
-    var result = await searchProductsUseCase.call(searchModel: searchModel);
+    var result = await searchProductsUseCase.call(cancelToken, searchModel: searchModel);
     return result;
   }
 }

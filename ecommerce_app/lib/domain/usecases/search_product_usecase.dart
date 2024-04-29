@@ -1,7 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:ecommerce_app/domain/entities/product.dart';
 
 abstract class SearchProductsUseCase {
-  Future<Result<ProductResponseModel>> call({required SearchModel searchModel});
+  Future<Result<ProductResponseModel>> call(CancelToken cancelToken,{required SearchModel searchModel});
 }
 
 class Result<T> {

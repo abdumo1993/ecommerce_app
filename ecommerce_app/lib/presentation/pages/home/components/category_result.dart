@@ -28,6 +28,7 @@ class CategoryResult extends StatelessWidget {
                       ),
             pagingController: productController.pagingController,
             builderDelegate: PagedChildBuilderDelegate<Product>(
+              animateTransitions: true,
               itemBuilder: (context, product, index) => 
               // GridTile(child: child),
               ProductCard(product: product,index: index,),
