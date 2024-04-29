@@ -15,9 +15,9 @@ class OrderUseCase {
   }
 
 
-  Future<bool> delivered(int id) async {
+  Future<bool> delivered(int id, int status) async {
     try {
-      return await repo.delivered(id);
+      return await repo.delivered(id, status);
     } catch (e) {
       rethrow;
     }

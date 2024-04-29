@@ -16,12 +16,12 @@ class OrderController extends GetxController {
   final orders = RxList<Order>([]);
   var useCase =
       OrderUseCase(repo: OrderRepositoryImp(dataSource: OrderDataSource()));
-  void delivered(int id) async {
+  void delivered(int id, int status) async {
     try {
-      var res = await useCase.delivered(id);
+      var res = await useCase.delivered(id, status);
       if (res == true) {
         var o = orders.firstWhere((p0) => p0.orderId == id);
-        o.status = 'Delivered';
+        o.status = status;
         orders.refresh();
       }
     } on BadResponseException catch (e) {

@@ -109,19 +109,7 @@ class OrderListItem extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  if (order.status.toLowerCase() == 'Pending'.toLowerCase())
-                    TextButton(
-                        style: ButtonStyle(
-                          // padding: MaterialStateProperty.all<EdgeInsets>(
-                          //     EdgeInsets.all(10)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.amber.shade500),
-                        ),
-                        onPressed: () {
-                          print("done");
-                          Get.find<OrderController>().delivered(order.orderId);
-                        },
-                        child: Text("Delivered"))
+                 
                 ],
               ),
               SizedBox(height: 8),
@@ -170,7 +158,6 @@ class OrderDetailScreen extends StatelessWidget {
         child: Text("Order Not Found"),
       );
     } else {
-      
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         appBar: AppBar(

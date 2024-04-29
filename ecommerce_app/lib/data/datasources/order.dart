@@ -25,9 +25,9 @@ class OrderDataSource {
     return [];
   }
 
-  Future<bool> delivered(int id) async {
+  Future<bool> delivered(int id, int status) async {
     try {
-      var res = await dio.dio.patch("/order/status/$id");
+      var res = await dio.dio.patch("/order/status/$id", data: status);
       if (res.statusCode == 200) {
         return true;
       }

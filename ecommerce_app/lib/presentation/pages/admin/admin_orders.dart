@@ -35,29 +35,29 @@ class AllOrders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
-          child: ListView.separated(
-              itemBuilder: (context, index) {
-                Order order = orders[index];
-                return GestureDetector(
-                    onTap: () {
-                      print("here");
-                      // go to a screen that shows all of the details of that order
-                      Get.toNamed("/order-detail", arguments: {"order": order});
-                    },
-                    child: SingleOrderItem(order: order));
-              },
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  width: double.maxFinite,
-                  height: 3,
-                  child: Container(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                );
-              },
-              itemCount: orders.length),
-        );
+      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+      child: ListView.separated(
+          itemBuilder: (context, index) {
+            Order order = orders[index];
+            return GestureDetector(
+                onTap: () {
+                  print("here");
+                  // go to a screen that shows all of the details of that order
+                  Get.toNamed("/order-detail", arguments: {"order": order});
+                },
+                child: SingleOrderItem(order: order));
+          },
+          separatorBuilder: (context, index) {
+            return SizedBox(
+              width: double.maxFinite,
+              height: 3,
+              child: Container(
+                color: Theme.of(context).colorScheme.onSecondary,
+              ),
+            );
+          },
+          itemCount: orders.length),
+    );
   }
 }
 
@@ -77,6 +77,7 @@ class SingleOrderItem extends StatelessWidget {
     } else {
       width = screen;
     }
+    var statuses = [null,"Pending", "Shipped", "Delivered"];
     // print("screen: $screen, maxw: $maxwidth, width: $width");
     return Container(
       alignment: Alignment.center,
@@ -101,26 +102,73 @@ class SingleOrderItem extends StatelessWidget {
               Wrap(
                 children: [
                   Text(
-                    'Status: ${order.status}',
+                    'Status: ${statuses[order.status]}',
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.onSecondary),
                   ),
                   SizedBox(
                     width: 10,
                   ),
-                  if (order.status.toLowerCase() == 'Pending'.toLowerCase())
+                  if (order.status != 3)
                     TextButton(
-                        style: ButtonStyle(
-                          // padding: MaterialStateProperty.all<EdgeInsets>(
-                          //     EdgeInsets.all(10)),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.amber.shade500),
-                        ),
-                        onPressed: () {
-                          print("done");
-                          OrderController().delivered(order.orderId);
-                        },
-                        child: Text("Delivered"))
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.amber.shade500),
+                      ),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.secondary,
+                              title: Text(
+                                'Confirm Action',
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                              ),
+                              content: Text(
+                                'Are you sure you want to mark this order as ${statuses[order.status]}?\n This is an irreversible action.',
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pop(); // Close the dialog
+                                  },
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSecondary),
+                                  ),
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pop(); // Close the dialog
+                                      OrderController().delivered(order.orderId, order.status + 1); // Proceed with the function
+                                    },
+                                    child: Text(
+                                      'Yes',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    )),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Text("Delivered", style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),),
+                    )
                 ],
               ),
               SizedBox(height: 8),

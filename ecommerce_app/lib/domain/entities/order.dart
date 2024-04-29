@@ -5,7 +5,7 @@ class Order {
   final GetUserModel? user;
   final String orderNumber;
   final int orderId;
-  final String status;
+  final int status;
   final Map<String, dynamic>? shippingAddress;
   final Map<String, dynamic>? billingAddress;
   final PaymentInfo paymentInfo;
@@ -26,7 +26,7 @@ class Order {
     required this.items,
   });
 
-  set status(String st) => status = st;
+  set status(int st) => status = st;
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
         user: GetUserModel().fromJson(json["user"]),
