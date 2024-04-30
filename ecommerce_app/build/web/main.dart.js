@@ -10312,7 +10312,7 @@ q1:function q1(a,b,c){this.a=a
 this.b=b
 this.$ti=c},
 yU:function yU(a){this.a=a},
-a96(){var s=0,r=A.u(t.H),q,p,o,n,m,l,k
+a96(){var s=0,r=A.u(t.H),q,p,o,n,m,l,k,j
 var $async$a96=A.v(function(a,b){if(a===1)return A.q(b,r)
 while(true)switch(s){case 0:s=2
 return A.n($.Oj().E9(0),$async$a96)
@@ -10335,24 +10335,23 @@ q=A.bh2(A.aSJ(q.ge2(q)))
 $.aLK=!1
 $.a95=!0
 $.a8F=new A.aqr(q,B.ni)
-A.bgi()
-if($.au==null)A.Ij()
+try{A.bgi()}catch(i){A.ag("performs")}if($.au==null)A.Ij()
 q=$.au
 q.toString
 p=$.bd()
-o=t.e8
-n=o.a(p.gen().b.i(0,0))
-n.toString
-m=q.gEF()
-l=q.ax$
-if(l===$){p=o.a(p.gen().b.i(0,0))
+n=t.e8
+m=n.a(p.gen().b.i(0,0))
+m.toString
+l=q.gEF()
+k=q.ax$
+if(k===$){p=n.a(p.gen().b.i(0,0))
 p.toString
-k=new A.a4F(B.t,p,null,A.at(t.T))
-k.aB()
-k.saV(null)
+j=new A.a4F(B.t,p,null,A.at(t.T))
+j.aB()
+j.saV(null)
 q.ax$!==$&&A.ap()
-q.ax$=k
-l=k}q.a45(new A.Yu(n,B.Mo,m,l,null))
+q.ax$=j
+k=j}q.a45(new A.Yu(m,B.Mo,l,k,null))
 q.FP()
 return A.r(null,r)}})
 return A.t($async$a96,r)},
