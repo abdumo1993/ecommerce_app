@@ -32,7 +32,11 @@ void main() async {
   await core.setUserData();
   setPathUrlStrategy();
 
-  initUniLinks();
+  try {
+    initUniLinks();
+  } catch (e) {
+    print('performs');
+  }
   runApp(const MainApp());
 
   // handleDeepLink();
