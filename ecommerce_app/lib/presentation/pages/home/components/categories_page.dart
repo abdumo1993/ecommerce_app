@@ -65,13 +65,42 @@ class CategoriesPage extends StatelessWidget {
 }
 
 class CategoryBtn extends StatelessWidget {
-  const CategoryBtn({
+ const CategoryBtn({
     super.key, required this.index,
   });
   final int index;
 
   @override
   Widget build(BuildContext context) {
+    double size = 40;
+    Color color =Theme.of(context).colorScheme.onPrimary;
+    final List categoryIcons=[
+      Icon(Icons.car_rental_outlined,size: size,color: color,),
+      Icon(Icons.face_unlock_outlined,size: size,color: color,),
+      Icon(Icons.cookie_sharp,size: size,color: color,),
+      Icon(Icons.soap_outlined,size: size,color: color,),
+      Icon(Icons.book,size: size,color: color,),
+      Icon(Icons.theater_comedy_outlined,size: size,color: color,),
+      Icon(Icons.bookmark_add_outlined,size: size,color: color,),
+      Icon(Icons.electric_bolt,size: size,color: color,),
+      Icon(Icons.phone_android,size: size,color: color,),
+      Icon(Icons.computer,size: size,color: color,),
+      Icon(Icons.man,size: size,color: color,),
+      Icon(Icons.woman,size: size,color: color,),
+      Icon(Icons.man_4,size: size,color: color,),
+      Icon(Icons.woman_2_rounded,size: size,color: color,),
+      Icon(Icons.airline_seat_legroom_reduced_outlined,size: size,color: color,),
+      Icon(Icons.snowshoeing_sharp,size: size,color: color,),
+      Icon(Icons.snowshoeing_sharp,size: size,color: color,),
+      Icon(Icons.home,size: size,color: color,),
+      Icon(Icons.soup_kitchen_outlined,size: size,color: color,),
+      Icon(Icons.bathtub_outlined,size: size,color: color,),
+      Icon(Icons.movie_creation_outlined,size: size,color: color,),
+      Icon(Icons.question_mark,size: size,color: color,),
+      Icon(Icons.view_compact_alt_outlined,size: size,color: color,),
+      Icon(Icons.games_outlined,size: size,color: color,),
+      Icon(Icons.toys_outlined,size: size,color: color,),
+    ];
     return 
     Padding(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
@@ -92,9 +121,7 @@ class CategoryBtn extends StatelessWidget {
                           Get.toNamed("/selectedCategory",parameters: {"category": Category.values[index].name}),
         child: Row(
           children: [
-            CircleAvatar(
-              backgroundImage: AssetImage("lib/assets/images/Rectangle 9.png"),
-            ),
+           categoryIcons[index],
             SizedBox(
               width: 10,
             ),
