@@ -7,8 +7,10 @@ class OrderDataSource {
   DioClient dio = DioClient();
   Future<List<Order>> fetchOrders() async {
     try {
+      print("order here?");
       var res = await dio.dio.get("/order");
       if (res.statusCode == 200) {
+        print(res);
         return res.data["data"]
                 ?.map((elem) {
                   return Order.fromJson(elem);
@@ -18,8 +20,11 @@ class OrderDataSource {
             [];
       }
     } on DioException catch (e) {
+      print("Dioexception: ${e.message}");
       handledioExceptions(e);
     } catch (e) {
+      print("someother exception: $e");
+
       rethrow;
     }
     return [];
@@ -27,11 +32,13 @@ class OrderDataSource {
 
   Future<bool> delivered(int id, int status) async {
     try {
-      var res = await dio.dio.patch("/order/status/$id", data: status);
+      var res = await dio.dio.patch("/order/status/$id", data: {"status": status});
       if (res.statusCode == 200) {
+        print("herererer?");
         return true;
       }
     } on DioException catch (e) {
+      print("the statsy: ${e.message}");
       handledioExceptions(e);
     } catch (e) {
       rethrow;

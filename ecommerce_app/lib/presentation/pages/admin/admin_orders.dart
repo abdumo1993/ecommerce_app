@@ -36,7 +36,7 @@ class AllOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
-      child: ListView.separated(
+      child: ListView.builder(
           itemBuilder: (context, index) {
             Order order = orders[index];
             return GestureDetector(
@@ -47,15 +47,7 @@ class AllOrders extends StatelessWidget {
                 },
                 child: SingleOrderItem(order: order));
           },
-          separatorBuilder: (context, index) {
-            return SizedBox(
-              width: double.maxFinite,
-              height: 3,
-              child: Container(
-                color: Theme.of(context).colorScheme.onSecondary,
-              ),
-            );
-          },
+          
           itemCount: orders.length),
     );
   }
@@ -91,6 +83,14 @@ class SingleOrderItem extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Text(
+                'User: ${order.user?.email ?? "AnonymousUser."}',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              SizedBox(height: 8),
               Text(
                 'Order Number: ${order.orderNumber}',
                 style: TextStyle(
@@ -130,7 +130,7 @@ class SingleOrderItem extends StatelessWidget {
                                         .onPrimary),
                               ),
                               content: Text(
-                                'Are you sure you want to mark this order as ${statuses[order.status]}?\n This is an irreversible action.',
+                                'Are you sure you want to mark this order as ${statuses[order.status+1]}?\n This is an irreversible action.',
                                 style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -167,7 +167,7 @@ class SingleOrderItem extends StatelessWidget {
                           },
                         );
                       },
-                      child: Text("Delivered", style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),),
+                      child: Text("${statuses[order.status + 1]}", style: TextStyle(color: Colors.black87),),
                     )
                 ],
               ),

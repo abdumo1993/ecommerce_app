@@ -29,11 +29,12 @@ class Order {
   set status(int st) => status = st;
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-        user: GetUserModel().fromJson(json["user"]),
+      user: json['user'] != null ? GetUserModel().fromJson(json["user"]) : json['user'],
         orderNumber: json["orderNumber"] ?? "N/A",
         orderId: json['orderId'] ?? "N/A",
-        status: json['status'] ?? "N/A",
+        status: json['statusInt'] ?? 1,
         shippingAddress: json['shippingAddress'],
+        
         paymentInfo: PaymentInfo.fromJson(json['paymentInfo']),
         orderDate: json["orderDate"] ?? "N/A",
         updatedAt: json["updatedAt"] ?? "N/A",
@@ -125,6 +126,7 @@ class PaymentInfo {
       required this.updatedAt});
 
   factory PaymentInfo.fromJson(Map<String, dynamic> json) {
+    print("payment info json: $json");
     return PaymentInfo(
         createdAt: json["createdAt"] ?? "N/A",
         updatedAt: json["updatedAt"] ?? "N/A",

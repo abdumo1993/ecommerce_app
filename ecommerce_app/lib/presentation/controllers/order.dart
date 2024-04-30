@@ -95,6 +95,7 @@ class OrderController extends GetxController {
     } on CustomeException catch (e) {
       Get.toNamed("/error", arguments: {"message": e.toString()});
     } catch (e) {
+      print(e);
       Get.toNamed("/error",
           arguments: {"message": "something went wrong. try again later"});
     }
